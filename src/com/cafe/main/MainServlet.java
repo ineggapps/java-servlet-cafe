@@ -25,7 +25,7 @@ public class MainServlet extends HttpServlet {
 
 	public static final String VIEWS = "/WEB-INF/views/cafe";
 	private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = VIEWS + "/index.jsp";
+		String path = VIEWS + "/main.jsp";
 		RequestDispatcher disp = req.getRequestDispatcher(path);
 		disp.forward(req, resp);
 	}

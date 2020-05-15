@@ -1,0 +1,26 @@
+.banner_visual {
+  background: url("../images/board/banner_event.jpg") no-repeat center 25%;
+  background-size: cover;
+  color: #fff;
+}
+
+.lnb > li,
+.lnb > li.on,
+.lnb > li:first-child,
+.lnb > li.on:first-child {
+  border-color: #fff;
+}
+
+.lnb > li > a {
+  color: #fff;
+}
+
+.lnb > li.on,
+.lnb > li:hover {
+  background-color: #fff;
+  border-color: #fff;
+}
+.lnb > li.on > a,
+.lnb > li:hover > a {
+  color: #333;
+}

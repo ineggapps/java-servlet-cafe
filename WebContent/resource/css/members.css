@@ -1,0 +1,234 @@
+@charset "UTF-8";
+
+.banner_visual {
+  background: url("../images/members/members_visual.jpg") no-repeat center 91%;
+}
+
+h3 {
+  float: left;
+}
+
+.list_button {
+  user-select: none;
+  margin-top: 20px;
+  float: right;
+  width: 150px;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+  text-align: center;
+  padding: 15px;
+  font-size: 1rem;
+}
+
+.list_button:hover {
+  font-weight: bold;
+}
+
+.card_container {
+  user-select: none;
+  margin-top: 35px;
+  width: 100%;
+}
+
+.card_container > ul > li {
+  width: 570px;
+  /* width: 100%; */
+  margin-right: 20px;
+  margin-bottom: 35px;
+  height: 210px;
+  float: left;
+}
+
+.card_container_full > ul > li {
+  width: 100%;
+}
+
+.card_container > ul > li > figure,
+.card_container > ul > li > div {
+  float: left;
+}
+
+.card_container > ul > li > figure img {
+  width: 333px;
+  height: 210px;
+}
+
+.card_container > ul > li > div {
+  margin-left: 20px;
+}
+
+.card_container > ul > li > div p {
+  font-size: 1.2rem;
+}
+
+.card_title {
+  margin-top: 20px;
+}
+.detail {
+  font-size: 0.8rem;
+}
+
+.modify {
+  font-size: 0.8rem;
+  margin-left: 10px;
+}
+
+.card_title,
+.card_id,
+.card_remain {
+  margin-bottom: 20px;
+}
+
+.card_remain strong {
+  color: #233e83;
+}
+
+.card_control {
+  line-height: 1rem;
+}
+
+.card_control li {
+  width: 110px;
+  float: left;
+  margin-bottom: 5px;
+}
+
+.card_control li:nth-child(2n-1) {
+  margin-right: 23px;
+}
+
+.card_control li:nth-child(3) {
+  clear: both;
+}
+
+.card_button {
+  font-size: 0.9rem;
+  text-align: center;
+  width: 100%;
+  display: block;
+  background-color: #fff;
+  padding: 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.card_button:hover {
+  background-color: #233e83;
+  color: #fff;
+}
+
+#card_history {
+  width: 100%;
+  border-top: 3px solid #233e83;
+  text-align: center;
+}
+
+#card_history thead td {
+  font-weight: bold;
+}
+
+#card_history tbody tr:hover td {
+  font-weight: bold;
+  color: #233e83;
+}
+
+#card_history tr {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+#card_history td {
+  padding: 20px;
+}
+
+.col_no {
+  width: 5%;
+}
+.col_category {
+  width: 15%;
+}
+.col_content {
+  width: 15%;
+}
+.col_store {
+  width: 15%;
+}
+.col_amount {
+  width: 15%;
+}
+.col_date {
+  width: auto;
+}
+
+/*카드 충전*/
+#card_charge {
+  width: 100%;
+  border-top: 3px solid #233e83;
+}
+#card_charge thead {
+  display: none;
+}
+#card_charge td {
+  padding: 20px;
+}
+#card_charge tbody tr {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+#card_charge p.desc {
+  font-size: 0.8rem;
+}
+#card_charge .desc_red {
+  color: #a52035;
+}
+#card_charge .desc_blue {
+  color: #233e83;
+}
+
+#card_charge .charge_option {
+  margin: 15px 0;
+}
+#card_charge .charge_option > li {
+  display: inline-block;
+}
+
+.col_charge_category {
+  width: 15%;
+  background-color: #f4f4f4;
+}
+
+.col_charge_data {
+  width: 85%;
+}
+
+.list_button.submit {
+  background-color: #233e83;
+  color: #fff;
+}
+
+.row.buttons *:not(:last-child) {
+  margin-left: 10px;
+}
+
+/*카드 등록*/
+.card_container.card_register li {
+  margin-bottom: 60px;
+}
+.card_container.card_register li,
+.card_container.card_register li img {
+  width: 280px;
+  height: 176px;
+}
+.card_container.card_register li:nth-child(4n) {
+  margin-right: 0;
+}
+.card_container .next_line {
+  width: 100%;
+  clear: both;
+  text-align: center;
+  margin: 0;
+}
+.card_container .next_line p {
+  font-size: 0.9rem;
+  margin: 10px 0;
+}

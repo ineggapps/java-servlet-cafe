@@ -1,0 +1,89 @@
+@charset "UTF-8";
+
+#order_process {
+  width: 100%;
+  text-align: center;
+}
+#order_process li {
+  display: inline-block;
+  padding: 0 8%;
+  transition: all ease-in-out 0.2s;
+}
+
+.order_item a {
+  display: block;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #2e3138;
+  user-select: none;
+  margin: 10px 0;
+}
+
+.order_item a.on,
+.order_item:hover a {
+  color: tomato;
+}
+
+#receive_list {
+  width: 100%;
+  border-top: 3px solid #233e83;
+  text-align: center;
+}
+
+#receive_list thead td {
+  font-weight: bold;
+}
+
+/* #receive_list tbody tr:hover td {
+  font-weight: bold;
+  color: #233e83;
+} */
+
+#receive_list tr {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+#receive_list td {
+  padding: 20px;
+}
+
+.col_no {
+  width: 2%;
+}
+.col_nickname {
+  width: 4%;
+}
+.col_product {
+  width: 10%;
+}
+.col_date {
+  width: 8%;
+}
+.col_status {
+  width: 5%;
+}
+
+.col_product_detail {
+  text-align: left;
+}
+.col_product_detail > li {
+  list-style-type: decimal;
+}
+
+.col_product_detail > li > p {
+  font-weight: bold;
+  margin: 10px 0;
+}
+.col_product_detail > li > ul {
+  text-indent: 20px;
+}
+.col_product_detail > li > ul > li {
+  padding: 3px 0;
+}
+
+/*반응형*/
+@media (max-width: 1050px) {
+  #order_process li {
+    padding: 0 2%;
+  }
+}

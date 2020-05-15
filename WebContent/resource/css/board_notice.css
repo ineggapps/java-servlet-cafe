@@ -1,0 +1,98 @@
+@charset "UTF-8";
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.noticelist-img {
+  width: 100%;
+  height: 400px;
+  background-image: url("https://i.imgur.com/46ZO057.jpg");
+  background-repeat: no-repeat;
+  text-align: center;
+}
+
+.line1 {
+  font-weight: bold;
+  font-size: 30px;
+  color: #1c1c1c;
+  padding-top: 150px;
+  padding-bottom: 10px;
+}
+.line2 {
+  font-weight: normal;
+  font-size: 20px;
+  color: #585858;
+}
+.line3 {
+  font-weight: bold;
+  font-size: 20px;
+  color: #233e83;
+}
+
+.board-list {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+.navigation {
+  width: 100%;
+  height: 30px;
+}
+
+.nav-bar {
+  text-align: right;
+  margin: 20px 0;
+  color: #454545;
+  font-size: 13px;
+}
+
+.list-ul {
+  height: 500px;
+  border-top: 2px solid #233e83;
+  margin-top: 50px;
+}
+
+.list-ul li {
+  height: 150px;
+  border-bottom: 1px solid #9c9c9c;
+  line-height: 150px;
+}
+
+.list-num {
+  display: inline-block;
+  float: left;
+  width: 80px;
+  text-align: center;
+}
+
+.list-title {
+  width: 1000px;
+}
+
+.list-title a {
+  display: inline-block;
+  width: 800px;
+}
+
+.page {
+  height: 50px;
+  text-align: center;
+}
+
+.page-num {
+  margin: 0 5px;
+  color: #919191;
+}
+
+.num1 {
+  color: #002f6c;
+}
+
+.num2 {
+  color: #002f6c;
+}
+
+.num3 {
+  color: #002f6c;
+}

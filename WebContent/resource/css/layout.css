@@ -1,0 +1,406 @@
+@charset "UTF-8";
+/* @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;400;700&display=swap");
+@import url("https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css");
+html,
+body {
+  width: 100%;
+  min-width: 1180px;
+  /* overflow-x: hidden; */
+  color: #333;
+}
+input:focus,
+button:focus,
+select:focus {
+  outline: none;
+}
+ul,
+li {
+  list-style: none;
+}
+body,
+div,
+input {
+  font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  letter-spacing: -0.03em;
+}
+
+h1,
+.strong {
+  color: #233e83;
+}
+
+a:hover {
+  color: #000;
+}
+.active {
+  color: #fff !important;
+}
+
+#wrap {
+  position: relative;
+  width: 100%;
+}
+
+#header {
+  z-index: 800;
+  position: fixed;
+  width: 100%;
+  height: 130px;
+  background-color: #fff;
+}
+
+#header_container {
+  position: relative;
+  width: 1180px;
+  margin: 0 auto;
+}
+
+div.header_row {
+  width: 100%;
+  margin: 20px 0 40px;
+}
+div.header_row:after {
+  clear: both;
+  content: "";
+  display: block;
+  visibility: hidden;
+}
+ul#right_side {
+  float: right;
+  margin-right: 60px;
+}
+ul#right_side li {
+  float: left;
+  font-size: 0.9rem;
+  color: #555;
+  margin-right: 20px;
+}
+
+#right_side li:not(:last-child):after {
+  content: "";
+  display: inline-block;
+  margin-left: 20px;
+  width: 1px;
+  height: 8px;
+  background-color: #ccc;
+}
+
+#gnb_area {
+  clear: both;
+  margin-top: 20px;
+}
+
+#logo {
+  font-family: "Arial Black", sans-serif;
+  font-weight: bold;
+  margin-right: 50px;
+  float: left;
+  font-size: 1.6rem;
+  vertical-align: top;
+}
+
+#gnb {
+  float: right;
+  width: 60%;
+  text-align: center;
+  color: #202023;
+}
+
+#gnb > li {
+  height: 100%;
+}
+
+#gnb > li > a > span {
+  display: block;
+  position: relative;
+}
+
+/*애니메이션 요소 공통*/
+#gnb > li > a > span:after,
+#gnb:after,
+.sub_gnb {
+  transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  -o-transition-duration: 0.2s;
+  -moz-transition-duration: 0.2s;
+  -webkit-transition-duration: 0.2s;
+}
+/*애니메이션 요소 공통*/
+
+#gnb > li > a > span:after {
+  display: block;
+  content: "";
+  width: 0px;
+  height: 4px;
+  background: #000;
+  margin: 6px auto;
+}
+
+#gnb > li > a:hover > span:after,
+#gnb > li:hover > a > span:after {
+  width: 100%;
+  background-color: #233e83;
+}
+
+.main_menu {
+  font-size: 1.2rem;
+  z-index: 80;
+  height: 40px;
+  position: relative;
+  display: inline-block;
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+.main_menu:not(:last-child) {
+  margin-right: 50px;
+}
+
+.main_menu > a {
+  margin: 20px 0;
+}
+.main_menu > a:after {
+  clear: both;
+  display: block;
+  content: "";
+}
+
+#gnb:after {
+  display: block;
+  content: "";
+  position: fixed;
+  top: 120px;
+  width: 1000rem;
+  height: 0;
+  background-color: #fff;
+  transform: translateX(-400rem);
+}
+
+#gnb .sub_gnb {
+  position: absolute;
+  margin-top: -38px;
+  left: 10px;
+  overflow: hidden;
+  width: 100%;
+  height: 0;
+  opacity: 0;
+  text-align: left;
+}
+
+#gnb:hover .sub_gnb {
+  display: block;
+  overflow: visible;
+  height: 100%;
+  margin-top: 0;
+  opacity: 1;
+}
+
+#gnb:hover:after {
+  height: 150px;
+  border-bottom: 2px solid #555555;
+}
+.sub_gnb a {
+  color: #848484;
+}
+
+.sub_gnb a:hover {
+  color: #000;
+}
+
+.sub_menu {
+  font-size: 0.9rem;
+  padding: 8px 0;
+  letter-spacing: -0.05rem;
+}
+
+/*content 영역*/
+
+#content {
+  padding-top: 130px;
+  width: 100%;
+  min-height: 693px;
+}
+
+.row {
+  width: 1180px;
+  margin: 0 auto;
+}
+
+.row_full {
+  width: 100%;
+}
+
+.row::after,
+.row_full::after {
+  content: "";
+  display: block;
+  clear: both;
+  visibility: hidden;
+}
+
+.row:last-child {
+  margin-bottom: 50px;
+}
+
+.banner_visual h2,
+.row h3 {
+  font-family: "나눔스퀘어", NanumSquare, NS, "맑은 고딕", MalgunGothic, "돋움", Dotum;
+}
+.row h3 span {
+  font-size: 1rem;
+  color: #818181;
+  margin-left: 20px;
+}
+
+.banner_visual {
+  user-select: none;
+  background-size: cover;
+  height: 460px;
+}
+
+.banner_visual h2 {
+  font-weight: 300;
+  font-size: 3rem;
+  text-align: center;
+  padding: 116px 0 19px;
+}
+
+.banner_visual .visual_text {
+  margin-top: 10px;
+  line-height: 1.7rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+/*lnb*/
+.lnb {
+  margin-top: 55px;
+  width: 100%;
+  text-align: center;
+  user-select: none;
+}
+
+.lnb li:first-child {
+  border-left: solid 1px #84847c;
+}
+
+.lnb li {
+  font-size: 0.85rem;
+  display: inline-block;
+  margin-right: -4px;
+  line-height: 35px;
+  color: #202023;
+  border-right: solid 1px #84847c;
+  border-top: solid 1px #84847c;
+  border-bottom: solid 1px #84847c;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.lnb li a {
+  display: block;
+  width: 178px;
+  height: 35px;
+}
+
+.lnb li:hover,
+.lnb li.on {
+  font-weight: bold;
+  opacity: 1;
+  background-color: #84847c;
+}
+.lnb li:hover a,
+.lnb li.on a {
+  color: #fff;
+}
+
+.lnb:after {
+  content: "";
+  display: block;
+  clear: both;
+  visibility: hidden;
+}
+
+.row_title {
+  width: 100%;
+  padding: 35px 0;
+  font-size: 1.8rem;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+/*sample*/
+
+.sample_row {
+  width: 100%;
+  height: 680px;
+  background-color: #233e83;
+}
+
+/*footer 영역*/
+footer {
+  width: 100%;
+  background-color: #262626;
+}
+
+.bottom_util {
+  width: 100%;
+  border-bottom: 1px solid #464646;
+  padding: 26px 0;
+}
+
+.bottom_util #fnb {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bottom_util #fnb li {
+  display: inline-block;
+  font-size: 0.9rem;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.bottom_util #fnb li a {
+  color: #818181;
+}
+
+.bottom_util #fnb li a:hover {
+  color: #fff;
+}
+
+.bottom_util #fnb:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.copyright {
+  width: 1180px;
+  margin: 0 auto;
+  padding: 10px 0 35px;
+  text-align: center;
+  color: #6c6c6c;
+}
+
+.bottom_logo_container {
+  width: 1180px;
+  margin: 0 auto;
+  padding: 50px 0 30px;
+  text-align: center;
+}
+
+.bottom_logo {
+  font-family: "Arial Black", sans-serif;
+  font-size: 2rem;
+  color: #6c6c6c;
+}
+
+.row500 {
+  width: 500px;
+  margin: 0 auto;
+}
