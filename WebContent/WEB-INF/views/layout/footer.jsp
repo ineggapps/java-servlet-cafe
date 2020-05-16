@@ -7,7 +7,7 @@
 %>
 		<div class="bottom_util">
           <ul id="fnb">
-            <li><a href="<%=cp %>/admin/main/index.do">점주의 방</a></li>
+            <li><a href="<%=cp %>/admin/auth/login.do">점주의 방</a></li>
           </ul>
         </div>
         <div class="bottom_logo_container"><span class="bottom_logo">COOKIE&amp;CREAM</span></div>

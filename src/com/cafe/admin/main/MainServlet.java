@@ -15,7 +15,7 @@ import com.util.EspressoServlet;
 public class MainServlet extends EspressoServlet {
 
 	// PATH
-	private static final String API_NAME = "/admin";
+	private static final String API_NAME = "/admin/main";
 	private static final String ADMIN = "admin";
 	private static final String VIEW = "/WEB-INF/views";
 	private static final String VIEWS = VIEW + "/" + ADMIN;
