@@ -27,8 +27,8 @@ public class MenuServlet extends EspressoServlet {
 	private static final String API_COFFEE = "/coffee.do";
 	private static final String API_ADE = "/ade.do";
 	private static final String API_BAKERY = "/bakery.do";
-	
-	//PARAM
+
+	// PARAM
 	private static final String PARAM_MENU = "menu";
 	private static final String PARAM_COFFEE = "coffee";
 	private static final String PARAM_ADE = "ade";
@@ -39,11 +39,12 @@ public class MenuServlet extends EspressoServlet {
 
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
 		contextPath = req.getContextPath();
-		apiPath = contextPath + CAFE;
+		apiPath = contextPath + API_NAME;
 		String uri = req.getRequestURI();
 
-		if (uri.indexOf(API_COFFEE) != -1 || uri.indexOf(API_INDEX)!=-1) {
+		if (uri.indexOf(API_COFFEE) != -1 || uri.indexOf(API_INDEX) != -1) {
 			beverage(req, resp);
 		} else if (uri.indexOf(API_ADE) != -1) {
 			ade(req, resp);
@@ -52,27 +53,26 @@ public class MenuServlet extends EspressoServlet {
 		}
 
 	}
-	
+
 	protected void beverage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_MENU;
-		//포워딩 
+		// 포워딩
 		req.setAttribute(PARAM_MENU, PARAM_COFFEE);
 		forward(req, resp, path);
-	}	
+	}
 
 	protected void ade(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_MENU;
-		//포워딩 
+		// 포워딩
 		req.setAttribute(PARAM_MENU, PARAM_ADE);
 		forward(req, resp, path);
-	}	
-	
+	}
+
 	protected void bakery(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_MENU;
-		//포워딩 
+		// 포워딩
 		req.setAttribute(PARAM_MENU, PARAM_BAKERY);
 		forward(req, resp, path);
-	}	
-	
+	}
 
 }
