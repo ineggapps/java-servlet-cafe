@@ -48,7 +48,7 @@
 
               <div class="row whitebox">
                 <div class="row500">
-                  <form>
+                  <form action="<%=cp%>/auth/login_ok.do" method="post">
                     <input class="text_input" type="text" placeholder="아이디 입력" />
                     <input class="text_input" type="password" placeholder="비밀번호 입력" />
                     <div class="checkbox_row">

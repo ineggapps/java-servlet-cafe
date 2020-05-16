@@ -28,7 +28,7 @@
                 <ul class="sub_gnb">
                   <li class="sub_menu"><a href="<%=cp%>/members/list.do">카드 목록</a></li>
                   <li class="sub_menu">
-                    <a href="<%=cp%>/members/enroll.do">카드 등록</a>
+                    <a href="<%=cp%>/members/register.do">카드 등록</a>
                   </li>
                   <li class="sub_menu"><a href="<%=cp%>/members/charge.do">카드 충전</a></li>
                   <li class="sub_menu"><a href="<%=cp%>/members/order.do">쿠앤크오더</a></li>

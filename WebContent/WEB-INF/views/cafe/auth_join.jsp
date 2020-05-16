@@ -32,7 +32,7 @@
               </div>
             </div>
             <div class="row">
-              <form action="#">
+              <form action="<%=cp%>/auth/join_ok.do" method="post">
                 <div class="joinbox">
                   <div class="email_wrap component_wrap">
                     <h3>이메일을 입력해주세요.</h3>
