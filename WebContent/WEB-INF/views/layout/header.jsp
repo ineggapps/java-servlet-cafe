@@ -18,7 +18,7 @@
               <li class="main_menu">
                 <a href="<%=cp%>/menu/index.do"><span>메뉴</span></a>
                 <ul class="sub_gnb">
-                  <li class="sub_menu"><a href="<%=cp%>/menu/beverage.do">음료</a></li>
+                  <li class="sub_menu"><a href="<%=cp%>/menu/coffee.do">커피</a></li>
                   <li class="sub_menu"><a href="<%=cp%>/menu/ade.do">에이드</a></li>
                   <li class="sub_menu"><a href="<%=cp%>/menu/bakery.do">베이커리</a></li>
                 </ul>

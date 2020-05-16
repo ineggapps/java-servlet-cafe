@@ -56,9 +56,9 @@
                     </div>
                     <button type="submit" class="navy_button">로그인</button>
                     <ul class="login_menu">
-                      <li><a href="#">회원가입</a></li>
-                      <li><a href="#">이메일 찾기</a></li>
-                      <li><a href="#">비밀번호 찾기</a></li>
+                      <li><a href="<%=cp%>/auth/join.do">회원가입</a></li>
+                      <li><a href="<%=cp%>/auth/find_email.do">이메일 찾기</a></li>
+                      <li><a href="<%=cp%>/auth/find_password.do">비밀번호 찾기</a></li>
                     </ul>
                   </form>
                 </div>

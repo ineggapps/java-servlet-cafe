@@ -12,22 +12,29 @@ import com.util.EspressoServlet;
 @WebServlet("/auth/*")
 public class AuthServlet extends EspressoServlet{
 	
+	//PATH
 	private static final String API_NAME = "/auth";
 	private static final String CAFE = "cafe";
 	private static final String VIEW = "/WEB-INF/views";
 	private static final String VIEWS = VIEW + "/" + CAFE;
 	private static final String SESSION_INFO = "member";
+	//PATH(dynamic)
+	private static String contextPath;
+	private static String apiPath;
 
+	//API
 	private static final String API_LOGIN = "/login.do";
 	private static final String API_LOGIN_OK = "/login_ok.do";
 	private static final String API_JOIN = "/join.do";
 	private static final String API_JOIN_OK = "/join_ok.do";
 	
+	private static final String API_FIND_EMAIL = "/find_email.do";
+	private static final String API_FIND_PASSWORD = "/find_password.do";
+	
+	//JSP
 	private static final String JSP_LOGIN = "/auth_login.jsp";
 	private static final String JSP_JOIN = "/auth_join.jsp";
 	
-	private static String contextPath;
-	private static String apiPath;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
