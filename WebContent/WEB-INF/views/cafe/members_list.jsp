@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -35,26 +36,28 @@
             </div>
             <div class="row">
               <div class="row_title">
-                <h3>보유 카드 현황 <span>(보유카드: 1장)</span></h3>
+                <h3>보유 카드 현황 <span>(보유카드: ${fn:length(list)}장)</span></h3>
               </div>
               <div class="card_container">
                 <ul>
+                  <c:forEach var="dto" items="${list}">
                   <li>
                     <figure>
                       <a href="members_card_detail.html">
-                        <img src="<%=cp%>/resource/images/members/card/card01.png" alt="card" />
+                        <img src="<%=cp%>/${dto.thumbnail}" alt="card" />
                       </a>
                     </figure>
                     <div>
                       <p class="card_title">
-                        <a href="./members_card_detail.html"><strong>카드이름</strong></a
+                        <a href="./members_card_detail.html"><strong>${dto.cardName}</strong></a
                         ><a href="#" class="modify">수정</a>
                       </p>
-                      <p class="card_id">(123456)</p>
-                      <p class="card_remain">잔액 <strong>999,999,999</strong>원</p>
+                      <p class="card_id">${dto.cardIdentity}</p>
+                      <p class="card_remain">잔액 <strong>${dto.balance}</strong>원</p>
                     </div>
                   </li>
-                  <li>
+                </c:forEach>
+                  <!--li>
                     <figure>
                       <a href="members_card_detail.html">
                         <img src="<%=cp%>/resource/images/members/card/card02.png" alt="card"
@@ -98,7 +101,7 @@
                       <p class="card_id">(123456)</p>
                       <p class="card_remain">잔액 <strong>999,999,999</strong>원</p>
                     </div>
-                  </li>
+                  </li-->
                 </ul>
               </div>
             </div>

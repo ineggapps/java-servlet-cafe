@@ -7,6 +7,7 @@ public class CardDTO {
 	private int modelNum;
 	private String cardIdentity;
 	private int balance; // 최대 충전 잔액은 55만원까지만 가능하다.
+	private String thumbnail;
 
 	public int getCardNum() {
 		return cardNum;
@@ -56,14 +57,26 @@ public class CardDTO {
 		this.balance = balance;
 	}
 
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
 	public CardDTO() {
 	}
 
-	public CardDTO(int cardNum, int userNum, int modelNum, String cardIdentity) {
+	public CardDTO(int cardNum, String cardName, int userNum, int modelNum, String cardIdentity, int balance,
+			String thumbnail) {
 		this.cardNum = cardNum;
+		this.cardName = cardName;
 		this.userNum = userNum;
 		this.modelNum = modelNum;
 		this.cardIdentity = cardIdentity;
+		this.balance = balance;
+		this.thumbnail = thumbnail;
 	}
 
 	public CardDTO(String cardName, int userNum, int modelNum) {

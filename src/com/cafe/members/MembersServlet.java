@@ -86,6 +86,14 @@ public class MembersServlet extends EspressoServlet {
 	protected void list(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_LIST;
+		CardDAO dao = new CardDAO();
+		SessionAuthInfo info = getSessionAuthInfo(req);
+		if(info==null) {
+			goToLogin(resp);
+			return;
+		}
+		List<CardDTO> list = dao.listCard(info.getUserNum());
+		attributes.put(ATTRIBUTE_LIST, list);
 		forward(req, resp, path, attributes);
 	}
 
