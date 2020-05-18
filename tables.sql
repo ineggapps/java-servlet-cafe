@@ -278,3 +278,16 @@ DROP SEQUENCE MEMBER_SEQ;
 
 SELECT * FROM TAB;
 SELECT * FROM SEQ;
+
+
+-- 카드모델 샘플 데이터
+
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '열정응원카드', '당신의 열정을 응원합니다', '/resource/images/members/card/card01.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '쿠앤크레몬카드', '레몬처럼 상큼한 쿠앤크카드', '/resource/images/members/card/card02.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '마음에 싹트다 카드', '쓸수록 마음이 싹트는 카드', '/resource/images/members/card/card03.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '오렌지 카드', '오렌지가 가득한 새콤한 쿠앤크카드', '/resource/images/members/card/card04.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '레드 카드', '레드레드한 쿠앤크카드', '/resource/images/members/card/card05.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '스튜던트 카드', '초심으로 돌아가 연필을 잡자 카드', '/resource/images/members/card/card06.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '나는야 백조카드', '핑크핑크한 백조를 보셨나요?', '/resource/images/members/card/card07.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '네추럴 카드', '로이더 아니고 네추럴 카드', '/resource/images/members/card/card08.png');
+COMMIT;
