@@ -48,12 +48,12 @@ public class AuthDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		/*
-		 SELECT member.userNum, email, userId, userPwd, userName, nickname,
-            TO_CHAR(created_date,'YYYY-MM-DD') created_date, TO_CHAR(updated_date,'YYYY-MM-DD')
-            updated_date, phone, enabled, admin.userNum isAdmin FROM member 
-            LEFT OUTER JOIN member_admin admin ON member.userNum = admin.userNum
-            WHERE enabled=1 and member.userNum = 5;
-		 * */
+		 * SELECT member.userNum, email, userId, userPwd, userName, nickname,
+		 * TO_CHAR(created_date,'YYYY-MM-DD') created_date,
+		 * TO_CHAR(updated_date,'YYYY-MM-DD') updated_date, phone, enabled,
+		 * admin.userNum isAdmin FROM member LEFT OUTER JOIN member_admin admin ON
+		 * member.userNum = admin.userNum WHERE enabled=1 and member.userNum = 5;
+		 */
 		String sql = "SELECT m.userNum, email, userId, userPwd, userName, nickname, "
 				+ "TO_CHAR(created_date,'YYYY-MM-DD') created_date, TO_CHAR(updated_date,'YYYY-MM-DD') "
 				+ "updated_date, phone, enabled, admin.userNum isAdmin FROM member m "
@@ -72,12 +72,31 @@ public class AuthDAO {
 				String updated_date = rs.getString("updated_date");
 				String phone = rs.getString("phone");
 				int enabled = rs.getInt("enabled");
-				boolean isAdmin = rs.getInt("isAdmin") > 0  ? true : false; // null이면 0으로 반환됨.
+				boolean isAdmin = rs.getInt("isAdmin") > 0 ? true : false; // null이면 0으로 반환됨.
 				dto = new AuthDTO(userNum, email, userId, userPwd, userName, nickname, created_date, updated_date,
 						phone, enabled, isAdmin);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if (!conn.isClosed()) {
+					conn.close();
+				}
+			} catch (Exception e2) {
+			}
 		}
 		return dto;
 	}
