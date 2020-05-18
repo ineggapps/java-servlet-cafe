@@ -2,6 +2,7 @@ package com.cafe.members;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -49,6 +50,9 @@ public class MembersServlet extends EspressoServlet {
 	private static final int PARAM_REGISTER_STEP_2 = 2;
 	private static final int PARAM_REGISTER_STEP_3 = 3;
 
+	// ATTRIBUTE
+	private static final String ATTRIBUTE_LIST = "list";
+
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
@@ -86,7 +90,10 @@ public class MembersServlet extends EspressoServlet {
 			throws ServletException, IOException {
 		String paramStep = req.getParameter(PARAM_REGISTER_STEP);
 		try {
-			int step = Integer.parseInt(paramStep);
+			int step = 1;
+			if(paramStep!=null) {
+				step = Integer.parseInt(paramStep);
+			}
 			switch (step) {
 			default:
 			case PARAM_REGISTER_STEP_1:
@@ -108,7 +115,13 @@ public class MembersServlet extends EspressoServlet {
 
 	protected void registerStep1(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
+		System.out.println("step1");
 		String path = VIEWS + JSP_REGISTER_STEP1;
+		//카드모델 고르기 페이지
+		CardModelDAO dao = new CardModelDAO();
+		List<CardModelDTO> list = dao.listCardModel();
+		attributes.put(ATTRIBUTE_LIST, list);
+
 		forward(req, resp, path, attributes);
 	}
 
