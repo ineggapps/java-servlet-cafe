@@ -47,7 +47,7 @@
                         <img src="<%=cp%>/${dto.thumbnail}" alt="card" />
                       </a>
                     </figure>
-                    <div>
+                    <div class="card_info">
                       <p class="card_title">
                         <a href="./members_card_detail.html"><strong>${dto.cardName}</strong></a
                         ><a href="#" class="modify">수정</a>
@@ -57,51 +57,6 @@
                     </div>
                   </li>
                 </c:forEach>
-                  <!--li>
-                    <figure>
-                      <a href="members_card_detail.html">
-                        <img src="<%=cp%>/resource/images/members/card/card02.png" alt="card"
-                      /></a>
-                    </figure>
-                    <div>
-                      <p class="card_title">
-                        <a href="./members_card_detail.html"><strong>카드이름</strong></a
-                        ><a href="#" class="modify">수정</a>
-                      </p>
-                      <p class="card_id">(123456)</p>
-                      <p class="card_remain">잔액 <strong>999,999,999</strong>원</p>
-                    </div>
-                  </li>
-                  <li>
-                    <figure>
-                      <a href="members_card_detail.html">
-                        <img src="<%=cp%>/resource/images/members/card/card03.png" alt="card"
-                      /></a>
-                    </figure>
-                    <div>
-                      <p class="card_title">
-                        <a href="./members_card_detail.html"><strong>카드이름</strong></a
-                        ><a href="#" class="modify">수정</a>
-                      </p>
-                      <p class="card_id">(123456)</p>
-                      <p class="card_remain">잔액 <strong>999,999,999</strong>원</p>
-                    </div>
-                  </li>
-                  <li>
-                    <figure>
-                      <a href="members_card_detail.html">
-                        <img src="<%=cp%>/resource/images/members/card/card04.png" alt="card"
-                      /></a>
-                    </figure>
-                    <div>
-                      <p class="card_title">
-                        <a href="./members_card_detail.html"><strong>카드이름</strong></a
-                        ><a href="#" class="modify">수정</a>
-                      </p>
-                      <p class="card_id">(123456)</p>
-                      <p class="card_remain">잔액 <strong>999,999,999</strong>원</p>
-                    </div>
-                  </li-->
                 </ul>
               </div>
             </div>
