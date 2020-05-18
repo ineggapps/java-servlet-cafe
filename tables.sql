@@ -210,8 +210,8 @@ CREATE SEQUENCE order_detail_seq -- 주문 일련번호 시퀀스
 
 CREATE TABLE card_model(
     modelNum NUMBER,
-    modelName VARCHAR2(100),
-    text VARCHAR2(4000),
+    modelName VARCHAR2(100) NOT NULL,
+    text VARCHAR2(4000) NOT NULL ,
     thumbnail VARCHAR2(500),
     CONSTRAINT pk_model_num PRIMARY KEY(modelNum)
 );
@@ -226,12 +226,17 @@ CREATE SEQUENCE card_model_seq -- 주문 일련번호 시퀀스
 
 CREATE TABLE cards(
     cardNum NUMBER,
+    cardName VARCHAR2(255),
     userNum NUMBER NOT NULL,
-    modelNum NUMBER,
+    modelNum NUMBER NOT NULL,
     cardIdentity VARCHAR2(16), -- 16자리 하이픈없이 숫자만
+    balance NUMBER,
     CONSTRAINT pk_cards_num PRIMARY KEY(cardNum),
+    CONSTRAINT uk_cards_identity UNIQUE(cardIdentity),
     CONSTRAINT fk_model_num FOREIGN KEY(modelNum) REFERENCES card_model(modelNum)
 );
+
+
 
 CREATE SEQUENCE cards_seq -- 주문 일련번호 시퀀스
     START WITH 1
