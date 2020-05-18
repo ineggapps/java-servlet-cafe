@@ -25,46 +25,41 @@
           <article id="main_container">
             <!-- Content영역 -->
 
-            <div class="notice-board">
-              <div class="noticelist-img">
-                <p class="line1">공지사항</p>
-                <span class="line2">ALWAYS BESIDE YOU,</span>
-                <span class="line3"> COOKIE&amp;CREAM</span>
-              </div>
-              <div class="board-list">
-                <div class="navigation">
-                  <div class="nav-bar">홈 &nbsp;〉 쿠앤크소식 &nbsp;〉 공지사항</div>
-                </div>
-                <ul class="list-ul">
-                  <li>
-                    <div class="list-num">9</div>
-                    <div class="list-title">
-                      <a href="notice_view9.html">쿠앤크 멤버스 이용약관 변경 안내</a>
-                      <span>2020-04-21</span>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="list-num">8</div>
-                    <div class="list-title">
-                      <a href="#">COVID-19 확산으로 인한 휴업 안내</a>
-                      <span>2020-03-02</span>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="list-num">7</div>
-                    <div class="list-title">
-                      <a href="#">쿠키 앤 크림 홍대점 오픈</a>
-                      <span>2020-01-28</span>
-                    </div>
-                  </li>
-                </ul>
-                <div class="page">
-                  <a class="page-num num1">1</a>
-                  <a href="notice_list2.html" class="page-num">2</a>
-                  <a href="notice_list3.html" class="page-num">3</a>
-                </div>
-              </div>
-            </div>
+          <form name = "noticeListForm" action="<%=cp%>/notice/list.do" method="post" >
+            <div class = "notice-board">
+	            <div class = "noticelist-img">
+	            	<p class = "line1">공지사항</p>
+	            	<span class = line2>ALWAYS BESIDE YOU,</span>
+	            	<span class = "line3"> COOKIE&amp;CREAM</span>
+	            </div>
+			    <div class = "board-list">
+				    <div class="navigation">
+				        <div class="nav-bar">홈 &nbsp;〉 쿠앤크소식 &nbsp;〉 공지사항</div>
+				    </div>
+			    <c:forEach var="dto" items="${listNotice}">
+			    	<ul class = "list-ul">
+			    		<li>
+			    			<div class = list-num>${dto.num }</div>
+			    			<div class = list-title>
+			    				<a href = "${articleUrl}&num=${dto.num}">${dto.subject }</a>
+			    				<span>${dto.created_date }</span>
+			    			</div>
+			    		</li>
+			    	</ul>
+			    	<div class = "btn">
+			    		<button type="button" class="re_btn" onclick="javascript:location.href='<%=cp %>/notice/list.do';">새로고침</button>
+			    		<c:if test="${sessionScope.member.userId == 'admin' }">
+				          <button type="button" class="upload_btn" onclick="javascript:location.href='<%=cp %>/notice/created.do';">글올리기</button>
+				        </c:if>
+			    	</div>
+			    </c:forEach>
+			    <div class = "page">
+			    	 ${dataCount == 0 ? "등록된 게시물이 없습니다." : paging }
+	   			</div>
+			    </div>
+			    
+   			</div>
+   		</form>
             <!-- Content 영역 끝 -->
           </article>
         </div>
