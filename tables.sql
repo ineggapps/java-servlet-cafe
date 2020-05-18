@@ -95,6 +95,7 @@ CREATE TABLE menu(
     menuNum NUMBER, -- 메뉴 일련번호 (1: 아메리카노, 2: 크루아상 3: 카페모카 ...)
     categoryNum NUMBER NOT NULL, -- 메뉴 카테고리 구분자
     menuName VARCHAR2(255) NOT NULL, -- 메뉴이름 (아메리카노, 크루아상, 카페모카 ...)
+    thumbnail VARCHAR2(500),
     text VARCHAR2(4000) NOT NULL, -- 메뉴 소개글
     price NUMBER DEFAULT 0, -- 가격 (구매 시 필요)
     CONSTRAINT pk_menu_num PRIMARY KEY(menuNum),
@@ -211,7 +212,7 @@ CREATE TABLE card_model(
     modelNum NUMBER,
     modelName VARCHAR2(100),
     text VARCHAR2(4000),
-    thumbnail VARCHAR2(255),
+    thumbnail VARCHAR2(500),
     CONSTRAINT pk_model_num PRIMARY KEY(modelNum)
 );
 
