@@ -2,9 +2,11 @@ package com.cafe.members;
 
 public class CardDTO {
 	private int cardNum;
+	private String cardName;
 	private int userNum;
 	private int modelNum;
 	private String cardIdentity;
+	private int balance; // 최대 충전 잔액은 55만원까지만 가능하다.
 
 	public int getCardNum() {
 		return cardNum;
@@ -12,6 +14,14 @@ public class CardDTO {
 
 	public void setCardNum(int cardNum) {
 		this.cardNum = cardNum;
+	}
+
+	public String getCardName() {
+		return cardName;
+	}
+
+	public void setCardName(String cardName) {
+		this.cardName = cardName;
 	}
 
 	public int getUserNum() {
@@ -38,6 +48,14 @@ public class CardDTO {
 		this.cardIdentity = cardIdentity;
 	}
 
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+
 	public CardDTO() {
 	}
 
@@ -48,10 +66,23 @@ public class CardDTO {
 		this.cardIdentity = cardIdentity;
 	}
 
+	public CardDTO(String cardName, int userNum, int modelNum) {
+		this.cardName = cardName;
+		this.userNum = userNum;
+		this.modelNum = modelNum;
+	}
+
+	public CardDTO(String cardName, int userNum, int modelNum, int balance) {
+		this.cardName = cardName;
+		this.userNum = userNum;
+		this.modelNum = modelNum;
+		this.balance = balance;
+	}
+
 	@Override
 	public String toString() {
 		return "CardDTO [cardNum=" + cardNum + ", userNum=" + userNum + ", modelNum=" + modelNum + ", cardIdentity="
 				+ cardIdentity + "]";
 	}
-	
+
 }

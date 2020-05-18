@@ -10,13 +10,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cafe.auth.SessionAuthInfo;
 import com.util.EspressoServlet;
 
 @WebServlet("/members/*")
 public class MembersServlet extends EspressoServlet {
 
 	// PATH
-	private static final String API_NAME = "/menu";
+	private static final String API_NAME = "/members";
 	private static final String CAFE = "cafe";
 	private static final String VIEW = "/WEB-INF/views";
 	private static final String VIEWS = VIEW + "/" + CAFE;
@@ -32,6 +33,7 @@ public class MembersServlet extends EspressoServlet {
 	private static final String API_DETAIL = "/detail.do";
 	private static final String API_REGISTER = "/register.do";
 	private static final String API_CHARGE = "/charge.do";
+	private static final String API_CHARGE_OK = "/charge_ok.do";
 	private static final String API_ORDER = "/order.do";
 
 	// JSP
@@ -43,15 +45,20 @@ public class MembersServlet extends EspressoServlet {
 
 	// PARAM
 	private static final String PARAM_MODE = "mode";
+	private static final String PARAM_MODEL_NUM = "modelNum";
 	private static final String PARAM_MODE_REGISTER = "register";
 	private static final String PARAM_MODE_CHARGE = "charge";
 	private static final String PARAM_REGISTER_STEP = "register_step";
+	private static final String PARAM_CARD_NAME = "cardName";
+	private static final String PARAM_PRICE = "price";
 	private static final int PARAM_REGISTER_STEP_1 = 1;
 	private static final int PARAM_REGISTER_STEP_2 = 2;
 	private static final int PARAM_REGISTER_STEP_3 = 3;
 
 	// ATTRIBUTE
 	private static final String ATTRIBUTE_LIST = "list";
+	private static final String ATTRIBUTE_CARD_DTO = "cardDTO";
+	private static final String ATTRIBUTE_CARD_MODEL_DTO = "modelDTO";
 
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -68,7 +75,9 @@ public class MembersServlet extends EspressoServlet {
 		} else if (uri.indexOf(API_REGISTER) != -1) {
 			register(req, resp, attributes);
 		} else if (uri.indexOf(API_CHARGE) != -1) {
-			charge(req, resp, attributes);
+			chargeForm(req, resp, attributes);
+		} else if (uri.indexOf(API_CHARGE_OK) != -1) {
+			chargeSubmit(req, resp, attributes);
 		} else if (uri.indexOf(API_ORDER) != -1) {
 			order(req, resp, attributes);
 		}
@@ -91,7 +100,13 @@ public class MembersServlet extends EspressoServlet {
 		String paramStep = req.getParameter(PARAM_REGISTER_STEP);
 		try {
 			int step = 1;
-			if(paramStep!=null) {
+			//무조건 로그인 인증하기
+			SessionAuthInfo info = getSessionAuthInfo(req);
+			if (info == null) {
+				goToLogin(resp);
+				return;
+			}
+			if (paramStep != null) {
 				step = Integer.parseInt(paramStep);
 			}
 			switch (step) {
@@ -117,28 +132,67 @@ public class MembersServlet extends EspressoServlet {
 			throws ServletException, IOException {
 		System.out.println("step1");
 		String path = VIEWS + JSP_REGISTER_STEP1;
-		//카드모델 고르기 페이지
+		// 카드모델 고르기 페이지
 		CardModelDAO dao = new CardModelDAO();
 		List<CardModelDTO> list = dao.listCardModel();
+		attributes.put(PARAM_MODE, PARAM_MODE_REGISTER);
 		attributes.put(ATTRIBUTE_LIST, list);
-
 		forward(req, resp, path, attributes);
 	}
 
 	protected void registerStep2(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_CHARGE;
-		forward(req, resp, path, attributes);
+		try {
+			int modelNum = Integer.parseInt(req.getParameter(PARAM_MODEL_NUM));
+			CardModelDAO modelDAO = new CardModelDAO();
+			CardDTO cardDTO = new CardDTO();
+			cardDTO.setModelNum(modelNum);
+			cardDTO.setCardName("");
+			CardModelDTO modelDTO = modelDAO.readCardModel(modelNum);
+			attributes.put(PARAM_MODE, PARAM_MODE_REGISTER);
+			attributes.put(ATTRIBUTE_CARD_DTO, cardDTO);
+			attributes.put(ATTRIBUTE_CARD_MODEL_DTO, modelDTO);
+			forward(req, resp, path, attributes);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_REGISTER);
+			return;
+		}
 	}
 
 	protected void registerSubmit(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
+		// 카드 등록하기
+		try {
+			SessionAuthInfo info = getSessionAuthInfo(req);
+			CardDAO dao = new CardDAO();
+			String cardName = req.getParameter(PARAM_CARD_NAME);
+			int price = Integer.parseInt(req.getParameter(PARAM_PRICE));
+			int modelNum = Integer.parseInt(req.getParameter(PARAM_MODEL_NUM));
+			CardDTO dto = new CardDTO(cardName, info.getUserNum(), modelNum, price);
+			dao.insertCard(dto);
+			resp.sendRedirect(apiPath + API_LIST);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_REGISTER);
+		}
 	}
 
-	protected void charge(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+	protected void chargeForm(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_CHARGE;
+		attributes.put(PARAM_MODE, PARAM_MODE_CHARGE);
 		forward(req, resp, path, attributes);
+	}
+
+	protected void chargeSubmit(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes) {
+		// 충전 절차 진행
+		try {
+			resp.sendRedirect(apiPath + API_LIST);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void order(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
@@ -171,6 +225,14 @@ public class MembersServlet extends EspressoServlet {
 //				}
 //			}
 			req.setAttribute(key, value);
+		}
+	}
+
+	private void goToLogin(HttpServletResponse resp) {
+		try {
+			resp.sendRedirect(contextPath + "/auth/login.do");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

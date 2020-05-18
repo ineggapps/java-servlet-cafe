@@ -43,7 +43,7 @@
                   <c:forEach var="dto" items="${list}">
                   <li>
                     <figure>
-                      <a href="./members_card_register_step2.html">
+                      <a href="<%=cp%>/members/register.do?register_step=2&amp;modelNum=${dto.modelNum}">
                         <img src="<%=cp%>${dto.thumbnail}" alt="card" />
                       </a>
                     </figure>
