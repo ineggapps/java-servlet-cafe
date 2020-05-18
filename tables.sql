@@ -1,7 +1,7 @@
 -- 회원
 
 CREATE TABLE member(
-    userNo NUMBER, --회원번호 (기본키)
+    userNum NUMBER, --회원번호 (기본키)
     email VARCHAR2(50) NOT NULL, -- 이메일
     userId VARCHAR2(50) NOT NULL, -- 아이디
     userPwd VARCHAR2(200) NOT NULL, -- 비밀번호
@@ -11,7 +11,7 @@ CREATE TABLE member(
     updated_date DATE DEFAULT SYSDATE, -- 회원정보 수정일시
     phone VARCHAR2(50), -- 휴대폰번호
     enabled NUMBER(1) DEFAULT 1, -- 회원탈퇴여부 (0: 탈퇴, 1:회원(기본값))
-    CONSTRAINT pk_member_userNo PRIMARY KEY(userNo)
+    CONSTRAINT pk_member_userNum PRIMARY KEY(userNum)
 );
 
 CREATE SEQUENCE member_seq -- 회원번호 시퀀스 
@@ -25,14 +25,14 @@ CREATE SEQUENCE member_seq -- 회원번호 시퀀스
 
 CREATE TABLE notice(
     num NUMBER, -- 게시글 번호(기본키)
-    userNo NUMBER NOT NULL, -- 작성자 회원번호
+    userNum NUMBER NOT NULL, -- 작성자 회원번호
     subject VARCHAR2(255) NOT NULL, -- 제목
     content VARCHAR2(4000) NOT NULL, -- 내용
     views NUMBER DEFAULT 0, -- 조회수
     created_date DATE DEFAULT SYSDATE, -- 게시글 작성일시
     updated_date DATE DEFAULT SYSDATE, -- 게시글 수정일시
     CONSTRAINT pk_notice_num PRIMARY KEY(num), 
-    CONSTRAINT fk_notice_userNo FOREIGN KEY(userNo) REFERENCES member(userNo)
+    CONSTRAINT fk_notice_userNum FOREIGN KEY(userNum) REFERENCES member(userNum)
 );
 
 CREATE SEQUENCE notice_seq -- 게시글번호 시퀀스
@@ -46,7 +46,7 @@ CREATE SEQUENCE notice_seq -- 게시글번호 시퀀스
 
 CREATE TABLE event(
     num NUMBER, -- 이벤트 게시글번호 (기본키)
-    userNo NUMBER NOT NULL, -- 작성자 회원번호
+    userNum NUMBER NOT NULL, -- 작성자 회원번호
     subject VARCHAR2(255) NOT NULL, -- 제목
     content VARCHAR2(4000) NOT NULL, -- 내용
     views NUMBER DEFAULT 0, -- 조회수
@@ -55,7 +55,7 @@ CREATE TABLE event(
     created_date DATE DEFAULT SYSDATE, -- 게시글 작성일시
     updated_date DATE DEFAULT SYSDATE, -- 게시글 수정일시
     CONSTRAINT pk_event_num PRIMARY KEY(num),
-    CONSTRAINT fk_event_userNo FOREIGN KEY(userNo) REFERENCES member(userNo)
+    CONSTRAINT fk_event_userNum FOREIGN KEY(userNum) REFERENCES member(userNum)
 );
 
 CREATE SEQUENCE event_seq -- 이벤트 게시글 일련번호
@@ -141,10 +141,12 @@ CREATE TABLE order_history(
     totalPaymentAmount NUMBER NOT NULL, --최종 결제금액
     storeNum NUMBER NOT NULL, --주문 매장번호
     statusNum NUMBER NOT NULL,
+    userNum NUMBER,
     cardNum NUMBER, -- ALTER TABLE로 제약사항 추가하기
     order_date DATE DEFAULT SYSDATE, --주문일시
     cancelNum NUMBER, -- ALTER TABLE로 제약사항 추가하기
-    CONSTRAINT pk_order_num PRIMARY KEY(orderNum)
+    CONSTRAINT pk_order_history_num PRIMARY KEY(orderNum),
+    CONSTRAINT fk_order_history_userNum FOREIGN KEY(userNum) REFERENCES member(userNum) 
 -- CONSTRAINT fk_cancel_num FOREIGN KEY(cancelNum) REFERENCES order_cancel(cancelNum)
 -- CONSTRAINT fk_cards_num FOREIGN KEY(cardNum) REFERENCES cards(cardNum)
 );
