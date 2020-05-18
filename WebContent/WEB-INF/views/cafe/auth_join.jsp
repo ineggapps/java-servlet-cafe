@@ -39,9 +39,9 @@
                     <p class="join_text">이메일은 멤버스 로그인 시 아이디로 사용됩니다.</p>
 
                     <ul class="email">
-                      <li><input type="text" class="email id" /></li>
+                      <li><input type="text" class="email id" name="email1"/></li>
                       <li>@</li>
-                      <li><input type="text" class="email domain" /></li>
+                      <li><input type="text" class="email domain" name="email2"/></li>
                       <li>
                         <select>
                           <option>직접입력</option>
@@ -152,22 +152,22 @@
                       <div class="join_item_title">
                         <h3>회원정보입력</h3>
                       </div>
-                      <div class="join_item"><strong>아이디</strong> <input type="text" /></div>
-                      <div class="join_item"><strong>이름</strong> <input type="text" /></div>
+                      <div class="join_item"><strong>아이디</strong> <input type="text" name="userId"/></div>
+                      <div class="join_item"><strong>이름</strong> <input type="text" name="userName"/></div>
                       <div class="join_item">
-                        <strong>별명</strong> <input type="text" />
+                        <strong>별명</strong> <input type="text" name="nickname"/>
                         <p class="desc">※ 욕설 등 부적절한 단어는 제한을 받습니다.</p>
                       </div>
-                      <div class="join_item"><strong>휴대폰</strong> <input type="text" /></div>
+                      <div class="join_item"><strong>휴대폰</strong> <input type="text" name="phone"/></div>
                       <div class="join_item">
-                        <strong>비밀번호</strong> <input type="password" />
+                        <strong>비밀번호</strong> <input type="password" name="userPwd"/>
                         <p class="desc">
                           ※ 안전한 비밀번호를 위해 숫자, 문자 조합하여 10~16자 이상으로
                           입력해주세요.
                         </p>
                       </div>
                       <div class="join_item">
-                        <strong>비밀번호 확인</strong> <input type="password" />
+                        <strong>비밀번호 확인</strong> <input type="password" name="userPwdConfirm"/>
                         <p class="desc">
                           비밀번호를 한 번 더 입력하세요
                         </p>

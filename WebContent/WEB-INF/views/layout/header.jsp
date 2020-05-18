@@ -8,8 +8,14 @@
 		<div id="header_container">
           <div class="header_row">
             <ul id="right_side">
+            <c:if test="${empty sessionScope.member}">
               <li><a href="<%=cp%>/auth/login.do">로그인</a></li>
               <li><a href="<%=cp%>/auth/join.do">회원가입</a></li>
+            </c:if>
+            <c:if test="${not empty sessionScope.member}">
+              <li><a href="<%=cp%>/auth/logout.do">로그아웃</a></li>
+              <li><a href="<%=cp%>/auth/mypage.do">마이페이지</a></li>
+            </c:if>
             </ul>
           </div>
           <div id="gnb_area">

@@ -17,7 +17,9 @@ public class AuthServlet extends EspressoServlet {
 	private static final String CAFE = "cafe";
 	private static final String VIEW = "/WEB-INF/views";
 	private static final String VIEWS = VIEW + "/" + CAFE;
-	private static final String SESSION_INFO = "member";
+	private static final String MAIN = "/main/index.do";
+	
+	
 	// PATH(dynamic)
 	private static String contextPath;
 	private static String apiPath;
@@ -34,6 +36,20 @@ public class AuthServlet extends EspressoServlet {
 	// JSP
 	private static final String JSP_LOGIN = "/auth_login.jsp";
 	private static final String JSP_JOIN = "/auth_join.jsp";
+
+	// COLUMN
+	private static final String PARAM_USER_NUM = "userNum";
+	private static final String PARAM_EMAIL1 = "email1";
+	private static final String PARAM_EMAIL2 = "email2";
+	private static final String PARAM_EMAIL = "email";
+	private static final String PARAM_USER_ID = "userId";
+	private static final String PARAM_USER_PWD = "userPwd";
+	private static final String PARAM_USER_NAME = "userName";
+	private static final String PARAM_NICKNAME = "nickname";
+	private static final String PARAM_CREATED_DATE = "created_date";
+	private static final String PARAM_UPDATED_DATE = "updated_date";
+	private static final String PARAM_PHONE = "phone";
+	private static final String PARAM_ENABLED = "enabled";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -70,6 +86,34 @@ public class AuthServlet extends EspressoServlet {
 	}
 
 	protected void loginSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		AuthDAO dao = new AuthDAO();
+		try {
+			String userId = req.getParameter(PARAM_USER_ID);
+			String userPwd = req.getParameter(PARAM_USER_PWD);
+			SessionAuthInfo info = null;
+			AuthDTO dto = dao.readMember(userId);
+			System.out.println(userId + ", " + userPwd);
+			System.out.println(dto);
+			if(dto==null) {
+				//로그인 정보가 존재하지 않아서 로그인 실패
+				throw new LoginException("아이디 또는 암호가 맞지 않습니다."); 
+			}
+			if(!dto.getUserId().equals(userId) || !dto.getUserPwd().equals(userPwd)) {
+				//로그인 정보가 하나라도 일치하지 않으면
+				throw new LoginException("아이디 또는 암호가 맞지 않습니다.");
+			}
+			info = new SessionAuthInfo(dto.getUserNum(), dto.getUserId(), dto.getUserName(), dto.getNickname());
+			req.getSession().setAttribute(SESSION_INFO, info);
+			resp.sendRedirect(contextPath + MAIN);
+		}catch(LoginException e) { 
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_LOGIN);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_LOGIN);
+			return;
+		}
 	}
 
 	// 회원 가입
@@ -79,7 +123,22 @@ public class AuthServlet extends EspressoServlet {
 	}
 
 	protected void joinSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		try {
+			AuthDAO dao = new AuthDAO();
+			String email1 = req.getParameter(PARAM_EMAIL1);
+			String email2 = req.getParameter(PARAM_EMAIL2);
+			String userId = req.getParameter(PARAM_USER_ID);
+			String userPwd = req.getParameter(PARAM_USER_PWD);
+			String userName = req.getParameter(PARAM_USER_NAME);
+			String nickname = req.getParameter(PARAM_NICKNAME);
+			String phone = req.getParameter(PARAM_PHONE);
+			AuthDTO dto = new AuthDTO(email1 + "@" + email2, userId, userPwd, userName, nickname, phone);
+			dao.insertMember(dto);
+			System.out.println(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(apiPath + API_LOGIN);
 	}
 
 }
