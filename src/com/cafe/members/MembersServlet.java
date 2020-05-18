@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.util.EspressoServlet;
 
 @WebServlet("/members/*")
-public class MemersServlet extends EspressoServlet {
+public class MembersServlet extends EspressoServlet {
 
 	// PATH
 	private static final String API_NAME = "/menu";
