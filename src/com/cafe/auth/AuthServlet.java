@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.util.EspressoServlet;
 
@@ -27,6 +28,7 @@ public class AuthServlet extends EspressoServlet {
 	// API
 	private static final String API_LOGIN = "/login.do";
 	private static final String API_LOGIN_OK = "/login_ok.do";
+	private static final String API_LOGOUT = "/logout.do";
 	private static final String API_JOIN = "/join.do";
 	private static final String API_JOIN_OK = "/join_ok.do";
 
@@ -75,6 +77,8 @@ public class AuthServlet extends EspressoServlet {
 			joinForm(req, resp);
 		} else if (uri.indexOf(API_JOIN_OK) != -1) {
 			joinSubmit(req, resp);
+		} else if (uri.indexOf(API_LOGOUT) != -1) {
+			logout(req, resp);
 		}
 
 	}
@@ -92,8 +96,8 @@ public class AuthServlet extends EspressoServlet {
 			String userPwd = req.getParameter(PARAM_USER_PWD);
 			SessionAuthInfo info = null;
 			AuthDTO dto = dao.readMember(userId);
-			System.out.println(userId + ", " + userPwd);
-			System.out.println(dto);
+//			System.out.println(userId + ", " + userPwd);
+//			System.out.println(dto);
 			if(dto==null) {
 				//로그인 정보가 존재하지 않아서 로그인 실패
 				throw new LoginException("아이디 또는 암호가 맞지 않습니다."); 
@@ -102,8 +106,11 @@ public class AuthServlet extends EspressoServlet {
 				//로그인 정보가 하나라도 일치하지 않으면
 				throw new LoginException("아이디 또는 암호가 맞지 않습니다.");
 			}
-			info = new SessionAuthInfo(dto.getUserNum(), dto.getUserId(), dto.getUserName(), dto.getNickname());
-			req.getSession().setAttribute(SESSION_INFO, info);
+			info = new SessionAuthInfo(dto.getUserNum(), dto.getUserId(), dto.getUserName(), dto.getNickname(), dto.isAdmin());
+			HttpSession session = req.getSession();
+			// 세션 유지시간 20분으로 변경
+			session.setMaxInactiveInterval(60 * 20);// 단위(초) 60초*20번 => 20분
+			session.setAttribute(SESSION_INFO, info);
 			resp.sendRedirect(contextPath + MAIN);
 		}catch(LoginException e) { 
 			e.printStackTrace();
@@ -115,6 +122,17 @@ public class AuthServlet extends EspressoServlet {
 			return;
 		}
 	}
+	
+	//로그아웃
+	protected void logout(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		SessionAuthInfo info = getSessionAuthInfo(req);
+		HttpSession session = req.getSession();
+		if(session !=null && info!=null) {
+			session.invalidate();
+			info = null;
+		}
+		resp.sendRedirect(contextPath + MAIN);
+	}	
 
 	// 회원 가입
 	protected void joinForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -134,7 +152,7 @@ public class AuthServlet extends EspressoServlet {
 			String phone = req.getParameter(PARAM_PHONE);
 			AuthDTO dto = new AuthDTO(email1 + "@" + email2, userId, userPwd, userName, nickname, phone);
 			dao.insertMember(dto);
-			System.out.println(dto);
+//			System.out.println(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

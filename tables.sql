@@ -17,6 +17,12 @@ CREATE TABLE member(
     CONSTRAINT uk_member_phone UNIQUE(phone)
 );
 
+CREATE TABLE member_admin(
+    userNum NUMBER,
+    CONSTRAINT pk_admin_userNum PRIMARY KEY (adminNum),
+    CONSTRAINT fk_admin_userNum FOREIGN KEY(adminNum) REFERENCES member(userNum)
+);
+
 CREATE SEQUENCE member_seq -- 회원번호 시퀀스 
     START WITH 1
     INCREMENT BY 1

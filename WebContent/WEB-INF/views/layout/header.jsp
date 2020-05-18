@@ -12,6 +12,12 @@
               <li><a href="<%=cp%>/auth/login.do">로그인</a></li>
               <li><a href="<%=cp%>/auth/join.do">회원가입</a></li>
             </c:if>
+            <c:if test="${not empty sessionScope.member and sessionScope.member.admin == false}">
+            	<li>${sessionScope.member.nickname}님</li>
+            </c:if>
+            <c:if test="${not empty sessionScope.member and sessionScope.member.admin}">
+            	<li>[관리자]</li>
+            </c:if>
             <c:if test="${not empty sessionScope.member}">
               <li><a href="<%=cp%>/auth/logout.do">로그아웃</a></li>
               <li><a href="<%=cp%>/auth/mypage.do">마이페이지</a></li>

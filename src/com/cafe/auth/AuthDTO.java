@@ -11,6 +11,7 @@ public class AuthDTO {
 	private String updatedDate;
 	private String phone;
 	private int enabled;
+	private boolean isAdmin = false;
 
 	public int getUserNum() {
 		return userNum;
@@ -91,6 +92,14 @@ public class AuthDTO {
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
 	}
+	
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
 
 	@Override
 	public String toString() {
@@ -112,7 +121,7 @@ public class AuthDTO {
 	}
 
 	public AuthDTO(int userNum, String email, String userId, String userPwd, String userName, String nickname,
-			String createdDate, String updatedDate, String phone, int enabled) {
+			String createdDate, String updatedDate, String phone, int enabled, boolean isAdmin) {
 		this.userNum = userNum;
 		this.email = email;
 		this.userId = userId;
@@ -123,6 +132,7 @@ public class AuthDTO {
 		this.updatedDate = updatedDate;
 		this.phone = phone;
 		this.enabled = enabled;
+		this.isAdmin = isAdmin;
 	}
 	
 }
