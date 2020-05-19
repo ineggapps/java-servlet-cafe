@@ -114,9 +114,9 @@ CREATE SEQUENCE menu_seq -- 메뉴 일련번호 시퀀스
 
 CREATE TABLE store(
     storeNum NUMBER, -- 매장일련번호
-    storeName VARCHAR2(200), --매장 이름
-    tel VARCHAR2(50),
-    storeAddress VARCHAR2(500), -- 매장 주소
+    storeName VARCHAR(200), --매장 이름
+    tel VARCHAR(50),
+    storeAddress VARCHAR(500), -- 매장 주소
     CONSTRAINT pk_store_num PRIMARY KEY (storeNum)
 );
 
@@ -133,7 +133,7 @@ CREATE SEQUENCE store_seq -- 매장 일련번호 시퀀스
 
 CREATE TABLE order_status(
     statusNum NUMBER, -- 1: 결제완료, 2: 제조대기, 3: 제조 중, 4: 제조 완료
-    statusName VARCHAR2(100),
+    statusName VARCHAR(100),
     CONSTRAINT pk_status_num PRIMARY KEY(statusNum)
 );
 
@@ -209,9 +209,8 @@ CREATE SEQUENCE order_detail_seq -- 주문 일련번호 시퀀스
 
 CREATE TABLE card_model(
     modelNum NUMBER,
-    modelName VARCHAR2(100),
-    text VARCHAR2(4000),
-    thumbnail VARCHAR2(255),
+    modelName VARCHAR(100),
+    thumbnail VARCHAR(255),
     CONSTRAINT pk_model_num PRIMARY KEY(modelNum)
 );
 
@@ -227,7 +226,7 @@ CREATE TABLE cards(
     cardNum NUMBER,
     userNum NUMBER NOT NULL,
     modelNum NUMBER,
-    cardIdentity VARCHAR2(16), -- 16자리 하이픈없이 숫자만
+    cardIdentity VARCHAR(16), -- 16자리 하이픈없이 숫자만
     CONSTRAINT pk_cards_num PRIMARY KEY(cardNum),
     CONSTRAINT fk_model_num FOREIGN KEY(modelNum) REFERENCES card_model(modelNum)
 );

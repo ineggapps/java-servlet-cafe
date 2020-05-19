@@ -3,21 +3,26 @@ package com.cafe.news.notice;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.util.EspressoServlet;
+import com.util.MyUploadServlet;
+import com.util.MyUtil;
 
 @WebServlet("/news/notice/*")
-public class NoticeServlet extends EspressoServlet {
-
+@MultipartConfig
+public class NoticeServlet extends MyUploadServlet {
+	private static final long serialVersionUID = 1L;
+	
 	// PATH
 	private static final String API_NAME = "/news/notice";
 	private static final String CAFE = "cafe";
 	private static final String VIEW = "/WEB-INF/views";
 	private static final String VIEWS = VIEW + "/" + CAFE;
 	private static final String SESSION_INFO = "member";
+	
 	// PATH(dynamic)
 	private static String contextPath;
 	private static String apiPath;
@@ -57,6 +62,8 @@ public class NoticeServlet extends EspressoServlet {
 	private static final String JSP_WRITE = "/news_notice_write.jsp";
 	private static final String JSP_UPDATE = JSP_WRITE;
 	private static final String JSP_VIEW = "/news_notice_view.jsp";
+	
+	
 
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -82,6 +89,16 @@ public class NoticeServlet extends EspressoServlet {
 	// 공지사항 목록
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_LIST;
+		NoticeDAO dao = new NoticeDAO();
+		MyUtil util = new MyUtil();
+		
+		String page = req.getParameter(PARAM_PAGE);
+		int current_page = 1;
+		if(page != null) {
+			current_page = Integer.parseInt(page);
+		}
+		
+		
 		forward(req, resp, path);
 	}
 
