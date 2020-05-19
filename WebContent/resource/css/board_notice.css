@@ -7,9 +7,11 @@
 .noticelist-img {
   width: 100%;
   height: 400px;
-  background-image: url("https://i.imgur.com/46ZO057.jpg");
+  background-image: url("../images/board/banner_notice.jpg");
   background-repeat: no-repeat;
   text-align: center;
+  background-size: cover;
+  background-position: 0% 90%;
 }
 
 .line1 {
@@ -72,7 +74,7 @@
 
 .list-title a {
   display: inline-block;
-  width: 800px;
+  width: 750px;
 }
 
 .page {

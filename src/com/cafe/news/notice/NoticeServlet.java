@@ -1,6 +1,10 @@
 package com.cafe.news.notice;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,16 +12,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.util.EspressoServlet;
+import com.util.MyUtil;
 
 @WebServlet("/news/notice/*")
 public class NoticeServlet extends EspressoServlet {
 	private static final long serialVersionUID = 1L;
-	// PATH
+
+  // PATH
 	private static final String API_NAME = "/news/notice";
 	private static final String CAFE = "cafe";
 	private static final String VIEW = "/WEB-INF/views";
 	private static final String VIEWS = VIEW + "/" + CAFE;
 	private static final String SESSION_INFO = "member";
+	
 	// PATH(dynamic)
 	private static String contextPath;
 	private static String apiPath;
@@ -32,7 +39,7 @@ public class NoticeServlet extends EspressoServlet {
 	private static final String API_UPDATE_OK = "/update_ok.do";
 	private static final String API_DELETE = "/delete.do";
 
-	// PARAM (ÀÌ·± ½ÄÀ¸·Î ÀÚÁÖ »ç¿ëÇÏ´Â ¹®ÀÚ¿­Àº »ó¼ö·Î ÀúÀåÇÏ¿© È°¿ë)
+	// PARAM (ì´ëŸ° ì‹ìœ¼ë¡œ ìžì£¼ ì‚¬ìš©í•˜ëŠ” ë¬¸ìžì—´ì€ ìƒìˆ˜ë¡œ ì €ìž¥í•˜ì—¬ í™œìš©)
 	private static final String PARAM_MODE = "mode";
 	private static final String PARAM_NUM = "num";
 	private static final String PARAM_PAGE = "page";
@@ -57,6 +64,7 @@ public class NoticeServlet extends EspressoServlet {
 	private static final String JSP_WRITE = "/news_notice_write.jsp";
 	private static final String JSP_UPDATE = JSP_WRITE;
 	private static final String JSP_VIEW = "/news_notice_view.jsp";
+	
 
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -79,37 +87,124 @@ public class NoticeServlet extends EspressoServlet {
 		}
 	}
 
-	// °øÁö»çÇ× ¸ñ·Ï
+	// ê³µì§€ì‚¬í•­ ëª©ë¡
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_LIST;
+		NoticeDAO dao = new NoticeDAO();
+		MyUtil util = new MyUtil();
+		
+		String page = req.getParameter(PARAM_PAGE);
+		int current_page = 1;
+		if(page != null) {
+			current_page = Integer.parseInt(page);
+		}
+		
+		String condition = req.getParameter("condition");
+		String keyword = req.getParameter("keyword");
+		
+		if(condition == null) {	
+			condition = "subject";
+			keyword = "";	
+		}
+		
+		if(req.getMethod().equalsIgnoreCase("GET")) {
+			keyword = URLDecoder.decode(keyword, "utf-8");
+		}
+		
+		int dataCount;
+		
+		if(keyword.length()==0) {
+			dataCount = dao.dataCount();
+		} else {			
+			dataCount = dao.dataCount(condition, keyword);
+		}
+		
+		int rows = 10;
+		String numPerPage = req.getParameter("rows");
+		if(numPerPage != null) {
+			rows = Integer.parseInt(numPerPage);
+		}
+		
+		int total_page = util.pageCount(rows, dataCount);
+		if(current_page > total_page) {
+			current_page = total_page;
+		}
+		
+		int start = (current_page-1)*rows+1;
+		int end = current_page*rows;
+		
+		List<NoticeDTO> list;
+		
+		if(keyword.length()==0) {
+			list = dao.listNotice(start, end);
+		} else {
+			list = dao.listNotice(start, end, condition, keyword);
+		}
+		
+		int listNum, n = 0;
+		
+		Iterator<NoticeDTO> it = list.iterator();
+		
+		while(it.hasNext()) {
+			NoticeDTO dto = it.next();
+			listNum = dataCount-(start+n-1);
+			dto.setListNum(listNum);
+			n++;
+		}
+		
+		String query = "";
+		
+		if(keyword.length() != 0) {
+			query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword,"UTF-8"); 
+		}
+		
+		String listUrl = contextPath + API_NAME + API_LIST;		// contextPath + "/news/notice/list.do";
+		String articleUrl = contextPath + API_NAME + API_VIEW + "?page=" + current_page;	// contextPath + "/news/notice/view.do?page=" + current_page;
+		
+		if(query.length()!=0) {
+			listUrl+= "?" + query;
+			articleUrl += "&"+query;
+		}
+		
+		String paging = util.paging(current_page, total_page, listUrl);
+		req.setAttribute("list", list);
+		req.setAttribute("paging", paging);
+		req.setAttribute("page", current_page);
+		req.setAttribute("dataCount", dataCount);
+		req.setAttribute("total_page", total_page);
+		req.setAttribute("articleUrl", articleUrl);
+		req.setAttribute("condition", condition);
+		req.setAttribute("keyword", keyword);
+		req.setAttribute("rows", rows);
+		
 		forward(req, resp, path);
 	}
 
-	// °øÁö»çÇ× º¸±â
+	// ê³µì§€ì‚¬í•­ ë³´ê¸°
 	protected void view(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_VIEW;
 		forward(req, resp, path);
 	}
 
-	// °øÁö»çÇ× ÀÛ¼º
+	// ê³µì§€ì‚¬í•­ ìž‘ì„±
 	protected void writeForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = VIEWS + JSP_LIST;
+		String path = VIEWS + JSP_WRITE;	
 		forward(req, resp, path);
 	}
 
 	protected void writeSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
 
-	// °øÁö»çÇ× ¼öÁ¤
+	// ê³µì§€ì‚¬í•­ ìˆ˜ì •
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = VIEWS + JSP_LIST;
+		String path = VIEWS + API_WRITE;
 		forward(req, resp, path);
 	}
 
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
 
-	// °øÁö»çÇ× Áö¿ì±â
+	// ê³µì§€ì‚¬í•­ ì§€ìš°ê¸°
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
 
