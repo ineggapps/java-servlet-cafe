@@ -91,7 +91,7 @@
               </table>
             </div>
             <div class="row">
-              <a href="./members_card_list.html" class="list_button">목록</a>
+              <a href="<%=cp %>/members/list.do" class="list_button">목록</a>
             </div>
             <!-- Content 영역 끝 -->
           </article>
