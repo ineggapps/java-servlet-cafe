@@ -118,6 +118,7 @@ CREATE TABLE store(
     storeName VARCHAR2(200), --매장 이름
     tel VARCHAR2(50),
     storeAddress VARCHAR2(500), -- 매장 주소
+    visible NUMBER(1) DEFAULT 1, -- 0(목록에서 안 보임), 1(보임)
     CONSTRAINT pk_store_num PRIMARY KEY (storeNum)
 );
 
@@ -177,7 +178,7 @@ CREATE TABLE order_cancel(
     CONSTRAINT fk_order_cancel_num FOREIGN KEY(orderNum) REFERENCES order_history(orderNum)
 );
 
-CREATE SEQUENCE order_cancel_seq -- 주문 일련번호 시퀀스
+CREATE SEQUENCE order_cancel_seq -- 주문 취소
     START WITH 1
     INCREMENT BY 1
     NOMAXVALUE
@@ -203,8 +204,6 @@ CREATE SEQUENCE order_detail_seq -- 주문 일련번호 시퀀스
     NOCYCLE
     NOCACHE;
 
-
-
 -- 카드 보유내역
 -- 카드 보유현황
 
@@ -216,7 +215,7 @@ CREATE TABLE card_model(
     CONSTRAINT pk_model_num PRIMARY KEY(modelNum)
 );
 
-CREATE SEQUENCE card_model_seq -- 주문 일련번호 시퀀스
+CREATE SEQUENCE card_model_seq -- 카드 모델(종류) 시퀀스
     START WITH 1
     INCREMENT BY 1
     NOMAXVALUE
@@ -230,20 +229,36 @@ CREATE TABLE cards(
     userNum NUMBER NOT NULL,
     modelNum NUMBER NOT NULL,
     cardIdentity VARCHAR2(16), -- 16자리 하이픈없이 숫자만
-    balance NUMBER,
+    balance NUMBER DEFAULT 0,
     CONSTRAINT pk_cards_num PRIMARY KEY(cardNum),
     CONSTRAINT uk_cards_identity UNIQUE(cardIdentity),
     CONSTRAINT fk_model_num FOREIGN KEY(modelNum) REFERENCES card_model(modelNum)
 );
 
-
-
-CREATE SEQUENCE cards_seq -- 주문 일련번호 시퀀스
+CREATE SEQUENCE cards_seq -- 카드 일련번호 시퀀스
     START WITH 1
     INCREMENT BY 1
     NOMAXVALUE
     NOCYCLE
     NOCACHE;
+
+CREATE TABLE card_charge(--카드 충전내역
+    chargeNum NUMBER,
+    cardNum NUMBER NOT NULL,
+    chargeAmount NUMBER NOT NULL,
+    charge_date DATE DEFAULT SYSDATE,
+    CONSTRAINT pk_card_charge_num PRIMARY KEY(chargeNum),
+    CONSTRAINT fk_card_charge_cardNum FOREIGN KEY(cardNum) REFERENCES cards(cardNum)
+);
+
+CREATE SEQUENCE card_charge_seq -- 카드충전내역 시퀀스
+    START WITH 1
+    INCREMENT BY 1
+    NOMAXVALUE
+    NOCYCLE
+    NOCACHE;
+
+
 
 
 ---제약사항 추가
@@ -296,3 +311,56 @@ INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_s
 INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '나는야 백조카드', '핑크핑크한 백조를 보셨나요?', '/resource/images/members/card/card07.png');
 INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '네추럴 카드', '로이더 아니고 네추럴 카드', '/resource/images/members/card/card08.png');
 COMMIT;
+
+-- 메뉴 카테고리 샘플
+
+INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '커피');
+INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '에이드');
+INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '베이커리');
+INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '기타');
+COMMIT;
+
+-- 지점
+
+INSERT INTO store(storeNum, storeName, TEL, storeAddress, visible) VALUES(store_seq.NEXTVAL, '온라인', '1588-0000', '온라인 구매', 0);
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '온라인', '1588-0000', '서울특별시 마포구 서교동 10-1');
+COMMIT;
+
+
+--카드 충전 포인트 샘플 데이터
+INSERT INTO card_charge(chargeNum, cardNum, chargeAmount) VALUES(card_charge_seq.NEXTVAL, 1, 10000);
+COMMIT;
+----카드 충전 포인트 트리거
+
+--포인트 충전 내역 등록/수정/삭제 트리거
+
+--포인트 충전 시
+CREATE OR REPLACE TRIGGER ins_card_charge_point
+AFTER INSERT ON card_charge
+FOR EACH ROW
+
+BEGIN
+     UPDATE cards SET balance = balance + :NEW.chargeAmount
+           WHERE cardNum = :NEW.cardNum;
+END;
+/
+
+-- 포인트 충전내역 수정 시 (기능 중 포인트 충전내역을 수정할 일은 없게 할 것이지만 혹시 몰라서 삽입)
+CREATE OR REPLACE TRIGGER update_card_charge_point
+AFTER UPDATE ON card_charge
+FOR EACH ROW
+BEGIN
+     UPDATE cards SET balance = balance - :OLD.chargeAmount + :NEW.chargeAmount
+            WHERE cardNum = :NEW.cardNum;
+END;
+/
+
+-- 포인트 충전내역 삭제 시
+CREATE OR REPLACE TRIGGER delete_card_charge_point
+AFTER DELETE ON card_charge
+FOR EACH ROW
+BEGIN
+     UPDATE cards SET balance = balance - :OLD.chargeAmount;
+           WHERE cardNum = :OLD.cardNum;
+END;
+/
