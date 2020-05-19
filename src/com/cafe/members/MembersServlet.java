@@ -68,6 +68,11 @@ public class MembersServlet extends EspressoServlet {
 		apiPath = contextPath + API_NAME;
 		String uri = req.getRequestURI();
 		Map<String, Object> attributes = new HashMap<>();
+		SessionAuthInfo info = getSessionAuthInfo(req);
+		if (info == null) {
+			goToLogin(resp);
+			return;
+		}
 
 		if (uri.indexOf(API_INDEX) != -1 || uri.indexOf(API_LIST) != -1) {
 			list(req, resp, attributes);
@@ -89,10 +94,6 @@ public class MembersServlet extends EspressoServlet {
 		String path = VIEWS + JSP_LIST;
 		CardDAO dao = new CardDAO();
 		SessionAuthInfo info = getSessionAuthInfo(req);
-		if (info == null) {
-			goToLogin(resp);
-			return;
-		}
 		List<CardDTO> list = dao.listCard(info.getUserNum());
 		attributes.put(ATTRIBUTE_LIST, list);
 		forward(req, resp, path, attributes);
@@ -105,10 +106,6 @@ public class MembersServlet extends EspressoServlet {
 		CardDTO dto;
 		SessionAuthInfo info = getSessionAuthInfo(req);
 		try {
-			if (info == null) {
-				goToLogin(resp);
-				return;
-			}
 			int cardNum = Integer.parseInt(req.getParameter(PARAM_CARD_NUM));
 			dto = dao.readCard(cardNum, info.getUserNum());
 			if (dto == null) {
@@ -129,11 +126,6 @@ public class MembersServlet extends EspressoServlet {
 		try {
 			int step = 1;
 			// 무조건 로그인 인증하기
-			SessionAuthInfo info = getSessionAuthInfo(req);
-			if (info == null) {
-				goToLogin(resp);
-				return;
-			}
 			if (paramStep != null) {
 				step = Integer.parseInt(paramStep);
 			}
@@ -218,10 +210,6 @@ public class MembersServlet extends EspressoServlet {
 	protected void chargeForm(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		SessionAuthInfo info = getSessionAuthInfo(req);
-		if (info == null) {
-			goToLogin(resp);
-			return;
-		}
 		String path = VIEWS + JSP_CHARGE;
 		attributes.put(PARAM_MODE, PARAM_MODE_CHARGE);
 		CardDAO dao = new CardDAO();
@@ -243,6 +231,7 @@ public class MembersServlet extends EspressoServlet {
 		// 충전 절차 진행
 		try {
 			resp.sendRedirect(apiPath + API_LIST);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
