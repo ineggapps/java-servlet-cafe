@@ -142,6 +142,25 @@ public class CardDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception(e);
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
 		}
 		
 		return dto;
