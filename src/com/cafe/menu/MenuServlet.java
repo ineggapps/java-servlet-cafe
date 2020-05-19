@@ -37,7 +37,7 @@ public class MenuServlet extends EspressoServlet {
 	private static final String PARAM_BAKERY = "bakery";
 
 	// JSP
-	private static final String JSP_MENU = "/menu.jsp";
+	private static final String JSP_MENU = "/menu/menu.jsp";
 
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
