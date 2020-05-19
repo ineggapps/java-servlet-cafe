@@ -53,7 +53,7 @@
                         ><a href="#" class="modify">수정</a>
                       </p>
                       <p class="card_id">${dto.cardIdentity}</p>
-                      <p class="card_remain">잔액 <strong>${dto.balance}</strong>원</p>
+                      <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${dto.balance}"/></strong>원</p>
                     </div>
                   </li>
                 </c:forEach>

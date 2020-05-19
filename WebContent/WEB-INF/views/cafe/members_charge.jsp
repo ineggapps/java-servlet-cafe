@@ -62,15 +62,20 @@
                   <ul>
                     <li>
                       <figure>
+                      	<c:if test="${mode=='register'}">
                         <img src="<%=cp%>${modelDTO.thumbnail}" alt="card" />
+                      	</c:if>
+						<c:if test="${mode=='charge' }">
+                        <img src="<%=cp%>${cardDTO.thumbnail}" alt="card" />
+						</c:if>
                       </figure>
-                      <div>
+                      <div class="detail">
                         <c:if test="${mode=='charge'}">
                         <p class="card_title detail">
-                          <strong>카드이름</strong><a href="#" class="modify">수정</a>
+                          <strong>${cardDTO.cardName}</strong><a href="#" class="modify">수정</a>
                         </p>
                         <p class="card_id">${cardDTO.cardIdentity}</p>
-                        <p class="card_remain">잔액<strong>${cardDTO.balance}</strong>원</p>
+                        <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${cardDTO.balance}"/></strong>원</p>
                       	</c:if>
                       </div>
                     </li>

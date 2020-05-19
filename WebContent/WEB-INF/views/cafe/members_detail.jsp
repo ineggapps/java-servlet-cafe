@@ -32,12 +32,7 @@
                   경험해보세요.</span
                 >
               </div>
-              <ul class="lnb">
-                <li class="on"><a href="./members_card_list.html">카드 목록</a></li>
-                <li><a href="./members_card_register_step1.html">카드 등록</a></li>
-                <li><a href="./members_card_detail.html">카드 충전</a></li>
-                <li><a href="#">쿠앤크 오더</a></li>
-              </ul>
+              <jsp:include page="/WEB-INF/views/layout/members_lnb.jsp"/>
             </div>
             <div class="row">
               <div class="row_title">
@@ -54,7 +49,7 @@
                         <strong>${cardDTO.cardName}</strong><a href="#" class="modify">수정</a>
                       </p>
                       <p class="card_id">(123456)</p>
-                      <p class="card_remain">잔액 <strong>${cardDTO.balance}</strong>원</p>
+                      <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${cardDTO.balance}"/></strong>원</p>
                       <ul class="card_control">
                         <li>
                           <a href="<%=cp %>/members/charge.do?cardNum=${cardDTO.cardNum}" class="card_button">충전하기</a>

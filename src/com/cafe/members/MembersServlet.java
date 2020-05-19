@@ -89,7 +89,7 @@ public class MembersServlet extends EspressoServlet {
 		String path = VIEWS + JSP_LIST;
 		CardDAO dao = new CardDAO();
 		SessionAuthInfo info = getSessionAuthInfo(req);
-		if(info==null) {
+		if (info == null) {
 			goToLogin(resp);
 			return;
 		}
@@ -105,14 +105,14 @@ public class MembersServlet extends EspressoServlet {
 		CardDTO dto;
 		SessionAuthInfo info = getSessionAuthInfo(req);
 		try {
-			if(info==null) {
+			if (info == null) {
 				goToLogin(resp);
 				return;
 			}
 			int cardNum = Integer.parseInt(req.getParameter(PARAM_CARD_NUM));
 			dto = dao.readCard(cardNum, info.getUserNum());
-			if(dto==null) {
-				throw new Exception("카드가 존재하지 않습니다. cardNum:" + cardNum );
+			if (dto == null) {
+				throw new Exception("카드가 존재하지 않습니다. cardNum:" + cardNum);
 			}
 			attributes.put(ATTRIBUTE_CARD_DTO, dto);
 			forward(req, resp, path, attributes);
@@ -128,7 +128,7 @@ public class MembersServlet extends EspressoServlet {
 		String paramStep = req.getParameter(PARAM_REGISTER_STEP);
 		try {
 			int step = 1;
-			//무조건 로그인 인증하기
+			// 무조건 로그인 인증하기
 			SessionAuthInfo info = getSessionAuthInfo(req);
 			if (info == null) {
 				goToLogin(resp);
@@ -196,18 +196,18 @@ public class MembersServlet extends EspressoServlet {
 			SessionAuthInfo info = getSessionAuthInfo(req);
 			CardDAO cardDAO = new CardDAO();
 			CardChargeDAO chargeDAO = new CardChargeDAO();
-			//카드 정보 파라미터에서 받아오기
+			// 카드 정보 파라미터에서 받아오기
 			String cardName = req.getParameter(PARAM_CARD_NAME);
 			int price = Integer.parseInt(req.getParameter(PARAM_PRICE));
 			int modelNum = Integer.parseInt(req.getParameter(PARAM_MODEL_NUM));
-			//카드 신규 등록
+			// 카드 신규 등록
 			CardDTO cardDTO = new CardDTO(cardName, info.getUserNum(), modelNum);
 			int cardNum = cardDAO.insertCard(cardDTO);
 			cardDTO = cardDAO.readCard(cardNum, info.getUserNum());
-			//신규 등록한 카드에 충전하기
+			// 신규 등록한 카드에 충전하기
 			CardChargeDTO chargeDTO = new CardChargeDTO(cardNum, price);
 			chargeDAO.insertCardCharge(chargeDTO);
-			//충전이 완료되면 목록으로 돌아가기
+			// 충전이 완료되면 목록으로 돌아가기
 			resp.sendRedirect(apiPath + API_LIST);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -217,9 +217,26 @@ public class MembersServlet extends EspressoServlet {
 
 	protected void chargeForm(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
+		SessionAuthInfo info = getSessionAuthInfo(req);
+		if (info == null) {
+			goToLogin(resp);
+			return;
+		}
 		String path = VIEWS + JSP_CHARGE;
 		attributes.put(PARAM_MODE, PARAM_MODE_CHARGE);
-		forward(req, resp, path, attributes);
+		CardDAO dao = new CardDAO();
+		try {
+			int cardNum = Integer.parseInt(req.getParameter(PARAM_CARD_NUM));
+			CardDTO dto = dao.readCard(cardNum, info.getUserNum());
+			if(dto==null) {
+				throw new Exception("카드가 존재하지 않습니다.");
+			}
+			attributes.put(ATTRIBUTE_CARD_DTO, dto);
+			forward(req, resp, path, attributes);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath+API_DETAIL);
+		}
 	}
 
 	protected void chargeSubmit(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes) {
