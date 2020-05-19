@@ -1,79 +1,192 @@
 package com.cafe.menu;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import com.util.EspressoServlet;
+import com.cafe.auth.SessionAuthInfo;
+import com.util.MyUploadServlet;
+import com.util.MyUtil;
 
 @WebServlet("/menu/*")
-public class MenuServlet extends EspressoServlet {
-
-	// PATH
-	private static final String API_NAME = "/menu";
-	private static final String CAFE = "cafe";
-	private static final String VIEW = "/WEB-INF/views";
-	private static final String VIEWS = VIEW + "/" + CAFE;
-	private static final String SESSION_INFO = "member";
-	// PATH(dynamic)
-	private static String contextPath;
-	private static String apiPath;
-
-	// API
-	private static final String API_INDEX = "/index.do";
-	private static final String API_COFFEE = "/coffee.do";
-	private static final String API_ADE = "/ade.do";
-	private static final String API_BAKERY = "/bakery.do";
-
-	// PARAM
-	private static final String PARAM_MENU = "menu";
-	private static final String PARAM_COFFEE = "coffee";
-	private static final String PARAM_ADE = "ade";
-	private static final String PARAM_BAKERY = "bakery";
-
-	// JSP
-	private static final String JSP_MENU = "/menu.jsp";
-
+@MultipartConfig(						
+		maxFileSize = 1024*1024*5,		
+		maxRequestSize = 1024*1024*5*5	
+)
+public class MenuServlet extends MyUploadServlet {
+	private static final long serialVersionUID = 1L;
+	
+	
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
-		contextPath = req.getContextPath();
-		apiPath = contextPath + API_NAME;
-		String uri = req.getRequestURI();
-
-		if (uri.indexOf(API_COFFEE) != -1 || uri.indexOf(API_INDEX) != -1) {
-			beverage(req, resp);
-		} else if (uri.indexOf(API_ADE) != -1) {
+		req.setCharacterEncoding("utf-8");
+		String uri=req.getRequestURI();
+		// 이미지 저장 경로
+		if (uri.indexOf("/coffee.do") != -1 || uri.indexOf("/index.do") != -1) {
+			coffee(req, resp);
+		} else if (uri.indexOf("/ade.do") != -1) {
 			ade(req, resp);
-		} else if (uri.indexOf(API_BAKERY) != -1) {
+		} else if (uri.indexOf("/bakery.do") != -1) {
 			bakery(req, resp);
+		} else if (uri.indexOf("/createdMenu.do") != -1) {
+			createdMenu(req, resp);
 		}
 
 	}
+	
+	protected SessionAuthInfo getSessionAuthInfo(HttpServletRequest req) {
+		if(req==null) {
+			return null;
+		}
+		HttpSession session = req.getSession();
+		SessionAuthInfo info = (SessionAuthInfo) session.getAttribute("member");
+		return info;
+	}
 
-	protected void beverage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = VIEWS + JSP_MENU;
+	protected void coffee(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String path = "/WEB-INF/views/cafe/menu/coffee.jsp";
+		String cp = req.getContextPath();
+		MenuDAO dao = new MenuDAO();
+		MyUtil util = new MyUtil();
+		
+		String page = req.getParameter("page");
+		int current_page=1;
+		if(page!=null) {
+			current_page = Integer.parseInt(page);
+		}
+		
+		int dataCount  = dao.dataCount();
+		
+		int rows = 6;
+		int total_page = util.pageCount(rows, dataCount);
+		if(current_page>total_page) {
+			current_page = total_page;
+		}
+		
+		int offset = (current_page-1)*rows;
+		
+		int categoryNum = 1;
+		List<MenuDTO> list = dao.listMenu(offset, rows, categoryNum);
+		
+		String listUrl = cp+"/menu/coffee.do";
+		String createdUrl = cp + "/menu/create.do?page="+current_page;
+		String paging = util.paging(current_page, total_page, listUrl);
+		
+		req.setAttribute("list", list);
+		req.setAttribute("dataCount", dataCount);
+		req.setAttribute("createdUrl", createdUrl);
+		req.setAttribute("page", current_page);
+		req.setAttribute("total_page", total_page);
+		req.setAttribute("paging", paging);
+		
+		
 		// 포워딩
-		req.setAttribute(PARAM_MENU, PARAM_COFFEE);
 		forward(req, resp, path);
 	}
 
 	protected void ade(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = VIEWS + JSP_MENU;
+		String path = "/WEB-INF/views/cafe/menu/ade.jsp";
+		String cp = req.getContextPath();
+		MenuDAO dao = new MenuDAO();
+		MyUtil util = new MyUtil();
+		
+		String page = req.getParameter("page");
+		int current_page=1;
+		if(page!=null) {
+			current_page = Integer.parseInt(page);
+		}
+		
+		int dataCount  = dao.dataCount();
+		
+		int rows = 6;
+		int total_page = util.pageCount(rows, dataCount);
+		if(current_page>total_page) {
+			current_page = total_page;
+		}
+		
+		int offset = (current_page-1)*rows;
+		
+		int categoryNum = 2;
+		List<MenuDTO> list = dao.listMenu(offset, rows, categoryNum);
+		
+		String listUrl = cp+"/menu/ade.do";
+		String createdUrl = cp + "/menu/create.do?page="+current_page;
+		String paging = util.paging(current_page, total_page, listUrl);
+		
+		req.setAttribute("list", list);
+		req.setAttribute("dataCount", dataCount);
+		req.setAttribute("createdUrl", createdUrl);
+		req.setAttribute("page", current_page);
+		req.setAttribute("total_page", total_page);
+		req.setAttribute("paging", paging);
 		// 포워딩
-		req.setAttribute(PARAM_MENU, PARAM_ADE);
 		forward(req, resp, path);
 	}
 
 	protected void bakery(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = VIEWS + JSP_MENU;
+		String path = "/WEB-INF/views/cafe/menu/bakery.jsp";
+		String cp = req.getContextPath();
+		MenuDAO dao = new MenuDAO();
+		MyUtil util = new MyUtil();
+		
+		String page = req.getParameter("page");
+		int current_page=1;
+		if(page!=null) {
+			current_page = Integer.parseInt(page);
+		}
+		
+		int dataCount  = dao.dataCount();
+		
+		int rows = 6;
+		int total_page = util.pageCount(rows, dataCount);
+		if(current_page>total_page) {
+			current_page = total_page;
+		}
+		
+		int offset = (current_page-1)*rows;
+		
+		int categoryNum = 3;
+		List<MenuDTO> list = dao.listMenu(offset, rows, categoryNum);
+		
+		String listUrl = cp+"/menu/bakery.do";
+		String createdUrl = cp + "/menu/create.do?page="+current_page;
+		String paging = util.paging(current_page, total_page, listUrl);
+		
+		req.setAttribute("list", list);
+		req.setAttribute("dataCount", dataCount);
+		req.setAttribute("createdUrl", createdUrl);
+		req.setAttribute("page", current_page);
+		req.setAttribute("total_page", total_page);
+		req.setAttribute("paging", paging);
 		// 포워딩
-		req.setAttribute(PARAM_MENU, PARAM_BAKERY);
+		forward(req, resp, path);
+	}
+	
+	protected void createdMenu(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String path = "/WEB-INF/views/cafe/menu/created.jsp";
+		String cp = req.getContextPath();
+		
+		SessionAuthInfo info = getSessionAuthInfo(req);
+		
+		if(info == null) { 
+			resp.sendRedirect(cp+"/cafe/login.do");
+			return;
+		}
+		
+		if(! info.isAdmin()) {
+			
+		}
+
+		
+		
+		
+		// 포워딩
 		forward(req, resp, path);
 	}
 

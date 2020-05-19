@@ -135,7 +135,7 @@ CREATE SEQUENCE store_seq -- 매장 일련번호 시퀀스
 
 CREATE TABLE order_status(
     statusNum NUMBER, -- 1: 결제완료, 2: 제조대기, 3: 제조 중, 4: 제조 완료
-    statusName VARCHAR2(100),
+    statusName VARCHAR(100),
     CONSTRAINT pk_status_num PRIMARY KEY(statusNum)
 );
 
