@@ -58,9 +58,9 @@ h3 {
   margin-left: 20px;
 }
 
-.card_container > ul > li > div.detail{
-  width:300px;
-  margin-left:20px;
+.card_container > ul > li > div.detail {
+  width: 300px;
+  margin-left: 20px;
 }
 
 .card_container > ul > li > div p {
@@ -240,15 +240,61 @@ h3 {
 }
 
 .text_input {
-    width: 300px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 3px;
+  width: 300px;
+  height: 30px;
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
 }
 
-.select_card{
-	padding: 10px;
-    min-width: 300px;
+.select_card {
+  padding: 10px;
+  min-width: 300px;
 }
 
+/*쿠앤크 오더*/
+
+.tab {
+  width: 100%;
+  display: table;
+  max-width: 1180px;
+  overflow: hidden;
+  border-bottom: 2px solid #002f6c;
+  border-left: 1px solid #d9d9d9;
+  border-top: 1px solid #d9d9d9;
+  margin-top: 20px;
+}
+
+.tab:after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+.tab li {
+  text-align: center;
+  width: 49.83%;
+  line-height: 49px;
+  user-select: none;
+  display: inline-block;
+  border-right: 1px solid #d9d9d9;
+  border-left: 1px solid #d9d9d9;
+}
+
+.tab li a {
+  color: #474747;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tab li.on a,
+.tab li:hover a {
+  color: #d7d7d7;
+}
+
+.tab li.on,
+.tab li:hover {
+  background-color: #002f6c;
+  border: 1px solid #002f6c;
+}

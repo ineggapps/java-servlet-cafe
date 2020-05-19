@@ -38,80 +38,15 @@
                 <div class="row_title">
                   <h3>쿠앤크 오더</h3>
                 </div>
-                <div class="card_container card_container_full">
-                  <ul>
-                    <li>
-                      <figure>
-                        <img src="<%=cp%>/resource/images/members/card/card04.png" alt="card" />
-                      </figure>
-                      <div>
-                        <p class="card_title detail">
-                          <strong>카드이름</strong><a href="#" class="modify">수정</a>
-                        </p>
-                        <p class="card_id">(123456)</p>
-                        <p class="card_remain">잔액 <strong>999,999,999</strong>원</p>
-                      </div>
-                    </li>
+              <div class="row">
+                  <ul class="tab">
+                    <li class="on"><a href="#">음식 고르기</a></li>
+                    <li><a href="#">주문 및 결제</a></li>
                   </ul>
                 </div>
               </div>
               <div class="row">
-                <table id="card_charge">
-                  <thead>
-                    <tr>
-                      <td>항목</td>
-                      <td>입력</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="col_charge_category">충전 금액 선택</td>
-                      <td class="col_charge_data">
-                        <p class="desc">
-                          충전 후 총 카드잔액: <strong class="desc_blue">999,999</strong>원
-                        </p>
-                        <ul class="charge_option">
-                          <li>
-                            <label
-                              ><input type="radio" value="100000" name="price" /><span
-                                >10만원</span
-                              ></label
-                            >
-                          </li>
-                          <li>
-                            <label
-                              ><input type="radio" value="50000" name="price" /><span
-                                >5만원</span
-                              ></label
-                            >
-                          </li>
-                          <li>
-                            <label
-                              ><input type="radio" value="30000" name="price" /><span
-                                >3만원</span
-                              ></label
-                            >
-                          </li>
-                          <li>
-                            <label
-                              ><input type="radio" value="10000" name="price" /><span
-                                >1만원</span
-                              ></label
-                            >
-                          </li>
-                        </ul>
-                        <p class="desc_red desc">
-                          ※쿠앤크 커피 온라인 충전은 1만 원 단위로 최대 55만원까지 가능하며, 충전 후
-                          합계 잔액이 55만 원을 초과할 수 없습니다.
-                        </p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="col_charge_category">결제 시점</td>
-                      <td class="col_charge_data"><strong class="desc_blue">즉시</strong> 결제</td>
-                    </tr>
-                  </tbody>
-                </table>
+                dddd
               </div>
             </form>
             <div class="row buttons">
