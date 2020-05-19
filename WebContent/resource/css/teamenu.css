@@ -11,7 +11,8 @@
 	/* border: 2px solid white; */
 }
 .backgroundcoffee {
-	background: url("https://i.imgur.com/tH3uRjt.jpg") no-repeat;
+	background: url("../images/menu/beverage/coffee.jpg") center 85%;
+	background-size: cover;
 }
 .menufont {
 	color: white;
@@ -84,11 +85,17 @@
 	text
 }
 
-.picture:after{
+.menus:after,
+.picture:after,
+.menu_controller:after{
 clear: both;
   content: "";
   display: block;
   visibility: hidden;
+}
+
+.menu_controller{
+	float:right;
 }
 
 .detail{	

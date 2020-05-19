@@ -13,7 +13,36 @@
     <title>COFFEE</title>
 	<link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
-    <link rel="stylesheet" href="<%=cp%>/resource/css/members.css" />  </head>
+    <link rel="stylesheet" href="<%=cp%>/resource/css/members.css" />  
+	<script>
+		const balance = ${cardDTO.balance};
+		function senario(chk){
+			const price = chk.value;
+			const after = Number(balance) + Number(price);
+			if(after>550000){
+				alert("카드 충전금액은 550,000원을 넘길 수 없습니다.");
+				chk.checked = false;
+				return;
+			}
+			document.getElementById('after_balance').innerText =	new Intl.NumberFormat().format(after)
+			
+		}
+		
+		function submit(){
+			const f = document.chargeForm;
+			<c:if test="${mode=='register'}">
+			f.action = "<%=cp%>/members/register.do";
+			</c:if>
+			<c:if test="${mode=='charge'}">
+			f.action = "<%=cp%>/members/charge_ok.do";
+			</c:if>
+			<c:if test="${mode=='close'}">
+			f.action = "<%=cp%>/members/close_ok.do";
+			</c:if>
+			f.submit();
+		}
+	</script>    
+</head>
   <body>
     <div id="wrap">
       <header id="header">
@@ -33,23 +62,35 @@
               </div>
 			  <jsp:include page="/WEB-INF/views/layout/members_lnb.jsp"/>
             </div>
-            <form>
+            <form name="chargeForm" method="post">
               <div class="row">
                 <div class="row_title">
-                  <h3>카드 등록/충전하기</h3>
+                	<c:if test="${mode!='close'}">
+                    <h3>카드 ${mode=="register"?"등록":"충전"}하기</h3>
+                	</c:if>
+					<c:if test="${mode=='close'}">
+                    <h3>카드 해지하기</h3>
+					</c:if>                    
                 </div>
                 <div class="card_container card_container_full">
                   <ul>
                     <li>
                       <figure>
-                        <img src="<%=cp%>/resource/images/members/card/card04.png" alt="card" />
+                      	<c:if test="${mode=='register'}">
+                        <img src="<%=cp%>${modelDTO.thumbnail}" alt="card" />
+                      	</c:if>
+						<c:if test="${mode!='register' }">
+                        <img src="<%=cp%>${cardDTO.thumbnail}" alt="card" />
+						</c:if>
                       </figure>
-                      <div>
+                      <div class="detail">
+                        <c:if test="${mode!='register'}">
                         <p class="card_title detail">
-                          <strong>카드이름</strong><a href="#" class="modify">수정</a>
+                          <strong>${cardDTO.cardName}</strong><!-- a href="#" class="modify">수정</a-->
                         </p>
-                        <p class="card_id">(123456)</p>
-                        <p class="card_remain">잔액 <strong>999,999,999</strong>원</p>
+                        <p class="card_id">${cardDTO.cardIdentity}</p>
+                        <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${cardDTO.balance}"/></strong>원</p>
+                      	</c:if>
                       </div>
                     </li>
                   </ul>
@@ -64,37 +105,56 @@
                     </tr>
                   </thead>
                   <tbody>
+                  	<c:if test="${mode=='close'}">
+                  	<tr>
+                  		<td class="col_charge_category">잔액을 이체할 카드</td>
+                  		<td class="col_charge_data">
+							<select name="targetCardNum" class="select_card">
+								<c:forEach var="dto" items="${list}">
+								<option value="${dto.cardNum}">${dto.cardName}</option>
+								</c:forEach>
+							</select>
+						</td>
+                  	</tr>
+                  	</c:if>
+                  	<c:if test="${mode=='register'}">
+                  	<tr>
+                  		<td class="col_charge_category">카드 이름</td>
+                  		<td class="col_charge_data"><input class="text_input" type="text" placeholder="카드 이름" name="cardName" /></td>
+                  	</tr>
+                  	</c:if>
+                 	<c:if test="${mode!='close'}">
                     <tr>
                       <td class="col_charge_category">충전 금액 선택</td>
                       <td class="col_charge_data">
                         <p class="desc">
-                          충전 후 총 카드잔액: <strong class="desc_blue">999,999</strong>원
+                          충전 후 총 카드잔액: <strong class="desc_blue" id="after_balance">${cardDTO.balance}</strong>원
                         </p>
                         <ul class="charge_option">
                           <li>
                             <label
-                              ><input type="radio" value="100000" name="price" /><span
+                              ><input type="radio" value="100000" name="price" onclick="senario(this)"/><span
                                 >10만원</span
                               ></label
                             >
                           </li>
                           <li>
                             <label
-                              ><input type="radio" value="50000" name="price" /><span
+                              ><input type="radio" value="50000" name="price"  onclick="senario(this)" /><span
                                 >5만원</span
                               ></label
                             >
                           </li>
                           <li>
                             <label
-                              ><input type="radio" value="30000" name="price" /><span
+                              ><input type="radio" value="30000" name="price" onclick="senario(this)" /><span
                                 >3만원</span
                               ></label
                             >
                           </li>
                           <li>
                             <label
-                              ><input type="radio" value="10000" name="price" /><span
+                              ><input type="radio" value="10000" name="price" onclick="senario(this)" /><span
                                 >1만원</span
                               ></label
                             >
@@ -110,14 +170,28 @@
                       <td class="col_charge_category">결제 시점</td>
                       <td class="col_charge_data"><strong class="desc_blue">즉시</strong> 결제</td>
                     </tr>
+                    </c:if>
                   </tbody>
                 </table>
               </div>
-            </form>
             <div class="row buttons">
-              <a href="./members_card_list.html" class="list_button">목록</a>
-              <a href="#" class="list_button submit" onclick="submit()">충전하기</a>
+            <c:if test="${mode=='register'}">
+            	<input type="hidden" name="register_step" value="3" />
+            	<input type="hidden" name="modelNum" value ="${modelDTO.modelNum}"/>
+              <a href="<%=cp %>/members/register.do" class="list_button">목록</a>
+            </c:if>
+            <c:if test="${mode!='register'}">
+            	<input type="hidden" name="cardNum" value="${cardDTO.cardNum}" />
+              <a href="<%=cp %>/members/list.do" class="list_button">목록</a>
+            </c:if>
+            <c:if test="${mode!='close'}">
+              <a href="#" class="list_button submit" onclick="submit()">${mode=="register"?"등록":"충전"}하기</a>
+             </c:if>
+            <c:if test="${mode=='close'}">
+              <a href="#" class="list_button submit" onclick="submit()">해지하기</a>
+             </c:if>
             </div>
+            </form>
             <!-- Content 영역 끝 -->
           </article>
         </div>
