@@ -17,8 +17,8 @@ import com.util.MyUtil;
 @WebServlet("/news/notice/*")
 public class NoticeServlet extends EspressoServlet {
 	private static final long serialVersionUID = 1L;
-
-  // PATH
+	
+	// PATH
 	private static final String API_NAME = "/news/notice";
 	private static final String CAFE = "cafe";
 	private static final String VIEW = "/WEB-INF/views";
@@ -39,7 +39,7 @@ public class NoticeServlet extends EspressoServlet {
 	private static final String API_UPDATE_OK = "/update_ok.do";
 	private static final String API_DELETE = "/delete.do";
 
-	// PARAM (ì´ëŸ° ì‹ìœ¼ë¡œ ìì£¼ ì‚¬ìš©í•˜ëŠ” ë¬¸ìì—´ì€ ìƒìˆ˜ë¡œ ì €ì¥í•˜ì—¬ í™œìš©)
+	// PARAM (ÀÌ·± ½ÄÀ¸·Î ÀÚÁÖ »ç¿ëÇÏ´Â ¹®ÀÚ¿­Àº »ó¼ö·Î ÀúÀåÇÏ¿© È°¿ë)
 	private static final String PARAM_MODE = "mode";
 	private static final String PARAM_NUM = "num";
 	private static final String PARAM_PAGE = "page";
@@ -87,7 +87,7 @@ public class NoticeServlet extends EspressoServlet {
 		}
 	}
 
-	// ê³µì§€ì‚¬í•­ ëª©ë¡
+	// °øÁö»çÇ× ¸ñ·Ï
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_LIST;
 		NoticeDAO dao = new NoticeDAO();
@@ -180,13 +180,13 @@ public class NoticeServlet extends EspressoServlet {
 		forward(req, resp, path);
 	}
 
-	// ê³µì§€ì‚¬í•­ ë³´ê¸°
+	// °øÁö»çÇ× º¸±â
 	protected void view(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_VIEW;
 		forward(req, resp, path);
 	}
 
-	// ê³µì§€ì‚¬í•­ ì‘ì„±
+	// °øÁö»çÇ× ÀÛ¼º
 	protected void writeForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_WRITE;	
 		forward(req, resp, path);
@@ -195,7 +195,7 @@ public class NoticeServlet extends EspressoServlet {
 	protected void writeSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
 
-	// ê³µì§€ì‚¬í•­ ìˆ˜ì •
+	// °øÁö»çÇ× ¼öÁ¤
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + API_WRITE;
 		forward(req, resp, path);
@@ -204,7 +204,7 @@ public class NoticeServlet extends EspressoServlet {
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
 
-	// ê³µì§€ì‚¬í•­ ì§€ìš°ê¸°
+	// °øÁö»çÇ× Áö¿ì±â
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
 

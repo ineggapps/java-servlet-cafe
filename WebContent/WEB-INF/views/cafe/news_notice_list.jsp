@@ -63,7 +63,7 @@
 				    <form name="listNumForm" action="<%=cp%>/news/notice/list.do" method="post">
 						<table style="width: 100%; margin-top: 20px; border-spacing: 0;">
 						   <tr height="35">
-						      <td align="right">
+						      <td align="right" style="border-bottom: 2px solid #233e83">
 						          <select name="rows" class="selectField" onchange="listNum()">
 						          		<option value="5"  ${rows==5 ? "selected='selected' ": "" }>5개</option>
 						          		<option value="10" ${rows==10 ? "selected='selected' ": "" }>10개</option>
