@@ -41,16 +41,14 @@
             <div class="row">
               <table id="stores">
                 <tbody>
+                  <c:forEach var="dto" items="${list}">
                   <tr class="on">
-                    <td class="store_name">흥덕지구점</td>
-                    <td>031-000-0000</td>
-                    <td>경기도 용인시 기흥구 흥덕9로 99번길 9, 999호</td>
+                    <td class="store_name">${dto.storeName}</td>
+                    <td>${dto.tel}</td>
+                    <td>${dto.storeAddress}</td>
                   </tr>
                   <tr>
-                    <td class="store_name">흥덕지구점</td>
-                    <td>031-000-0000</td>
-                    <td>경기도 용인시 기흥구 흥덕9로 99번길 9, 999호</td>
-                  </tr>
+                  </c:forEach>
                 </tbody>
               </table>
             </div>

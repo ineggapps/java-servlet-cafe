@@ -115,16 +115,10 @@ CREATE SEQUENCE menu_seq -- 메뉴 일련번호 시퀀스
 
 CREATE TABLE store(
     storeNum NUMBER, -- 매장일련번호
-<<<<<<< HEAD
-    storeName VARCHAR(200), --매장 이름
-    tel VARCHAR(50),
-    storeAddress VARCHAR(500), -- 매장 주소
-=======
     storeName VARCHAR2(200), --매장 이름
     tel VARCHAR2(50),
     storeAddress VARCHAR2(500), -- 매장 주소
     visible NUMBER(1) DEFAULT 1, -- 0(목록에서 안 보임), 1(보임)
->>>>>>> ineggapps/master
     CONSTRAINT pk_store_num PRIMARY KEY (storeNum)
 );
 
@@ -215,14 +209,9 @@ CREATE SEQUENCE order_detail_seq -- 주문 일련번호 시퀀스
 
 CREATE TABLE card_model(
     modelNum NUMBER,
-<<<<<<< HEAD
-    modelName VARCHAR(100),
-    thumbnail VARCHAR(255),
-=======
     modelName VARCHAR2(100) NOT NULL,
     text VARCHAR2(4000) NOT NULL ,
     thumbnail VARCHAR2(500),
->>>>>>> ineggapps/master
     CONSTRAINT pk_model_num PRIMARY KEY(modelNum)
 );
 
@@ -238,14 +227,10 @@ CREATE TABLE cards(
     cardNum NUMBER,
     cardName VARCHAR2(255),
     userNum NUMBER NOT NULL,
-<<<<<<< HEAD
-    modelNum NUMBER,
-    cardIdentity VARCHAR(16), -- 16자리 하이픈없이 숫자만
-=======
     modelNum NUMBER NOT NULL,
     cardIdentity VARCHAR2(16), -- 16자리 하이픈없이 숫자만
     balance NUMBER DEFAULT 0,
->>>>>>> ineggapps/master
+    isClosed NUMBER(1) DEFAULT 0, --0:열림, 1:닫힘
     CONSTRAINT pk_cards_num PRIMARY KEY(cardNum),
     CONSTRAINT uk_cards_identity UNIQUE(cardIdentity),
     CONSTRAINT fk_model_num FOREIGN KEY(modelNum) REFERENCES card_model(modelNum)
@@ -336,10 +321,29 @@ INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NE
 INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '기타');
 COMMIT;
 
+-- 메뉴 샘플
+INSERT INTO menu(menuNum, categoryNum, menuName, thumbnail, text, price) VALUES(menu_seq.NEXTVAL, 1, '아메리카노', 'TODO:썸네일주소', '맛있는 아메리카노', 3500);
+COMMIT;
+
 -- 지점
 
 INSERT INTO store(storeNum, storeName, TEL, storeAddress, visible) VALUES(store_seq.NEXTVAL, '온라인', '1588-0000', '온라인 구매', 0);
-INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '온라인', '1588-0000', '서울특별시 마포구 서교동 10-1');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포서교점', '1588-0000', '서울 마포구 서교동 10-1');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '남서울대점', '1588-0000', '충남 천안시 서북구 성환읍 성진로 999(성월리, 남경루)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '동서울대점', '1588-0000', '경기 성남시 수정구 복정로 1010(복정동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '서울대중앙점', '1588-0000', '서울 관악구 남부순환로 999길 29(봉천동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '서울숲역점', '1588-0000', '서울 성동구 왕십리로 96-1');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '서울시립대점', '1588-0000', '서울 중구 세종대로 20길 23');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '서울신대점', '1588-0000', '경기 부천시 호현로 489번길 39(소사본동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '서울여대점', '1588-0000', '서울 노원구 노원로 333 (공릉동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '안산서울예대점', '1588-0000', '경기 안산시 단원구 예술대학로 111 (고잔동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포경찰서점', '1588-0000', '서울 마포구 마포대로 177 (공덕동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포공덕역점', '1588-0000', '서울 마포구 새창로 999 (도화동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포구청점', '1588-0000', '서울 마포구 월드컵로 995 (성산동) ');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포데시앙점', '1588-0000', '서울 마포구 독막로 222 (도화동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포점', '1588-0000', '서울 마포구 도화길 111(도화동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '을지로3가점', '1588-0000', '서울 중구 수표로 494 (저동22가)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '강남YMCA점', '1588-0000', '서울 강남구 논현동');
 COMMIT;
 
 
