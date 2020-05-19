@@ -33,6 +33,19 @@
               </div>
 			  <jsp:include page="/WEB-INF/views/layout/members_lnb.jsp"/>
             </div>
+			<div class="row_full alert">
+              <div class="row">
+              	<div class="box">
+              		<figure class="img">
+              			<img src="<%=cp %>/resource/images/assets/alert-240.png" alt="alert" />
+              		</figure>
+              		<div class="msg_content">
+						<div class="title">구매 개수를 초과하였습니다.</div>              		
+					  	<p class="message">커피, 베이커리, 에이드는 합쳐서 20잔(개)까지만 구매가 가능합니다.<br/>보다 맛있는 음식으로 보답하는 쿠앤크 커피가 되겠습니다.</p>
+              		</div>
+              	</div>
+			  </div>
+            </div>
             <form>
               <div class="row">
                 <div class="row_title">
@@ -40,11 +53,13 @@
                 </div>
               <div class="row">
                   <ul class="tab">
-                    <li class="on"><a href="#">음식 고르기</a></li>
-                    <li><a href="#">주문 및 결제</a></li>
+                    <li ${api=="/order.do"?"class=\"on\"":""}><a href="<%=cp%>/members/order.do">음식 고르기</a></li>
+                    <li ${api=="/buy.do"?"class=\"on\"":""}><a href="<%=cp%>/members/buy.do">주문 및 결제</a></li>
+                    <li ${api=="/orderedList.do"?"class=\"on\"":""}><a href="<%=cp%>/members/orderedList.do">주문 내역</a></li>
                   </ul>
                 </div>
               </div>
+              <c:if test="${api=='/order.do'}">
               <div class="row">
                 <ul class="shop">
                 	<c:forEach var="dto" items="${list}"> 
@@ -56,7 +71,7 @@
                 		 		<div class="menu_content">
                 		 			<p>${dto.menuName}</p>
                 		 			<div class="menu_item_controller">
-						              <a href="#" class="item_button">담기</a>
+						              <a href="<%=cp%>/members/order.do?menuNum=${dto.menuNum}" class="item_button">담기</a>
 						              <a href="#" class="item_button submit" onclick="submit()">주문</a>
 						            </div>
                 		 		</div>
@@ -65,6 +80,12 @@
                 	</c:forEach>
                 </ul>
               </div>
+              </c:if>
+              <c:if test="${api=='/order.do'}">
+              <div class="row">
+                
+              </div>
+              </c:if>
             </form>
             
             <!-- Content 영역 끝 -->

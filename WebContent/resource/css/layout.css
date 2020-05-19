@@ -404,3 +404,44 @@ footer {
   width: 500px;
   margin: 0 auto;
 }
+
+/*경고 메시지*/
+
+.row_full.alert{
+	user-select:none;
+	background-color:#233e83;
+	height:200px;
+	text-align:center;
+}
+
+.row_full.alert .box{
+	margin:0 auto;
+	color:#fff;
+	min-height:100px;
+	padding:50px;
+}
+
+.row_full.alert figure{
+	display:inline-block;
+	margin-right:50px;
+}
+.row_full.alert figure img{
+	width:96px;
+}
+
+.row_full.alert .msg_content{
+	vertical-align:top;
+	display:inline-block;
+}
+
+.row_full.alert .msg_content .title{
+	font-size:1.8rem;
+	font-weight:bold;
+	line-height:3rem;
+}
+
+p.message{
+	color:#e9e9e9;
+	text-align:center;
+	line-height:1.4rem;
+}

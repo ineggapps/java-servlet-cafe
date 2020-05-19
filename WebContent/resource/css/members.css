@@ -257,6 +257,7 @@ h3 {
 .tab {
   width: 100%;
   display: table;
+  border-collapse:collapse;
   max-width: 1180px;
   overflow: hidden;
   border-bottom: 2px solid #002f6c;
@@ -265,23 +266,22 @@ h3 {
   margin-top: 20px;
 }
 
-.tab:after {
-  clear: both;
-  content: "";
-  display: block;
-}
-
 .tab li {
   text-align: center;
-  width: 49.83%;
+  /*width: 49.83%;*/
+  width:33.193%;
   line-height: 49px;
   user-select: none;
   display: inline-block;
   border-right: 1px solid #d9d9d9;
+}
+
+.tab li:first-child(){
   border-left: 1px solid #d9d9d9;
 }
 
 .tab li a {
+  font-weight:bold;
   color: #474747;
   width: 100%;
   height: 100%;
@@ -290,7 +290,7 @@ h3 {
 
 .tab li.on a,
 .tab li:hover a {
-  color: #d7d7d7;
+  color: #e9e9e9;
 }
 
 .tab li.on,
