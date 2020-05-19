@@ -19,7 +19,13 @@
 		function senario(chk){
 			const price = chk.value;
 			const after = Number(balance) + Number(price);
+			if(after>550000){
+				alert("카드 충전금액은 550,000원을 넘길 수 없습니다.");
+				chk.checked = false;
+				return;
+			}
 			document.getElementById('after_balance').innerText =	new Intl.NumberFormat().format(after)
+			
 		}
 		
 		function submit(){
@@ -28,7 +34,7 @@
 			f.action = "<%=cp%>/members/register.do";
 			</c:if>
 			<c:if test="${mode=='charge'}">
-			f.action = "<%=cp%>/members/charge.do";
+			f.action = "<%=cp%>/members/charge_ok.do";
 			</c:if>
 			f.submit();
 		}
@@ -153,6 +159,7 @@
               <a href="<%=cp %>/members/register.do" class="list_button">목록</a>
             </c:if>
             <c:if test="${mode=='charge'}">
+            	<input type="hidden" name="cardNum" value="${cardDTO.cardNum}" />
               <a href="<%=cp %>/members/list.do" class="list_button">목록</a>
             </c:if>
               <a href="#" class="list_button submit" onclick="submit()">${mode=="register"?"등록":"충전"}하기</a>

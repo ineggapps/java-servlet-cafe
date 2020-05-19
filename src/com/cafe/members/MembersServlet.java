@@ -57,9 +57,11 @@ public class MembersServlet extends EspressoServlet {
 	private static final int PARAM_REGISTER_STEP_3 = 3;
 
 	// ATTRIBUTE
+	private static final String ATTRIBUTE_API = "api";
 	private static final String ATTRIBUTE_LIST = "list";
 	private static final String ATTRIBUTE_CARD_DTO = "cardDTO";
 	private static final String ATTRIBUTE_CARD_MODEL_DTO = "modelDTO";
+	private static final int MAX_BALANCE = 550000;
 
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -68,6 +70,7 @@ public class MembersServlet extends EspressoServlet {
 		apiPath = contextPath + API_NAME;
 		String uri = req.getRequestURI();
 		Map<String, Object> attributes = new HashMap<>();
+		attributes.put(ATTRIBUTE_API, uri.substring(uri.lastIndexOf("/")));
 		SessionAuthInfo info = getSessionAuthInfo(req);
 		if (info == null) {
 			goToLogin(resp);
@@ -216,24 +219,40 @@ public class MembersServlet extends EspressoServlet {
 		try {
 			int cardNum = Integer.parseInt(req.getParameter(PARAM_CARD_NUM));
 			CardDTO dto = dao.readCard(cardNum, info.getUserNum());
-			if(dto==null) {
+			if (dto == null) {
 				throw new Exception("카드가 존재하지 않습니다.");
 			}
 			attributes.put(ATTRIBUTE_CARD_DTO, dto);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
 			e.printStackTrace();
-			resp.sendRedirect(apiPath+API_DETAIL);
+			resp.sendRedirect(apiPath + API_DETAIL);
 		}
 	}
 
 	protected void chargeSubmit(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes) {
 		// 충전 절차 진행
 		try {
-			resp.sendRedirect(apiPath + API_LIST);
-			
+			SessionAuthInfo info = getSessionAuthInfo(req);
+			int cardNum = Integer.parseInt(req.getParameter(PARAM_CARD_NUM));
+			int price = Integer.parseInt(req.getParameter(PARAM_PRICE));
+			CardDAO cardDAO = new CardDAO();
+			CardDTO cardDTO = cardDAO.readCard(cardNum, info.getUserNum());
+			if (cardDTO == null) {
+				throw new Exception("카드가 존재하지 않습니다.");
+			}
+			if (cardDTO.getBalance() + price > MAX_BALANCE) {
+				throw new ChargeException("카드 충전금액이 550,000원을 넘길 수 없습니다.");
+			}
+			CardChargeDAO chargeDAO = new CardChargeDAO();
+			chargeDAO.insertCardCharge(new CardChargeDTO(cardNum, price));
+			resp.sendRedirect(apiPath + API_DETAIL + "?" + PARAM_CARD_NUM + "=" + cardNum);
 		} catch (Exception e) {
 			e.printStackTrace();
+			try {
+				resp.sendRedirect(apiPath + API_LIST);
+			} catch (IOException e1) {
+			}
 		}
 	}
 
