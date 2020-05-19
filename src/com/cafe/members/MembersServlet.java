@@ -174,12 +174,21 @@ public class MembersServlet extends EspressoServlet {
 		// 카드 등록하기
 		try {
 			SessionAuthInfo info = getSessionAuthInfo(req);
-			CardDAO dao = new CardDAO();
+			CardDAO cardDAO = new CardDAO();
+			CardChargeDAO chargeDAO = new CardChargeDAO();
+			//카드 정보 파라미터에서 받아오기
 			String cardName = req.getParameter(PARAM_CARD_NAME);
 			int price = Integer.parseInt(req.getParameter(PARAM_PRICE));
 			int modelNum = Integer.parseInt(req.getParameter(PARAM_MODEL_NUM));
-			CardDTO dto = new CardDTO(cardName, info.getUserNum(), modelNum, price);
-			dao.insertCard(dto);
+			//카드 신규 등록
+			CardDTO cardDTO = new CardDTO(cardName, info.getUserNum(), modelNum);
+			int cardNum = cardDAO.insertCard(cardDTO);
+			cardDTO = cardDAO.readCard(cardNum, info.getUserNum());
+			//신규 등록한 카드에 충전하기
+			System.out.println(cardNum + "넘버... 아 돼라!!!!");
+			CardChargeDTO chargeDTO = new CardChargeDTO(cardNum, price);
+			chargeDAO.insertCardCharge(chargeDTO);
+			//충전이 완료되면 목록으로 돌아가기
 			resp.sendRedirect(apiPath + API_LIST);
 		} catch (Exception e) {
 			e.printStackTrace();
