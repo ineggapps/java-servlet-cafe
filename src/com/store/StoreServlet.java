@@ -1,6 +1,7 @@
 package com.store;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class StoreServlet extends EspressoServlet {
 	private static final String API_STORES = "/stores.do";
 
 	// PARAM
+	private static final String PARAM_SEARCH_TEXT = "search_text";
 
 	// ATTRIBUTe
 	private static final String ATTRIBUTE_LIST = "list";
@@ -55,8 +57,15 @@ public class StoreServlet extends EspressoServlet {
 
 	protected void list(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes) throws ServletException, IOException {
 		String path = VIEWS + JSP_LIST;
+		String keyword = req.getParameter(PARAM_SEARCH_TEXT);
 		StoreDAO dao = new StoreDAO();
-		List<StoreDTO> list = dao.listStore();
+		List<StoreDTO> list;
+		if(keyword!=null&&keyword.length()>0) {
+			System.out.println(keyword + "검색어로 검색");
+			list = dao.listStore(keyword);
+		}else {
+			list = dao.listStore();
+		}
 		attributes.put(ATTRIBUTE_LIST, list);
 		forward(req, resp, path,attributes);
 	}
@@ -75,24 +84,16 @@ public class StoreServlet extends EspressoServlet {
 		for (String key : attributes.keySet()) {
 			Object value = attributes.getOrDefault(key, "");
 			//특정 항목 인코딩
-			//if(value != null && req.getMethod().equalsIgnoreCase("GET") && value instanceof String) {
-			//if(key.equals("특정항목")){
-			//	try {
-			//		value = (Object)URLDecoder.decode(((String)value),"utf-8");
-			//	} catch (Exception e) {
-			//		e.printStackTrace();
-			//	}
-			//}
-			//}
+			if(value != null && req.getMethod().equalsIgnoreCase("GET") && value instanceof String) {
+			if(key.equals(PARAM_SEARCH_TEXT)){
+				try {
+					value = (Object)URLDecoder.decode(((String)value),"utf-8");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			}
 			req.setAttribute(key, value);
-		}
-	}
-
-	private void goToLogin(HttpServletResponse resp) {
-		try {
-			resp.sendRedirect(contextPath + "/auth/login.do");
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
