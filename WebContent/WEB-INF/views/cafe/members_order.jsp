@@ -46,13 +46,27 @@
                 </div>
               </div>
               <div class="row">
-                dddd
+                <ul class="shop">
+                	<c:forEach var="dto" items="${list}"> 
+                		<li>
+                			<div class="menu_item">
+                				<figure class="menu_figure">
+                					<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.menuName}" />
+                				</figure>
+                		 		<div class="menu_content">
+                		 			<p>${dto.menuName}</p>
+                		 			<div class="menu_item_controller">
+						              <a href="#" class="item_button">담기</a>
+						              <a href="#" class="item_button submit" onclick="submit()">주문</a>
+						            </div>
+                		 		</div>
+                			</div>
+                		</li>
+                	</c:forEach>
+                </ul>
               </div>
             </form>
-            <div class="row buttons">
-              <a href="./members_card_list.html" class="list_button">목록</a>
-              <a href="#" class="list_button submit" onclick="submit()">충전하기</a>
-            </div>
+            
             <!-- Content 영역 끝 -->
           </article>
         </div>
