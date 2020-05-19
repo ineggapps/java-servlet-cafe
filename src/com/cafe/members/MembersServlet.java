@@ -46,6 +46,7 @@ public class MembersServlet extends EspressoServlet {
 	// PARAM
 	private static final String PARAM_MODE = "mode";
 	private static final String PARAM_MODEL_NUM = "modelNum";
+	private static final String PARAM_CARD_NUM = "cardNum";
 	private static final String PARAM_MODE_REGISTER = "register";
 	private static final String PARAM_MODE_CHARGE = "charge";
 	private static final String PARAM_REGISTER_STEP = "register_step";
@@ -100,7 +101,26 @@ public class MembersServlet extends EspressoServlet {
 	protected void detail(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_DETAIL;
-		forward(req, resp, path, attributes);
+		CardDAO dao = new CardDAO();
+		CardDTO dto;
+		SessionAuthInfo info = getSessionAuthInfo(req);
+		try {
+			if(info==null) {
+				goToLogin(resp);
+				return;
+			}
+			int cardNum = Integer.parseInt(req.getParameter(PARAM_CARD_NUM));
+			dto = dao.readCard(cardNum, info.getUserNum());
+			if(dto==null) {
+				throw new Exception("카드가 존재하지 않습니다. cardNum:" + cardNum );
+			}
+			attributes.put(ATTRIBUTE_CARD_DTO, dto);
+			forward(req, resp, path, attributes);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_LIST);
+			return;
+		}
 	}
 
 	protected void register(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
@@ -185,7 +205,6 @@ public class MembersServlet extends EspressoServlet {
 			int cardNum = cardDAO.insertCard(cardDTO);
 			cardDTO = cardDAO.readCard(cardNum, info.getUserNum());
 			//신규 등록한 카드에 충전하기
-			System.out.println(cardNum + "넘버... 아 돼라!!!!");
 			CardChargeDTO chargeDTO = new CardChargeDTO(cardNum, price);
 			chargeDAO.insertCardCharge(chargeDTO);
 			//충전이 완료되면 목록으로 돌아가기

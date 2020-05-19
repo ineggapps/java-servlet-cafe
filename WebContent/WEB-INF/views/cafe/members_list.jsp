@@ -43,13 +43,13 @@
                   <c:forEach var="dto" items="${list}">
                   <li>
                     <figure>
-                      <a href="members_card_detail.html">
+                      <a href="<%=cp%>/members/detail.do?cardNum=${dto.cardNum}">
                         <img src="<%=cp%>/${dto.thumbnail}" alt="card" />
                       </a>
                     </figure>
-                    <div class="card_info">
+                    <div class="card_info list">
                       <p class="card_title">
-                        <a href="./members_card_detail.html"><strong>${dto.cardName}</strong></a
+                        <a href="<%=cp%>/members/detail.do?cardNum=${dto.cardNum}"><strong>${dto.cardName}</strong></a
                         ><a href="#" class="modify">수정</a>
                       </p>
                       <p class="card_id">${dto.cardIdentity}</p>

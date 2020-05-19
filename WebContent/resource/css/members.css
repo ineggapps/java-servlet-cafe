@@ -53,9 +53,14 @@ h3 {
   height: 210px;
 }
 
-.card_container > ul > li > div {
+.card_container > ul > li > div.list {
   width: 217px;
   margin-left: 20px;
+}
+
+.card_container > ul > li > div.detail{
+  width:300px;
+  margin-left:20px;
 }
 
 .card_container > ul > li > div p {
