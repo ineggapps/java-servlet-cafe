@@ -93,7 +93,7 @@ public class NoticeDAO {
 		try {
 			sb.append("SELECT * FROM (");
 			sb.append(" SELECT ROWNUM rnum, tb.* FROM (");
-			sb.append("   SELECT num, subject, content, views ");
+			sb.append("   SELECT num, subject, views, ");
 			sb.append("     TO_CHAR(created_date, 'YYYY-MM-DD') created_date ");
 			sb.append("	  FROM notice ");
 			sb.append("   ORDER BY num DESC ");
@@ -111,7 +111,6 @@ public class NoticeDAO {
 				NoticeDTO dto = new NoticeDTO();
 				dto.setNum(rs.getInt("num"));
 				dto.setSubject(rs.getString("subject"));
-				dto.setContent(rs.getString("content"));
 				dto.setViews(rs.getInt("views"));
 				dto.setCreated_date(rs.getString("created_date"));
 				list.add(dto);

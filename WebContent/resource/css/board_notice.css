@@ -11,8 +11,7 @@
   background-repeat: no-repeat;
   text-align: center;
   background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 0% 70%;
+  background-position: 0% 90%;
 }
 
 .line1 {
@@ -75,7 +74,7 @@
 
 .list-title a {
   display: inline-block;
-  width: 800px;
+  width: 750px;
 }
 
 .page {
