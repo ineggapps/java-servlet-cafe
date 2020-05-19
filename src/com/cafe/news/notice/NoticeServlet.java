@@ -167,7 +167,7 @@ public class NoticeServlet extends EspressoServlet {
 		}
 		
 		String paging = util.paging(current_page, total_page, listUrl);
-		req.setAttribute("list", list);
+		req.setAttribute("list", list);  
 		req.setAttribute("paging", paging);
 		req.setAttribute("page", current_page);
 		req.setAttribute("dataCount", dataCount);

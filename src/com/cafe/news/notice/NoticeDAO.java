@@ -94,7 +94,7 @@ public class NoticeDAO {
 			sb.append("SELECT * FROM (");
 			sb.append(" SELECT ROWNUM rnum, tb.* FROM (");
 			sb.append("   SELECT num, subject, views, ");
-			sb.append("     TO_CHAR(created_date, 'YYYY-MM-DD') created_date ");
+			sb.append("     TO_CHAR(created_date, 'YYYY-MM-DD') created_date  ");
 			sb.append("	  FROM notice ");
 			sb.append("   ORDER BY num DESC ");
 			sb.append(" )  tb WHERE ROWNUM <= ? ");
