@@ -54,7 +54,7 @@
                         <li>
                           <a href="<%=cp %>/members/charge.do?cardNum=${cardDTO.cardNum}" class="card_button">충전하기</a>
                         </li>
-                        <li><a href="#" class="card_button">잔액이전</a></li>
+                        <li><a href="<%=cp %>/members/close.do?cardNum=${cardDTO.cardNum}" class="card_button">해지</a></li>
                       </ul>
                     </div>
                   </li>

@@ -246,3 +246,9 @@ h3 {
     border: 1px solid #cccccc;
     border-radius: 3px;
 }
+
+.select_card{
+	padding: 10px;
+    min-width: 300px;
+}
+

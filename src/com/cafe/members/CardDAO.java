@@ -70,7 +70,7 @@ public class CardDAO {
 		String sql = "SELECT cardNum, cardName, userNum, cards.modelNum, cardIdentity, balance, thumbnail "
 				+ "FROM cards "
 				+ "JOIN card_model ON cards.modelNum = card_model.modelNum "
-				+ "WHERE userNum = ? ";
+				+ "WHERE userNum = ? AND isClosed = 0";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, userNum);
@@ -125,7 +125,7 @@ public class CardDAO {
 				+ "FROM cards "
 				+ "JOIN card_model ON cards.modelNum = card_model.modelNum "
 				+ "JOIN member m ON cards.userNum = m.userNum "
-				+ "WHERE cardNum = ? AND cards.userNum = ?";
+				+ "WHERE cardNum = ? AND cards.userNum = ? AND isClosed = 0";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, cardNum);
@@ -164,6 +164,54 @@ public class CardDAO {
 		}
 		
 		return dto;
+	}
+	
+	public int closeCard(int closeCardNum, int targetCardNum) {
+		int result = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		String sql;		
+		try {
+			conn.setAutoCommit(false);
+			//#1. 해지할 카드의 포인트를 조회하여 이체 (복사 뜨기)
+			sql = "INSERT INTO card_charge(chargeNum, cardNum, chargeAmount) "
+					+ "VALUES(card_charge_seq.NEXTVAL, ?, (SELECT balance FROM cards WHERE cardNum=?)) ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, targetCardNum);
+			pstmt.setInt(2, closeCardNum);
+			pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			//#2. 카드 해지상태로 바꾸기
+			sql = "UPDATE cards SET isClosed = 1 WHERE cardNum = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, closeCardNum);
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+		
+		
+		return result;
+		
 	}
 
 }
