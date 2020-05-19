@@ -86,7 +86,7 @@
                       <div class="detail">
                         <c:if test="${mode!='register'}">
                         <p class="card_title detail">
-                          <strong>${cardDTO.cardName}</strong><a href="#" class="modify">수정</a>
+                          <strong>${cardDTO.cardName}</strong><!-- a href="#" class="modify">수정</a-->
                         </p>
                         <p class="card_id">${cardDTO.cardIdentity}</p>
                         <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${cardDTO.balance}"/></strong>원</p>
@@ -123,7 +123,7 @@
                   		<td class="col_charge_data"><input class="text_input" type="text" placeholder="카드 이름" name="cardName" /></td>
                   	</tr>
                   	</c:if>
-                 	<c:if test="${mode=='register'}">
+                 	<c:if test="${mode!='close'}">
                     <tr>
                       <td class="col_charge_category">충전 금액 선택</td>
                       <td class="col_charge_data">

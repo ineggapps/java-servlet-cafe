@@ -223,9 +223,14 @@ public class MembersServlet extends EspressoServlet {
 		String path = VIEWS + JSP_CHARGE;
 		attributes.put(PARAM_MODE, PARAM_MODE_CHARGE);
 		CardDAO dao = new CardDAO();
+		CardDTO dto = null;
 		try {
-			int cardNum = Integer.parseInt(req.getParameter(PARAM_CARD_NUM));
-			CardDTO dto = dao.readCard(cardNum, info.getUserNum());
+			String cardNum = req.getParameter(PARAM_CARD_NUM);
+			if (cardNum == null) {
+				dto = dao.readRecentCard(info.getUserNum());
+			} else {
+				dto = dao.readCard(Integer.parseInt(cardNum), info.getUserNum());
+			}
 			if (dto == null) {
 				throw new Exception("카드가 존재하지 않습니다.");
 			}
