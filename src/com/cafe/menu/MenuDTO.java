@@ -4,6 +4,7 @@ public class MenuDTO {
 	private int menuNum;
 	private int categoryNum;
 	private String menuName;
+	private String thumbnail;
 	private String text;
 	private int price;
 	
@@ -24,6 +25,12 @@ public class MenuDTO {
 	}
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
+	}
+	public String getThumbnail() {
+		return thumbnail;
+	}
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 	public String getText() {
 		return text;

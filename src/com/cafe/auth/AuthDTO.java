@@ -1,17 +1,17 @@
 package com.cafe.auth;
 
 public class AuthDTO {
-	private int userNum;
-	private String email;
-	private String userId;
+	private int userNum; // 회원번호
+	private String email; // 이메일 
+	private String userId; 
 	private String userPwd;
 	private String userName;
 	private String nickname;
-	private String createdDate;
-	private String updatedDate;
+	private String createdDate; // 회원가입날짜
+	private String updatedDate; // 회원정보수정날짜
 	private String phone;
-	private int enabled;
-	private boolean isAdmin = false;
+	private int enabled; // 기본값 =1 (1이 기존회원 0은 탈퇴한 회원)
+	private boolean isAdmin = false; // 관리자여부 (join으로)
 
 	public int getUserNum() {
 		return userNum;

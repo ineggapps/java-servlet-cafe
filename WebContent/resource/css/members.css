@@ -53,8 +53,14 @@ h3 {
   height: 210px;
 }
 
-.card_container > ul > li > div {
+.card_container > ul > li > div.list {
+  width: 217px;
   margin-left: 20px;
+}
+
+.card_container > ul > li > div.detail{
+  width:300px;
+  margin-left:20px;
 }
 
 .card_container > ul > li > div p {
@@ -231,4 +237,12 @@ h3 {
 .card_container .next_line p {
   font-size: 0.9rem;
   margin: 10px 0;
+}
+
+.text_input {
+    width: 300px;
+    height: 30px;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
 }

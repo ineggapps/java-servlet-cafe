@@ -40,102 +40,20 @@
               </div>
               <div class="card_container card_register">
                 <ul>
+                  <c:forEach var="dto" items="${list}">
                   <li>
                     <figure>
-                      <a href="./members_card_register_step2.html">
-                        <img src="<%=cp%>/resource/images/members/card/card01.png" alt="card" />
+                      <a href="<%=cp%>/members/register.do?register_step=2&amp;modelNum=${dto.modelNum}">
+                        <img src="<%=cp%>${dto.thumbnail}" alt="card" />
                       </a>
                     </figure>
                     <div class="next_line">
                       <p class="card_title">
-                        <a href="./members_card_register_step2.html"><strong>카드모델1</strong></a>
+                        <a href="./members_card_register_step2.html"><strong>${dto.modelName}</strong></a>
                       </p>
                     </div>
                   </li>
-                  <li>
-                    <figure>
-                      <a href="./members_card_register_step2.html">
-                        <img src="<%=cp%>/resource/images/members/card/card02.png" alt="card" />
-                      </a>
-                    </figure>
-                    <div class="next_line">
-                      <p class="card_title">
-                        <a href="./members_card_register_step2.html"><strong>카드모델2</strong></a>
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <figure>
-                      <a href="./members_card_register_step2.html">
-                        <img src="<%=cp%>/resource/images/members/card/card03.png" alt="card" />
-                      </a>
-                    </figure>
-                    <div class="next_line">
-                      <p class="card_title">
-                        <a href="./members_card_register_step2.html"><strong>카드모델3</strong></a>
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <figure>
-                      <a href="./members_card_register_step2.html">
-                        <img src="<%=cp%>/resource/images/members/card/card04.png" alt="card" />
-                      </a>
-                    </figure>
-                    <div class="next_line">
-                      <p class="card_title">
-                        <a href="./members_card_register_step2.html"><strong>카드모델4</strong></a>
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <figure>
-                      <a href="./members_card_register_step2.html">
-                        <img src="<%=cp%>/resource/images/members/card/card05.png" alt="card" />
-                      </a>
-                    </figure>
-                    <div class="next_line">
-                      <p class="card_title">
-                        <a href="./members_card_register_step2.html"><strong>카드모델5</strong></a>
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <figure>
-                      <a href="./members_card_register_step2.html">
-                        <img src="<%=cp%>/resource/images/members/card/card06.png" alt="card" />
-                      </a>
-                    </figure>
-                    <div class="next_line">
-                      <p class="card_title">
-                        <a href="./members_card_register_step2.html"><strong>카드모델6</strong></a>
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <figure>
-                      <a href="./members_card_register_step2.html">
-                        <img src="<%=cp%>/resource/images/members/card/card07.png" alt="card" />
-                      </a>
-                    </figure>
-                    <div class="next_line">
-                      <p class="card_title">
-                        <a href="./members_card_register_step2.html"><strong>카드모델7</strong></a>
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <figure>
-                      <a href="./members_card_register_step2.html">
-                        <img src="<%=cp%>/resource/images/members/card/card08.png" alt="card" />
-                      </a>
-                    </figure>
-                    <div class="next_line">
-                      <p class="card_title">
-                        <a href="./members_card_register_step2.html"><strong>카드모델8</strong></a>
-                      </p>
-                    </div>
-                  </li>
+                  </c:forEach>
                 </ul>
               </div>
             </div>

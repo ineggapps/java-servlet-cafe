@@ -35,10 +35,10 @@
               </div>
             </div>
             <div class="centercontent">
-              <div class="sidefont"><a>에이드</a>&nbsp;<a>></a>&nbsp;<a>메뉴</a></div>
+              <div class="sidefont"><a>베이커리</a>&nbsp;<a>></a>&nbsp;<a>메뉴</a></div>
               <br /><br />
               <div>
-                <a>에이드 메뉴</a>
+                <a>베이커리 메뉴</a>
               </div>
               <hr />
               <br /><br />
@@ -47,15 +47,15 @@
                 <c:forEach var="dto" items="${list}" varStatus="status">
                   <li>
                     <div>
-                      <a href="#"><img alt="" src="${dto.coffeeimage}" /></a>
-                      <p>${dto.subject}</p>
+                      <a href="#"><img alt="" src="${dto.thumbnail}" /></a>
+                      <p>${dto.menuName}</p>
                       <div class="detail">
                         <ul>
                           <li style="width: 100%; padding-top: 20px; padding-bottom: 20px;">
-                            <p style="text-align: center;"><span>${dto.subject}</span></p>
+                            <p style="text-align: center;"><span>${dto.menuName}</span></p>
                           </li>
                           <li style="border-top: 2px solid black; padding-top: 20px;">
-                            ${dto.content}
+                            ${dto.text}
                           </li>
                         </ul>
                       </div>
@@ -63,6 +63,9 @@
                   </li>
                   </c:forEach>
                 </ul>
+                <div class="menu_controller">
+                	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
+                </div>
               </div>
               <br />
               <hr />

@@ -11,7 +11,7 @@ import com.util.EspressoServlet;
 
 @WebServlet("/news/notice/*")
 public class NoticeServlet extends EspressoServlet {
-
+	private static final long serialVersionUID = 1L;
 	// PATH
 	private static final String API_NAME = "/news/notice";
 	private static final String CAFE = "cafe";
