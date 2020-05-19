@@ -95,6 +95,7 @@ CREATE TABLE menu(
     menuNum NUMBER, -- 메뉴 일련번호 (1: 아메리카노, 2: 크루아상 3: 카페모카 ...)
     categoryNum NUMBER NOT NULL, -- 메뉴 카테고리 구분자
     menuName VARCHAR2(255) NOT NULL, -- 메뉴이름 (아메리카노, 크루아상, 카페모카 ...)
+    thumbnail VARCHAR2(500),
     text VARCHAR2(4000) NOT NULL, -- 메뉴 소개글
     price NUMBER DEFAULT 0, -- 가격 (구매 시 필요)
     CONSTRAINT pk_menu_num PRIMARY KEY(menuNum),
@@ -114,9 +115,10 @@ CREATE SEQUENCE menu_seq -- 메뉴 일련번호 시퀀스
 
 CREATE TABLE store(
     storeNum NUMBER, -- 매장일련번호
-    storeName VARCHAR(200), --매장 이름
-    tel VARCHAR(50),
-    storeAddress VARCHAR(500), -- 매장 주소
+    storeName VARCHAR2(200), --매장 이름
+    tel VARCHAR2(50),
+    storeAddress VARCHAR2(500), -- 매장 주소
+    visible NUMBER(1) DEFAULT 1, -- 0(목록에서 안 보임), 1(보임)
     CONSTRAINT pk_store_num PRIMARY KEY (storeNum)
 );
 
@@ -176,7 +178,7 @@ CREATE TABLE order_cancel(
     CONSTRAINT fk_order_cancel_num FOREIGN KEY(orderNum) REFERENCES order_history(orderNum)
 );
 
-CREATE SEQUENCE order_cancel_seq -- 주문 일련번호 시퀀스
+CREATE SEQUENCE order_cancel_seq -- 주문 취소
     START WITH 1
     INCREMENT BY 1
     NOMAXVALUE
@@ -202,19 +204,18 @@ CREATE SEQUENCE order_detail_seq -- 주문 일련번호 시퀀스
     NOCYCLE
     NOCACHE;
 
-
-
 -- 카드 보유내역
 -- 카드 보유현황
 
 CREATE TABLE card_model(
     modelNum NUMBER,
-    modelName VARCHAR(100),
-    thumbnail VARCHAR(255),
+    modelName VARCHAR2(100) NOT NULL,
+    text VARCHAR2(4000) NOT NULL ,
+    thumbnail VARCHAR2(500),
     CONSTRAINT pk_model_num PRIMARY KEY(modelNum)
 );
 
-CREATE SEQUENCE card_model_seq -- 주문 일련번호 시퀀스
+CREATE SEQUENCE card_model_seq -- 카드 모델(종류) 시퀀스
     START WITH 1
     INCREMENT BY 1
     NOMAXVALUE
@@ -224,19 +225,41 @@ CREATE SEQUENCE card_model_seq -- 주문 일련번호 시퀀스
 
 CREATE TABLE cards(
     cardNum NUMBER,
+    cardName VARCHAR2(255),
     userNum NUMBER NOT NULL,
-    modelNum NUMBER,
-    cardIdentity VARCHAR(16), -- 16자리 하이픈없이 숫자만
+    modelNum NUMBER NOT NULL,
+    cardIdentity VARCHAR2(16), -- 16자리 하이픈없이 숫자만
+    balance NUMBER DEFAULT 0,
+    isClosed NUMBER(1) DEFAULT 0, --0:열림, 1:닫힘
     CONSTRAINT pk_cards_num PRIMARY KEY(cardNum),
+    CONSTRAINT uk_cards_identity UNIQUE(cardIdentity),
     CONSTRAINT fk_model_num FOREIGN KEY(modelNum) REFERENCES card_model(modelNum)
 );
 
-CREATE SEQUENCE cards_seq -- 주문 일련번호 시퀀스
+CREATE SEQUENCE cards_seq -- 카드 일련번호 시퀀스
     START WITH 1
     INCREMENT BY 1
     NOMAXVALUE
     NOCYCLE
     NOCACHE;
+
+CREATE TABLE card_charge(--카드 충전내역
+    chargeNum NUMBER,
+    cardNum NUMBER NOT NULL,
+    chargeAmount NUMBER NOT NULL,
+    charge_date DATE DEFAULT SYSDATE,
+    CONSTRAINT pk_card_charge_num PRIMARY KEY(chargeNum),
+    CONSTRAINT fk_card_charge_cardNum FOREIGN KEY(cardNum) REFERENCES cards(cardNum)
+);
+
+CREATE SEQUENCE card_charge_seq -- 카드충전내역 시퀀스
+    START WITH 1
+    INCREMENT BY 1
+    NOMAXVALUE
+    NOCYCLE
+    NOCACHE;
+
+
 
 
 ---제약사항 추가
@@ -276,3 +299,88 @@ DROP SEQUENCE MEMBER_SEQ;
 
 SELECT * FROM TAB;
 SELECT * FROM SEQ;
+
+
+-- 카드모델 샘플 데이터
+
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '열정응원카드', '당신의 열정을 응원합니다', '/resource/images/members/card/card01.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '쿠앤크레몬카드', '레몬처럼 상큼한 쿠앤크카드', '/resource/images/members/card/card02.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '마음에 싹트다 카드', '쓸수록 마음이 싹트는 카드', '/resource/images/members/card/card03.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '오렌지 카드', '오렌지가 가득한 새콤한 쿠앤크카드', '/resource/images/members/card/card04.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '레드 카드', '레드레드한 쿠앤크카드', '/resource/images/members/card/card05.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '스튜던트 카드', '초심으로 돌아가 연필을 잡자 카드', '/resource/images/members/card/card06.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '나는야 백조카드', '핑크핑크한 백조를 보셨나요?', '/resource/images/members/card/card07.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '네추럴 카드', '로이더 아니고 네추럴 카드', '/resource/images/members/card/card08.png');
+COMMIT;
+
+-- 메뉴 카테고리 샘플
+
+INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '커피');
+INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '에이드');
+INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '베이커리');
+INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '기타');
+COMMIT;
+
+-- 메뉴 샘플
+INSERT INTO menu(menuNum, categoryNum, menuName, thumbnail, text, price) VALUES(menu_seq.NEXTVAL, 1, '아메리카노', 'TODO:썸네일주소', '맛있는 아메리카노', 3500);
+COMMIT;
+
+-- 지점
+
+INSERT INTO store(storeNum, storeName, TEL, storeAddress, visible) VALUES(store_seq.NEXTVAL, '온라인', '1588-0000', '온라인 구매', 0);
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포서교점', '1588-0000', '서울 마포구 서교동 10-1');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '남서울대점', '1588-0000', '충남 천안시 서북구 성환읍 성진로 999(성월리, 남경루)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '동서울대점', '1588-0000', '경기 성남시 수정구 복정로 1010(복정동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '서울대중앙점', '1588-0000', '서울 관악구 남부순환로 999길 29(봉천동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '서울숲역점', '1588-0000', '서울 성동구 왕십리로 96-1');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '서울시립대점', '1588-0000', '서울 중구 세종대로 20길 23');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '서울신대점', '1588-0000', '경기 부천시 호현로 489번길 39(소사본동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '서울여대점', '1588-0000', '서울 노원구 노원로 333 (공릉동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '안산서울예대점', '1588-0000', '경기 안산시 단원구 예술대학로 111 (고잔동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포경찰서점', '1588-0000', '서울 마포구 마포대로 177 (공덕동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포공덕역점', '1588-0000', '서울 마포구 새창로 999 (도화동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포구청점', '1588-0000', '서울 마포구 월드컵로 995 (성산동) ');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포데시앙점', '1588-0000', '서울 마포구 독막로 222 (도화동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '마포점', '1588-0000', '서울 마포구 도화길 111(도화동)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '을지로3가점', '1588-0000', '서울 중구 수표로 494 (저동22가)');
+INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTVAL, '강남YMCA점', '1588-0000', '서울 강남구 논현동');
+COMMIT;
+
+
+--카드 충전 포인트 샘플 데이터
+INSERT INTO card_charge(chargeNum, cardNum, chargeAmount) VALUES(card_charge_seq.NEXTVAL, 1, 10000);
+COMMIT;
+----카드 충전 포인트 트리거
+
+--포인트 충전 내역 등록/수정/삭제 트리거
+
+--포인트 충전 시
+CREATE OR REPLACE TRIGGER ins_card_charge_point
+AFTER INSERT ON card_charge
+FOR EACH ROW
+
+BEGIN
+     UPDATE cards SET balance = balance + :NEW.chargeAmount
+           WHERE cardNum = :NEW.cardNum;
+END;
+/
+
+-- 포인트 충전내역 수정 시 (기능 중 포인트 충전내역을 수정할 일은 없게 할 것이지만 혹시 몰라서 삽입)
+CREATE OR REPLACE TRIGGER update_card_charge_point
+AFTER UPDATE ON card_charge
+FOR EACH ROW
+BEGIN
+     UPDATE cards SET balance = balance - :OLD.chargeAmount + :NEW.chargeAmount
+            WHERE cardNum = :NEW.cardNum;
+END;
+/
+
+-- 포인트 충전내역 삭제 시
+CREATE OR REPLACE TRIGGER delete_card_charge_point
+AFTER DELETE ON card_charge
+FOR EACH ROW
+BEGIN
+     UPDATE cards SET balance = balance - :OLD.chargeAmount;
+           WHERE cardNum = :OLD.cardNum;
+END;
+/

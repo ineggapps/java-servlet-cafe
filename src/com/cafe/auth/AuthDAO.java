@@ -8,7 +8,7 @@ import com.util.DBCPConn;
 
 public class AuthDAO {
 
-	public int insertMember(AuthDTO dto) {
+	public int insertMember(AuthDTO dto) { // 회원가입
 		int result = 0;
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
@@ -42,18 +42,18 @@ public class AuthDAO {
 		return result;
 	}
 
-	public AuthDTO readMember(String userId) {
+	public AuthDTO readMember(String userId) { // 아이디로 회원정보 조회
 		AuthDTO dto = null;
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		/*
-		 SELECT member.userNum, email, userId, userPwd, userName, nickname,
-            TO_CHAR(created_date,'YYYY-MM-DD') created_date, TO_CHAR(updated_date,'YYYY-MM-DD')
-            updated_date, phone, enabled, admin.userNum isAdmin FROM member 
-            LEFT OUTER JOIN member_admin admin ON member.userNum = admin.userNum
-            WHERE enabled=1 and member.userNum = 5;
-		 * */
+		 * SELECT member.userNum, email, userId, userPwd, userName, nickname,
+		 * TO_CHAR(created_date,'YYYY-MM-DD') created_date,
+		 * TO_CHAR(updated_date,'YYYY-MM-DD') updated_date, phone, enabled,
+		 * admin.userNum isAdmin FROM member LEFT OUTER JOIN member_admin admin ON
+		 * member.userNum = admin.userNum WHERE enabled=1 and member.userNum = 5;
+		 */
 		String sql = "SELECT m.userNum, email, userId, userPwd, userName, nickname, "
 				+ "TO_CHAR(created_date,'YYYY-MM-DD') created_date, TO_CHAR(updated_date,'YYYY-MM-DD') "
 				+ "updated_date, phone, enabled, admin.userNum isAdmin FROM member m "
@@ -72,13 +72,68 @@ public class AuthDAO {
 				String updated_date = rs.getString("updated_date");
 				String phone = rs.getString("phone");
 				int enabled = rs.getInt("enabled");
-				boolean isAdmin = rs.getInt("isAdmin") > 0  ? true : false; // null이면 0으로 반환됨.
+				boolean isAdmin = rs.getInt("isAdmin") > 0 ? true : false; // null이면 0으로 반환됨.
 				dto = new AuthDTO(userNum, email, userId, userPwd, userName, nickname, created_date, updated_date,
 						phone, enabled, isAdmin);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if (!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
 		}
 		return dto;
+	}
+	
+	public int updateMember(AuthDTO dto) { // 회원정보 수정 
+		
+		int result = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "UPDATE member SET eamil=?, userPwd=?, userName=?, nickname=?, phone=? WHERE userNum=? ";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getEmail());
+			pstmt.setString(2, dto.getUserPwd());
+			pstmt.setString(3, dto.getUserName());
+			pstmt.setString(4, dto.getNickname());
+			pstmt.setString(5, dto.getPhone());
+			pstmt.setInt(6, dto.getUserNum());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+		
+		
+		
 	}
 }
