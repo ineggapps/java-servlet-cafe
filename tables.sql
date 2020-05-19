@@ -230,6 +230,7 @@ CREATE TABLE cards(
     modelNum NUMBER NOT NULL,
     cardIdentity VARCHAR2(16), -- 16자리 하이픈없이 숫자만
     balance NUMBER DEFAULT 0,
+    isClosed NUMBER(1) DEFAULT 0, --0:열림, 1:닫힘
     CONSTRAINT pk_cards_num PRIMARY KEY(cardNum),
     CONSTRAINT uk_cards_identity UNIQUE(cardIdentity),
     CONSTRAINT fk_model_num FOREIGN KEY(modelNum) REFERENCES card_model(modelNum)
@@ -318,6 +319,10 @@ INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NE
 INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '에이드');
 INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '베이커리');
 INSERT INTO MENU_CATEGORY(categoryNum, categoryName) VALUES(menu_category_seq.NEXTVAL, '기타');
+COMMIT;
+
+-- 메뉴 샘플
+INSERT INTO menu(menuNum, categoryNum, menuName, thumbnail, text, price) VALUES(menu_seq.NEXTVAL, 1, '아메리카노', 'TODO:썸네일주소', '맛있는 아메리카노', 3500);
 COMMIT;
 
 -- 지점
