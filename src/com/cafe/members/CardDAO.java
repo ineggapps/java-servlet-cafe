@@ -227,7 +227,16 @@ public class CardDAO {
 			pstmt.executeUpdate();
 			pstmt.close();
 			pstmt = null;
-			// #2. 카드 해지상태로 바꾸기
+			// #2. 해지할 카드는 전액 삭감
+			sql = "INSERT INTO card_charge(chargeNum, cardNum, chargeAmount) "
+					+ "VALUES(card_charge_seq.NEXTVAL, ?, (SELECT balance FROM cards WHERE cardNum=?) * -1) ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, closeCardNum);
+			pstmt.setInt(2, closeCardNum);
+			pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			// #3. 카드 해지상태로 바꾸기
 			sql = "UPDATE cards SET isClosed = 1 WHERE cardNum = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, closeCardNum);
