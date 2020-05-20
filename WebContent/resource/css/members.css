@@ -360,6 +360,12 @@ tbody .col_date{
 }
 
 /*주문 및 결제*/ 
+
+#cart_size{
+	box-sizing:border-box;
+	padding:25px;
+	text-align:right;
+}
 .col_category{
 	width:20%;
 	text-align:center;

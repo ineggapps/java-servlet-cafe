@@ -145,8 +145,11 @@
                </tbody>
              </table>
              <div class="total">
-              <h3>총 주문금액 ${fn:length(cart.items)}</h3>
+              <h3>총 주문금액</h3>
               <span><fmt:formatNumber value="${cart.totalPaymentAmount}"/></span>
+             </div>
+             <div class="row" id="cart_size">
+             	<h4>총 ${fn:length(cart.items)}개 선택되었습니다.</h4>
              </div>
              <form action="<%=cp%>/members/buy_ok.do" method="post" name="buy">
              <div class="row">
