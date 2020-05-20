@@ -39,14 +39,6 @@
                 </ul>
               </li>
               <li>
-                <p>메뉴관리</p>
-                <ul class="gnb_sub">
-                  <li><a href="#">커피</a></li>
-                  <li><a href="#">에이드</a></li>
-                  <li><a href="#">베이커리</a></li>
-                </ul>
-              </li>
-              <li>
                 <p>정산관리</p>
                 <ul class="gnb_sub">
                   <li><a href="#">메뉴별 매출</a></li>
