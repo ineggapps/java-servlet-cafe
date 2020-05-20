@@ -1,2 +1,16 @@
 @charset "UTF-8";
 
+.menuCreateForm {
+	width: 75%;
+	margin: 0px auto;
+}
+
+.menuinput {
+	width: 350px;
+	margin-bottom: 10px;
+	border-radius: 3px;
+}
+
+.menubutton {
+	float: right;
+}

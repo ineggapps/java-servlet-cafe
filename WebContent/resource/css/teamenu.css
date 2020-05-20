@@ -82,16 +82,15 @@
 
 .picture p {
 	text-align: center;
-	text
 }
 
 .menus:after,
 .picture:after,
 .menu_controller:after{
-clear: both;
-  content: "";
-  display: block;
-  visibility: hidden;
+	clear: both;
+ 	content: "";
+  	display: block;
+  	visibility: hidden;
 }
 
 .menu_controller{

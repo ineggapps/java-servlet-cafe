@@ -175,7 +175,7 @@ public class MenuServlet extends MyUploadServlet {
 		SessionAuthInfo info = getSessionAuthInfo(req);
 		
 		if(info == null) { 
-			resp.sendRedirect(cp+"/cafe/login.do");
+			resp.sendRedirect(cp+"/WEB-INF/views/cafe/login.do");
 			return;
 		}
 		
