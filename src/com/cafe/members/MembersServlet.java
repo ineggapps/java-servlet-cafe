@@ -477,9 +477,10 @@ public class MembersServlet extends EspressoServlet {
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_ORDER;
 		try {
-			// #1. 메뉴 리스트 뽑기
-			// #2. 따로 장바구니 페이지를 만들어 두는 게 좋을 듯..
-			// 대부분의 쇼핑몰이 얼마나 담겼는지는 안 보여주네
+			SessionAuthInfo info = getSessionAuthInfo(req);
+			OrderDAO dao = new OrderDAO();
+			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum());
+			attributes.put(ATTRIBUTE_ORDER_HISTORY, orderHistory);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
 			e.printStackTrace();

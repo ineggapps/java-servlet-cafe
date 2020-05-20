@@ -3,6 +3,7 @@ package com.cafe.members;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,28 +77,43 @@ public class OrderDAO {
 			
 			
 			//3. 주문 상세 만들기
-			sql = "INSERT INTO order_detail(detailNum, orderNum, unitPrice, quantity, paymentAmount) "
-					+ " VALUES(order_detail_seq.NEXTVAL, ?, ?, ?, ?)";
+			sql = "INSERT INTO order_detail(detailNum, orderNum, menuNum, unitPrice, quantity, paymentAmount) "
+					+ " VALUES(order_detail_seq.NEXTVAL, ?, ?, ?, ?, ?)";
 			List<MenuDTO> items = cart.getItems();
 			for(MenuDTO item: items) {
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, orderNum);
-				pstmt.setInt(2, item.getPrice());
-				pstmt.setInt(3, 1); //일단 1개로 구현
-				pstmt.setInt(4, item.getPrice()*1);//단가*수량(1로 고정)
+				pstmt.setInt(2, item.getMenuNum());
+				pstmt.setInt(3, item.getPrice());
+				pstmt.setInt(4, 1); //일단 1개로 구현
+				pstmt.setInt(5, item.getPrice()*1);//단가*수량(1로 고정)
 				pstmt.executeUpdate();
 				returnPrepResource(pstmt);
 			}
 			
 			conn.commit();
 		}catch(OrderException e) {
+			try {
+				if(conn!=null && !conn.isClosed()) {
+					conn.rollback();
+				}
+			} catch (SQLException e1) {
+			}
 			throw new OrderException(e);
 		}
 		catch (Exception e) {
+			try {
+				if(conn!=null && !conn.isClosed()) {
+					conn.rollback();
+				}
+			} catch (SQLException e1) {
+			}
 			e.printStackTrace();
 		}finally {
 			try {
-				conn.setAutoCommit(true);
+				if(conn!=null && !conn.isClosed()) {
+					conn.setAutoCommit(true);
+				}
 			} catch (Exception e2) {
 			}
 			returnDBResources(pstmt, rs);
@@ -147,8 +163,9 @@ public class OrderDAO {
 				historyDTO.setCardNum(cardNum);
 				historyDTO.setOrderDate(rs.getString("order_date"));
 				historyDTO.setCancelNum(rs.getInt("cancelNum"));
-				sql = "SELECT detailNum, orderNum, unitPrice, quantity, paymentAmount "
-						+ " FROM order_detail "
+				sql = "SELECT detailNum, orderNum, od.menuNum, menuName, unitPrice, quantity, paymentAmount "
+						+ " FROM order_detail od "
+						+ " JOIN menu mn ON od.menuNum = mn.menuNum "
 						+ " WHERE orderNum = ?";
 				pstmtSub = conn.prepareStatement(sql);
 				pstmtSub.setInt(1, orderNum);
@@ -158,6 +175,79 @@ public class OrderDAO {
 					OrderDetailDTO detailDTO = new OrderDetailDTO();
 					detailDTO.setDetailNum(rsSub.getInt("detailNum"));
 					detailDTO.setOrderNum(rsSub.getInt("orderNum"));
+					detailDTO.setMenuNum(rsSub.getInt("menuNum"));
+					detailDTO.setMenuName(rsSub.getString("menuName"));
+					detailDTO.setUnitPrice(rsSub.getInt("unitPrice"));
+					detailDTO.setQuantity(rsSub.getInt("quantity"));
+					detailDTO.setPaymentAmount(rsSub.getInt("paymentAmount"));
+					items.add(detailDTO);
+				}
+				historyDTO.setItems(items);
+				list.add(historyDTO);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			returnDBResources(pstmt, rs);
+			returnDBResources(pstmtSub, rsSub);
+			try {
+				if(!conn.isClosed()) {
+					conn.close();
+				}
+			} catch (Exception e2) {
+			}
+		}
+		
+		return list;
+	}
+	
+	//카드번호로 내역 조회하기
+	public List<OrderHistoryDTO> listOrderHistoryByUserNum(int userNum) {
+		List<OrderHistoryDTO> list = new ArrayList<>();
+		List<OrderDetailDTO> items;
+		Connection conn = DBCPConn.getConnection();
+		//OrderHistory 조작하는 pstmt, rs
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		//OrderDetail 조작하는 pstmt, rs
+		PreparedStatement pstmtSub = null;
+		ResultSet rsSub = null;
+		String sql;
+		try {
+			sql = "SELECT orderNum, totalPaymentAmount, storeNum, oh.statusNum, statusName, userNum, cardNum, "
+					+ "TO_CHAR(order_date,'YYYY-MM-DD HH24:MI:SS') order_date, cancelNum "
+					+ " FROM order_history oh "
+					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
+					+ " WHERE userNum = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userNum);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				OrderHistoryDTO historyDTO = new OrderHistoryDTO();
+				int orderNum = rs.getInt("orderNum");
+				historyDTO.setOrderNum(orderNum);
+				historyDTO.setTotalPaymentAmount(rs.getInt("totalPaymentAmount"));
+				historyDTO.setStoreNum(rs.getInt("storeNum"));
+				historyDTO.setStatusNum(rs.getInt("statusNum"));
+				historyDTO.setStatusName(rs.getString("statusName"));
+				historyDTO.setUserNum(userNum);
+				historyDTO.setCardNum(rs.getInt("cardNum"));
+				historyDTO.setOrderDate(rs.getString("order_date"));
+				historyDTO.setCancelNum(rs.getInt("cancelNum"));
+				sql = "SELECT detailNum, orderNum, od.menuNum, menuName, unitPrice, quantity, paymentAmount "
+						+ " FROM order_detail od "
+						+ " JOIN menu mn ON od.menuNum = mn.menuNum "
+						+ " WHERE orderNum = ?";
+				pstmtSub = conn.prepareStatement(sql);
+				pstmtSub.setInt(1, orderNum);
+				rsSub = pstmtSub.executeQuery();
+				items = new ArrayList<>();
+				while(rsSub.next()) {
+					OrderDetailDTO detailDTO = new OrderDetailDTO();
+					detailDTO.setDetailNum(rsSub.getInt("detailNum"));
+					detailDTO.setOrderNum(rsSub.getInt("orderNum"));
+					detailDTO.setMenuNum(rsSub.getInt("menuNum"));
+					detailDTO.setMenuName(rsSub.getString("menuName"));
 					detailDTO.setUnitPrice(rsSub.getInt("unitPrice"));
 					detailDTO.setQuantity(rsSub.getInt("quantity"));
 					detailDTO.setPaymentAmount(rsSub.getInt("paymentAmount"));

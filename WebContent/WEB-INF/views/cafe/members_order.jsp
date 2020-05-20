@@ -178,6 +178,36 @@
              </form>
              </div>
              </c:if>
+             <c:if test="${api=='/orderedList.do'}">
+             <div class="row">
+                <table class="table" id="ordered_history">
+                <thead>
+                  <tr>
+                    <td class="col_no">No</td>
+                    <td class="col_content">내역</td>
+                    <td class="col_amount">금액</td>
+                    <td class="col_status">상태</td>
+                    <td class="col_date">날짜</td>
+                  </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="history" items="${orderHistory}" varStatus="status">
+                  <tr>
+                    <td class="col_no">${status.count}</td>
+                    <td class="col_content">
+						<c:forEach var="item" items="${history.items}" varStatus="st">
+							${item.menuName}${st.last==false?", ":""}
+						</c:forEach>
+					</td>
+                    <td class="col_amount"><fmt:formatNumber value="${history.totalPaymentAmount}"/></td>
+                    <td class="col_status">${history.statusName}</td>
+                    <td class="col_date">${history.orderDate}</td>
+                  </tr>
+                </c:forEach>
+				</tbody>
+				</table>             
+             </div>
+             </c:if>
            <!-- Content 영역 끝 -->
           </article>
         </div>

@@ -462,3 +462,16 @@ tbody .col_date{
 	text-align:center;
 	font-weight:bold;
 }
+
+
+/*orderedList*/
+#ordered_history .col_content{
+	width:30%;
+}
+#ordered_history .col_amount{
+	width:20%;
+}
+#ordered_history .col_status{
+	text-align:center;
+	width:20%;
+}

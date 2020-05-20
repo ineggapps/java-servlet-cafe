@@ -3,6 +3,8 @@ package com.cafe.members;
 public class OrderDetailDTO {
 	private int detailNum;
 	private int orderNum;
+	private int menuNum;
+	private String menuName;
 	private int unitPrice;
 	private int quantity;
 	private int paymentAmount;
@@ -21,6 +23,22 @@ public class OrderDetailDTO {
 
 	public void setOrderNum(int orderNum) {
 		this.orderNum = orderNum;
+	}
+
+	public int getMenuNum() {
+		return menuNum;
+	}
+
+	public void setMenuNum(int menuNum) {
+		this.menuNum = menuNum;
+	}
+
+	public String getMenuName() {
+		return menuName;
+	}
+
+	public void setMenuName(String menuName) {
+		this.menuName = menuName;
 	}
 
 	public int getUnitPrice() {
@@ -47,5 +65,4 @@ public class OrderDetailDTO {
 		this.paymentAmount = paymentAmount;
 	}
 
-	
 }

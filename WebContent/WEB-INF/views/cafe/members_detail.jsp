@@ -72,10 +72,9 @@
                 <thead>
                   <tr>
                     <td class="col_no">No</td>
-                    <td class="col_category">구분</td>
-                    <td class="col_content">내역</td>
-                    <td class="col_amount">금액</td>
                     <td class="col_date">날짜</td>
+                    <td class="col_content">주문 내역</td>
+                    <td class="col_amount">금액</td>
                   </tr>
                 </thead>
                 <tbody>
@@ -83,10 +82,9 @@
                 <c:forEach var="history" items="${orderHistory}" varStatus="status">
                   <tr>
                     <td class="col_no">${status.count}</td>
-                    <td class="col_category">사용</td>
+                    <td class="col_date">${history.orderDate}</td>
                     <td class="col_content">상품구매</td>
                     <td class="col_amount"><fmt:formatNumber value="-${history.totalPaymentAmount}"/></td>
-                    <td class="col_date">${history.orderDate}</td>
                   </tr>
                 </c:forEach>
                 </c:if>
