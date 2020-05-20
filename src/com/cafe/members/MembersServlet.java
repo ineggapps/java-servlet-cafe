@@ -346,6 +346,13 @@ public class MembersServlet extends EspressoServlet {
 			MenuDAO menuDAO = new MenuDAO();
 			List<MenuDTO> list = menuDAO.listAllMenu(0, 100);
 			// #2. 따로 장바구니 페이지를 만들어 두는 게 좋을 듯..
+			if(menuNum!=null && menuNum.length()>0) {
+				int mNum = Integer.parseInt(menuNum);
+				MenuDTO dto = menuDAO.readMenu(mNum); //TODO: 메서드명 수정하기
+				if(dto!=null) {
+					//TODO: 세션에 주문내역 추가하기
+				}
+			}
 			boolean isAdded = addCart(menuNum, cart, menuDAO);
 			if (isAdded == false && menuNum != null) {
 				attributes.put(ATTRIBUTE_ERROR_MSG, new ErrorMessage("구매 개수를 초과하였습니다.", "주문은 총 수량 15개까지만 구매가 가능합니다."));
@@ -374,7 +381,7 @@ public class MembersServlet extends EspressoServlet {
 						cart.addItem(dto);
 					} else {
 						// 카드에 없으면 DB에서 불러오기
-						dto = menuDAO.readPhoto(mNum); // TODO: 메서드명 수정하기
+						dto = menuDAO.readMenu(mNum); // TODO: 메서드명 수정하기
 						if (dto != null) {
 							System.out.println("새로운 아이템을 고르셨군!");
 							cart.addItem(dto);

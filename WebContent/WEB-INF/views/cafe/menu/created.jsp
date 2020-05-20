@@ -33,7 +33,7 @@ function sendMenu() {
     }
 
     var mode="${mode}";
-	  if(mode=="created"||mode=="update" && f.thumbnail.value!="") {
+	  if(mode=="createdMenu"||mode=="updateMenu" && f.thumbnail.value!="") {
 		if(! /(\.gif|\.jpg|\.png|\.jpeg)$/i.test(f.thumbnail.value)) {
 			alert('이미지 파일만 가능합니다. !!!');
 			f.thumbnail.focus();
@@ -42,9 +42,9 @@ function sendMenu() {
 	  }
 	  
   	  if(mode=="created")
-    		f.action="<%=cp%>/menu/created_ok.do";
+    		f.action="<%=cp%>/menu/createdMenu_ok.do";
   	  else if(mode=="update")
-    		f.action="<%=cp%>/menu/update_ok.do";
+    		f.action="<%=cp%>/menu/updateMenu_ok.do";
 
     f.submit();
 }
@@ -61,33 +61,41 @@ function sendMenu() {
       <h3> | 메뉴 등록</h3>
       <hr>
 		<div>
-		<form action="menuForm" method="post" enctype="multipart/form-data">
+		<form name="menuForm" method="post" enctype="multipart/form-data">
 			<table>
 				<tr>
 					<td> 메뉴 카테고리 번호 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td> <input class="menuinput" type="text" placeholder="커피는 1번, 에이드는 2번, 베이커리는 3번입니다..."> </td>
+					<td> 
+						<select name="categoryNum" style="width: 120px; height:30px;">
+							<option value="none"> 선 택 </option>
+							<option value="1" selected="selected"> 커피 </option>
+							<option value="2"> 에이드 </option>
+							<option value="3"> 베이커리 </option>
+						</select> 
+					</td>
+					<td><br></td>
 				</tr>
 				<tr>
 					<td> 메뉴 이름 </td>
-					<td> <input class="menuinput" type="text"> </td>
+					<td> <input class="menuinput" type="text" name="menuName" value="${dto.menuName}"> </td>
 				</tr>
 				<tr>
 					<td> 이미지 파일 </td>
-					<td> <input class="menuinput" type="file" name="upload" accept="image/*"></td>
+					<td> <input class="menuinput" type="file" name="thumbnail" accept="image/*" value="${dto.thumbnail}"></td>
 				</tr>
 				<tr>
 					<td> 메뉴 소개글 </td>
-					<td> <input class="menuinput" type="text"> </td>
+					<td> <input class="menuinput" type="text" name="text" value="${dto.text}"> </td>
 				</tr>
 				<tr>
 					<td> 가격 </td>
-					<td> <input class="menuinput" type="text"> </td>
+					<td> <input class="menuinput" type="text" name="price" value="${dto.price}"> </td>
 				</tr>
 				<tr>
 					<td>
-						<button class="menubutton" type="button" onclick="sendMenu();">${mode=='update'?'수정완료':'등록하기'}</button>
+						<button class="menubutton" type="button" onclick="sendMenu();">등록하기</button>
 						<button type="reset" class="btn">다시입력</button>
-			        	<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/menu/coffee.do';">${mode=='update'?'수정취소':'등록취소'}</button>
+			        	<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/menu/coffee.do';">등록취소</button>
 					</td>
 				</tr>
 			</table>

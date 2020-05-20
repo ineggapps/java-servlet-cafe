@@ -18,9 +18,8 @@ public class MenuDAO {
 		String sql;
 		
 		try {
-			sql = "INSERT INTO menu (menuNum, categoryNum, menuName,thumbnail, text, price) VALUES(menu_seq, ?,?,?,?,?)";
+			sql = "INSERT INTO menu (menuNum, categoryNum, menuName,thumbnail, text, price) VALUES(menu_seq.NEXTVAL, ?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
-			
 			pstmt.setInt(1, dto.getCategoryNum());
 			pstmt.setString(2, dto.getMenuName());
 			pstmt.setString(3, dto.getThumbnail());
@@ -50,8 +49,8 @@ public class MenuDAO {
 	}
 	
 	public int dataCount() {
-		int result=0;		Connection conn = DBCPConn.getConnection();
-
+		int result=0;
+		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		String sql;
@@ -64,7 +63,7 @@ public class MenuDAO {
 				result=rs.getInt(1);
 
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			e.printStackTrace();
 		} finally {
 			if(rs!=null) {
 				try {
@@ -91,8 +90,8 @@ public class MenuDAO {
 	}
 	
 	public List<MenuDTO> listMenu(int offset, int rows, int categoryNum) {
-		List<MenuDTO> list = new ArrayList<MenuDTO>();		Connection conn = DBCPConn.getConnection();
-
+		List<MenuDTO> list = new ArrayList<MenuDTO>();
+		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -144,8 +143,8 @@ public class MenuDAO {
 	}
 	
 	public List<MenuDTO> listAllMenu(int offset, int rows) {
-		List<MenuDTO> list = new ArrayList<MenuDTO>();		Connection conn = DBCPConn.getConnection();
-
+		List<MenuDTO> list = new ArrayList<MenuDTO>();
+		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -197,7 +196,6 @@ public class MenuDAO {
 	
 	public MenuDTO readMenu(int menuNum) {
 		MenuDTO dto=null;
-		
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
@@ -205,7 +203,7 @@ public class MenuDAO {
 		
 		try {
 			sql = "SELECT menuNum, categoryNum, menuName, thumbnail, text, price FROM menu WHERE menuNum=?";
-
+			
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, menuNum);
 			rs=pstmt.executeQuery();
@@ -247,8 +245,8 @@ public class MenuDAO {
 	}
 	
 	public int updateMenu(MenuDTO dto) {
-		int result=0;		Connection conn = DBCPConn.getConnection();
-
+		int result=0;
+		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt=null;
 		String sql;
 		
@@ -264,7 +262,7 @@ public class MenuDAO {
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			e.printStackTrace();
 		} finally {
 			if(pstmt!=null) {
 				try {
@@ -284,8 +282,8 @@ public class MenuDAO {
 	}
 	
 	public int deleteMenu(int menuNum) {
-		int result=0;		Connection conn = DBCPConn.getConnection();
-
+		int result=0;
+		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt=null;
 		String sql;
 		
@@ -295,7 +293,7 @@ public class MenuDAO {
 			pstmt.setInt(1, menuNum);
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			e.printStackTrace();
 		} finally {
 			if(pstmt!=null) {
 				try {
