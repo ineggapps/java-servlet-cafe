@@ -1,6 +1,6 @@
 package com.cafe.menu;
 
-public class MenuDTO {
+public class MenuDTO  implements Cloneable{
 	private int menuNum;
 	private int categoryNum;
 	private String menuName;
@@ -44,4 +44,10 @@ public class MenuDTO {
 	public void setPrice(int price) {
 		this.price = price;
 	}
+	@Override
+	public String toString() {
+		return "MenuDTO [menuNum=" + menuNum + ", categoryNum=" + categoryNum + ", menuName=" + menuName
+				+ ", thumbnail=" + thumbnail + ", text=" + text + ", price=" + price + "]";
+	}
+	
 }

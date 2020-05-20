@@ -10,10 +10,10 @@ import java.util.List;
 import com.util.DBCPConn;
 
 public class MenuDAO {
-	private Connection conn = DBCPConn.getConnection();
 	
 	public int insertMenu(MenuDTO dto) {
 		int result = 0;
+		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		String sql;
 		
@@ -50,7 +50,8 @@ public class MenuDAO {
 	}
 	
 	public int dataCount() {
-		int result=0;
+		int result=0;		Connection conn = DBCPConn.getConnection();
+
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		String sql;
@@ -78,13 +79,20 @@ public class MenuDAO {
 				} catch (SQLException e) {
 				}
 			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
 		}
 		
 		return result;
 	}
 	
 	public List<MenuDTO> listMenu(int offset, int rows, int categoryNum) {
-		List<MenuDTO> list = new ArrayList<MenuDTO>();
+		List<MenuDTO> list = new ArrayList<MenuDTO>();		Connection conn = DBCPConn.getConnection();
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -136,7 +144,8 @@ public class MenuDAO {
 	}
 	
 	public List<MenuDTO> listAllMenu(int offset, int rows) {
-		List<MenuDTO> list = new ArrayList<MenuDTO>();
+		List<MenuDTO> list = new ArrayList<MenuDTO>();		Connection conn = DBCPConn.getConnection();
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -189,13 +198,14 @@ public class MenuDAO {
 	public MenuDTO readPhoto(int menuNum) {
 		MenuDTO dto=null;
 		
+		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		String sql;
 		
 		try {
 			sql = "SELECT menuNum, categoryNum, menuName, thumbnail, text, price FROM menu WHERE menuNum=?";
-			
+
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, menuNum);
 			rs=pstmt.executeQuery();
@@ -210,7 +220,7 @@ public class MenuDAO {
 				dto.setPrice(rs.getInt("price"));
 			}
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			e.printStackTrace();
 		} finally {
 			if(rs!=null) {
 				try {
@@ -225,13 +235,20 @@ public class MenuDAO {
 				} catch (SQLException e) {
 				}
 			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
 		}
 		
 		return dto;
 	}
 	
 	public int updateMenu(MenuDTO dto) {
-		int result=0;
+		int result=0;		Connection conn = DBCPConn.getConnection();
+
 		PreparedStatement pstmt=null;
 		String sql;
 		
@@ -255,13 +272,20 @@ public class MenuDAO {
 				} catch (SQLException e) {
 				}
 			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
 		}
 		
 		return result;
 	}
 	
 	public int deleteMenu(int menuNum) {
-		int result=0;
+		int result=0;		Connection conn = DBCPConn.getConnection();
+
 		PreparedStatement pstmt=null;
 		String sql;
 		
@@ -278,6 +302,12 @@ public class MenuDAO {
 					pstmt.close();
 				} catch (SQLException e) {
 				}
+			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
 			}
 		}
 		
