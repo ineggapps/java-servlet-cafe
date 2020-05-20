@@ -191,10 +191,12 @@ CREATE SEQUENCE order_cancel_seq -- 주문 취소
 CREATE TABLE order_detail(
     detailNum NUMBER, --주문상세일련번호
     orderNum NUMBER,
+    menuNum NUMBER NOT NULL,
     unitPrice NUMBER NOT NULL, -- 단가
     quantity NUMBER NOT NULL, -- 수량
     paymentAmount NUMBER NOT NULL, -- 결제금액 (할인 등 변수 고려)
     CONSTRAINT pk_order_detail_num PRIMARY KEY(detailNum),
+    CONSTRAINT fk_order_detail_menu_num FOREIGN KEY(menuNum) REFERENCES menu(menuNum),
     CONSTRAINT fk_order_detail_num FOREIGN KEY(orderNum) REFERENCES order_history(orderNum)
 );
 
