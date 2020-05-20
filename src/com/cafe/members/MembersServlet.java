@@ -73,6 +73,7 @@ public class MembersServlet extends EspressoServlet {
 	private static final String ATTRIBUTE_API = "api";
 	private static final String ATTRIBUTE_LIST = "list";
 	private static final String ATTRIBUTE_ORDER_HISTORY = "orderHistory";
+	private static final String ATTRIBUTE_CARD_CHARGE_LIST = "cardChargeList";
 	private static final String ATTRIBUTE_CARDS = "cards";
 	private static final String ATTRIBUTE_ERROR_MSG = "errorMessage";
 	private static final String ATTRIBUTE_CARD_DTO = "cardDTO";
@@ -136,7 +137,9 @@ public class MembersServlet extends EspressoServlet {
 	protected void detail(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_DETAIL;
+		String tab = req.getParameter(PARAM_TAB);
 		CardDAO dao = new CardDAO();
+		CardChargeDAO chargeDAO = new CardChargeDAO();
 		OrderDAO orderDAO = new OrderDAO();
 		CardDTO dto;
 		SessionAuthInfo info = getSessionAuthInfo(req);
@@ -146,9 +149,18 @@ public class MembersServlet extends EspressoServlet {
 			if (dto == null) {
 				throw new Exception("카드가 존재하지 않습니다. cardNum:" + cardNum);
 			}
-			List<OrderHistoryDTO> list = orderDAO.listOrderHistoryByCardNum(cardNum, info.getUserNum());
-			attributes.put(PARAM_TAB, req.getParameter(PARAM_TAB));
-			attributes.put(ATTRIBUTE_ORDER_HISTORY, list);
+			
+			
+			List<OrderHistoryDTO> historyList; 
+			List<CardChargeDTO> chargeList;
+			if(tab==null || tab.equalsIgnoreCase("usage")) {
+				historyList = orderDAO.listOrderHistoryByCardNum(cardNum, info.getUserNum());
+				attributes.put(ATTRIBUTE_ORDER_HISTORY, historyList);
+			}else {
+				chargeList = chargeDAO.listCardCharge(cardNum, info.getUserNum());
+				attributes.put(ATTRIBUTE_CARD_CHARGE_LIST, chargeList);
+			}
+			attributes.put(PARAM_TAB, tab);
 			attributes.put(ATTRIBUTE_CARD_DTO, dto);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {

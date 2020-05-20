@@ -90,6 +90,17 @@
                   </tr>
                 </c:forEach>
                 </c:if>
+                <c:if test="${tab=='charge'}">
+                <c:forEach var="charge" items="${cardChargeList}" varStatus="status">
+                  <tr>
+                    <td class="col_no">${status.count}</td>
+                    <td class="col_category">충전</td>
+                    <td class="col_content">온라인 충전</td>
+                    <td class="col_amount"><fmt:formatNumber value="+${charge.chargeAmount}"/></td>
+                    <td class="col_date">${charge.chargeDate}</td>
+                  </tr>
+                </c:forEach>
+                </c:if>
                 </tbody>
               </table>
             </div>
