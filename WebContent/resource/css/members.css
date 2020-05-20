@@ -465,6 +465,10 @@ tbody .col_date{
 
 
 /*orderedList*/
+#ordered_history tbody td{
+	vertical-align:middle;
+}
+
 #ordered_history .col_content{
 	width:30%;
 }
@@ -474,4 +478,14 @@ tbody .col_date{
 #ordered_history .col_status{
 	text-align:center;
 	width:20%;
+}
+
+#ordered_detail dt,
+#ordered_detail dd{
+	float:left;
+	margin:10px;
+}
+
+#ordered_detail dt{
+	clear:both;
 }

@@ -184,24 +184,27 @@
                 <thead>
                   <tr>
                     <td class="col_no">No</td>
+                    <td class="col_date">날짜</td>
                     <td class="col_content">내역</td>
                     <td class="col_amount">금액</td>
                     <td class="col_status">상태</td>
-                    <td class="col_date">날짜</td>
                   </tr>
                 </thead>
                 <tbody>
                 <c:forEach var="history" items="${orderHistory}" varStatus="status">
                   <tr>
                     <td class="col_no">${status.count}</td>
+                    <td class="col_date">${history.orderDate}</td>
                     <td class="col_content">
+						<dl id="ordered_detail">
 						<c:forEach var="item" items="${history.items}" varStatus="st">
-							${item.menuName}${st.last==false?", ":""}
+							<dt>${item.menuName}</dt>
+							<dd>${item.unitPrice}</dd>
 						</c:forEach>
+						</dl>
 					</td>
                     <td class="col_amount"><fmt:formatNumber value="${history.totalPaymentAmount}"/></td>
                     <td class="col_status">${history.statusName}</td>
-                    <td class="col_date">${history.orderDate}</td>
                   </tr>
                 </c:forEach>
 				</tbody>
