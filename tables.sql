@@ -150,14 +150,15 @@ CREATE SEQUENCE order_status_seq -- 주문 상태번호
 CREATE TABLE order_history(
     orderNum NUMBER,
     totalPaymentAmount NUMBER NOT NULL, --최종 결제금액
-    storeNum NUMBER NOT NULL, --주문 매장번호
+    storeNum NUMBER, --주문 매장번호
     statusNum NUMBER NOT NULL,
-    userNum NUMBER,
-    cardNum NUMBER, -- ALTER TABLE로 제약사항 추가하기
+    userNum NUMBER NOT NULL,
+    cardNum NUMBER NOT NULL, -- ALTER TABLE로 제약사항 추가하기
     order_date DATE DEFAULT SYSDATE, --주문일시
     cancelNum NUMBER, -- ALTER TABLE로 제약사항 추가하기
     CONSTRAINT pk_order_history_num PRIMARY KEY(orderNum),
-    CONSTRAINT fk_order_history_userNum FOREIGN KEY(userNum) REFERENCES member(userNum) 
+    CONSTRAINT fk_order_history_userNum FOREIGN KEY(userNum) REFERENCES member(userNum),
+    CONSTRAINT fk_order_history_statusNum FOREIGN KEY(statusNum) REFERENCES order_status(statusNum)
 -- CONSTRAINT fk_cancel_num FOREIGN KEY(cancelNum) REFERENCES order_cancel(cancelNum)
 -- CONSTRAINT fk_cards_num FOREIGN KEY(cardNum) REFERENCES cards(cardNum)
 );
@@ -347,6 +348,13 @@ INSERT INTO store(storeNum, storeName, TEL, storeAddress) VALUES(store_seq.NEXTV
 COMMIT;
 
 
+INSERT INTO order_status(statusNum, statusName) VALUES(order_status_seq.NEXTVAL, '결제 완료');
+INSERT INTO order_status(statusNum, statusName) VALUES(order_status_seq.NEXTVAL, '제조 대기');
+INSERT INTO order_status(statusNum, statusName) VALUES(order_status_seq.NEXTVAL, '제조 중');
+INSERT INTO order_status(statusNum, statusName) VALUES(order_status_seq.NEXTVAL, '제조 완료');
+
+COMMIT;
+
 --카드 충전 포인트 샘플 데이터
 INSERT INTO card_charge(chargeNum, cardNum, chargeAmount) VALUES(card_charge_seq.NEXTVAL, 1, 10000);
 COMMIT;
@@ -381,6 +389,38 @@ AFTER DELETE ON card_charge
 FOR EACH ROW
 BEGIN
      UPDATE cards SET balance = balance - :OLD.chargeAmount;
+           WHERE cardNum = :OLD.cardNum;
+END;
+/
+
+---트리거
+-- 구매내역 입력 시
+CREATE OR REPLACE TRIGGER ins_order_history_point
+AFTER INSERT ON order_history
+FOR EACH ROW
+
+BEGIN
+     UPDATE cards SET balance = balance - :NEW.totalPaymentAmount
+           WHERE cardNum = :NEW.cardNum;
+END;
+/
+
+-- 구매내역 수정 시
+CREATE OR REPLACE TRIGGER update_order_history_point
+AFTER UPDATE ON order_history
+FOR EACH ROW
+BEGIN
+     UPDATE cards SET balance = balance + :OLD.totalPaymentAmount - :NEW.totalPaymentAmount
+            WHERE cardNum = :NEW.cardNum;
+END;
+/
+
+--구매내역 삭제 시
+CREATE OR REPLACE TRIGGER delete_order_history_point
+AFTER DELETE ON order_history
+FOR EACH ROW
+BEGIN
+     UPDATE cards SET balance = balance + :OLD.totalPaymentAmount
            WHERE cardNum = :OLD.cardNum;
 END;
 /
