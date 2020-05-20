@@ -339,7 +339,7 @@ public class MembersServlet extends EspressoServlet {
 			// #2. 따로 장바구니 페이지를 만들어 두는 게 좋을 듯..
 			if(menuNum!=null && menuNum.length()>0) {
 				int mNum = Integer.parseInt(menuNum);
-				MenuDTO dto = menuDAO.readPhoto(mNum); //TODO: 메서드명 수정하기
+				MenuDTO dto = menuDAO.readMenu(mNum); //TODO: 메서드명 수정하기
 				if(dto!=null) {
 					//TODO: 세션에 주문내역 추가하기
 				}
