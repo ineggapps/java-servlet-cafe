@@ -260,16 +260,18 @@ h3 {
   border-collapse:collapse;
   max-width: 1180px;
   overflow: hidden;
-  border-bottom: 2px solid #002f6c;
   border-left: 1px solid #d9d9d9;
   border-top: 1px solid #d9d9d9;
+  border-bottom: 3px solid #002f6c;
   margin-top: 20px;
 }
 
 .tab li {
   text-align: center;
   /*width: 49.83%;*/
-  width:33.193%;
+  /*width:33.193%;*/
+  width:33.3344%;
+  box-sizing:border-box;
   line-height: 49px;
   user-select: none;
   display: inline-block;
@@ -306,6 +308,7 @@ h3 {
 }
 
 .shop li {
+  user-select:none;
   display: inline-block;
   text-align: center;
 }
@@ -361,4 +364,102 @@ h3 {
 .menu_item_controller{
 	margin-top:10px;
 	height:100%;
+}
+
+/*주문 및 결제*/ 
+.col_category{
+	width:20%;
+	text-align:center;
+}
+.col_menuName{
+	width:60%;
+}
+.col_price{
+	width:20%;
+	text-align:center;
+}
+
+#buy td{
+	display:table-cell;
+	vertical-align:middle;
+}
+
+/*buy item*/
+
+.buy_item > * {
+	float:left;
+}
+
+.buy_item:after,
+.total:after{
+	content:"";
+	clear:both;
+	display:block;
+}
+
+.buy_item .item_image{
+	width:100px;
+	height:100px;
+}
+
+.buy_item .item_image img{
+	width:100%;
+}
+
+.buy_item .item_label{
+	user-select:none;
+	padding:44px 0;
+}
+
+.total h3{
+	float:left;
+	font-size:1.9rem;
+}
+
+.total span{
+	float:right;
+	font-size:1.8rem;
+	color:#002f6c;
+}
+
+.total{
+	font-weight:bold;
+	padding:50px 80px;
+	border-bottom:1px solid #d1d1d1;
+}
+
+/*카드... 결제수단*/
+.buy_method{
+	padding:50px 0;
+}
+
+.item_card input[type=radio]{
+	display:none;
+}
+.item_card{
+	width:200px;
+	float:left;
+	margin-right:20px;
+}
+
+.item_card label,
+.item_card img{
+	width:100%;
+	cursor:pointer;
+}
+
+.item_card img{
+	opacity:0.4;
+}
+
+.item_card input:checked ~ img{
+	opacity:1;
+}
+
+
+.item_card span{
+	display:block;
+	width:100%;
+	text-align:center;
+	font-weight:bold;
 }
