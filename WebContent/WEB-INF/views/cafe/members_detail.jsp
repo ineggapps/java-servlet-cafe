@@ -79,7 +79,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                <c:if test="${tab=='usage'}">
+                <c:if test="${tab=='usage' or empty tab}">
                 <c:forEach var="history" items="${orderHistory}" varStatus="status">
                   <tr>
                     <td class="col_no">${status.count}</td>

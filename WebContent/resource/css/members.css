@@ -133,6 +133,9 @@ div.detail {
 .col_content {
   width: 15%;
 }
+tbody .col_content{
+	text-align:center;
+}
 .col_store {
   width: 15%;
 } 
@@ -145,6 +148,9 @@ tbody .col_amount{
 }
 .col_date {
   width: auto;
+}
+tbody .col_date{
+	padding-left:5%;
 }
 
 /*카드 충전*/

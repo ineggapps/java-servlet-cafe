@@ -126,7 +126,8 @@ public class OrderDAO {
 		ResultSet rsSub = null;
 		String sql;
 		try {
-			sql = "SELECT orderNum, totalPaymentAmount, storeNum, oh.statusNum, statusName, userNum, cardNum, order_date, cancelNum "
+			sql = "SELECT orderNum, totalPaymentAmount, storeNum, oh.statusNum, statusName, userNum, cardNum, "
+					+ "TO_CHAR(order_date,'YYYY-MM-DD HH24:MI:SS') order_date, cancelNum "
 					+ " FROM order_history oh "
 					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
 					+ "WHERE cardNum = ? AND userNum = ?";
@@ -144,7 +145,7 @@ public class OrderDAO {
 				historyDTO.setStatusName(rs.getString("statusName"));
 				historyDTO.setUserNum(userNum);
 				historyDTO.setCardNum(cardNum);
-				historyDTO.setOrderDate(rs.getDate("order_date").toString());
+				historyDTO.setOrderDate(rs.getString("order_date"));
 				historyDTO.setCancelNum(rs.getInt("cancelNum"));
 				sql = "SELECT detailNum, orderNum, unitPrice, quantity, paymentAmount "
 						+ " FROM order_detail "
@@ -155,7 +156,6 @@ public class OrderDAO {
 				items = new ArrayList<>();
 				while(rsSub.next()) {
 					OrderDetailDTO detailDTO = new OrderDetailDTO();
-					System.out.println(rsSub.getInt("detailNum"));
 					detailDTO.setDetailNum(rsSub.getInt("detailNum"));
 					detailDTO.setOrderNum(rsSub.getInt("orderNum"));
 					detailDTO.setUnitPrice(rsSub.getInt("unitPrice"));
