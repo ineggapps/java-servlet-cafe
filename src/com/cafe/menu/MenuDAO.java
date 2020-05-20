@@ -186,7 +186,7 @@ public class MenuDAO {
 		return list;
 	}
 	
-	public MenuDTO readPhoto(int menuNum) {
+	public MenuDTO readMenu(int menuNum) {
 		MenuDTO dto=null;
 		
 		PreparedStatement pstmt=null;
