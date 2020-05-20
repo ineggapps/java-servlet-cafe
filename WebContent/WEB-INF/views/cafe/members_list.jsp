@@ -50,7 +50,7 @@
                     <div class="card_info list">
                       <p class="card_title">
                         <a href="<%=cp%>/members/detail.do?cardNum=${dto.cardNum}"><strong>${dto.cardName}</strong></a
-                        ><a href="#" class="modify">수정</a>
+                        ><!--a href="#" class="modify">수정</a-->
                       </p>
                       <p class="card_id">${dto.cardIdentity}</p>
                       <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${dto.balance}"/></strong>원</p>

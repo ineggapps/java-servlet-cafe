@@ -36,6 +36,9 @@
 			<c:if test="${mode=='charge'}">
 			f.action = "<%=cp%>/members/charge_ok.do";
 			</c:if>
+			<c:if test="${mode=='close'}">
+			f.action = "<%=cp%>/members/close_ok.do";
+			</c:if>
 			f.submit();
 		}
 	</script>    
@@ -62,7 +65,12 @@
             <form name="chargeForm" method="post">
               <div class="row">
                 <div class="row_title">
-                  <h3>카드 ${mode=="register"?"등록":"충전"}하기</h3>
+                	<c:if test="${mode!='close'}">
+                    <h3>카드 ${mode=="register"?"등록":"충전"}하기</h3>
+                	</c:if>
+					<c:if test="${mode=='close'}">
+                    <h3>카드 해지하기</h3>
+					</c:if>                    
                 </div>
                 <div class="card_container card_container_full">
                   <ul>
@@ -71,14 +79,14 @@
                       	<c:if test="${mode=='register'}">
                         <img src="<%=cp%>${modelDTO.thumbnail}" alt="card" />
                       	</c:if>
-						<c:if test="${mode=='charge' }">
+						<c:if test="${mode!='register' }">
                         <img src="<%=cp%>${cardDTO.thumbnail}" alt="card" />
 						</c:if>
                       </figure>
                       <div class="detail">
-                        <c:if test="${mode=='charge'}">
+                        <c:if test="${mode!='register'}">
                         <p class="card_title detail">
-                          <strong>${cardDTO.cardName}</strong><a href="#" class="modify">수정</a>
+                          <strong>${cardDTO.cardName}</strong><!-- a href="#" class="modify">수정</a-->
                         </p>
                         <p class="card_id">${cardDTO.cardIdentity}</p>
                         <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${cardDTO.balance}"/></strong>원</p>
@@ -97,12 +105,25 @@
                     </tr>
                   </thead>
                   <tbody>
+                  	<c:if test="${mode=='close'}">
+                  	<tr>
+                  		<td class="col_charge_category">잔액을 이체할 카드</td>
+                  		<td class="col_charge_data">
+							<select name="targetCardNum" class="select_card">
+								<c:forEach var="dto" items="${list}">
+								<option value="${dto.cardNum}">${dto.cardName}</option>
+								</c:forEach>
+							</select>
+						</td>
+                  	</tr>
+                  	</c:if>
                   	<c:if test="${mode=='register'}">
                   	<tr>
                   		<td class="col_charge_category">카드 이름</td>
                   		<td class="col_charge_data"><input class="text_input" type="text" placeholder="카드 이름" name="cardName" /></td>
                   	</tr>
                   	</c:if>
+                 	<c:if test="${mode!='close'}">
                     <tr>
                       <td class="col_charge_category">충전 금액 선택</td>
                       <td class="col_charge_data">
@@ -149,6 +170,7 @@
                       <td class="col_charge_category">결제 시점</td>
                       <td class="col_charge_data"><strong class="desc_blue">즉시</strong> 결제</td>
                     </tr>
+                    </c:if>
                   </tbody>
                 </table>
               </div>
@@ -158,11 +180,16 @@
             	<input type="hidden" name="modelNum" value ="${modelDTO.modelNum}"/>
               <a href="<%=cp %>/members/register.do" class="list_button">목록</a>
             </c:if>
-            <c:if test="${mode=='charge'}">
+            <c:if test="${mode!='register'}">
             	<input type="hidden" name="cardNum" value="${cardDTO.cardNum}" />
               <a href="<%=cp %>/members/list.do" class="list_button">목록</a>
             </c:if>
+            <c:if test="${mode!='close'}">
               <a href="#" class="list_button submit" onclick="submit()">${mode=="register"?"등록":"충전"}하기</a>
+             </c:if>
+            <c:if test="${mode=='close'}">
+              <a href="#" class="list_button submit" onclick="submit()">해지하기</a>
+             </c:if>
             </div>
             </form>
             <!-- Content 영역 끝 -->

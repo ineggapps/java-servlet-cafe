@@ -45,16 +45,16 @@
                       <img src="<%=cp %>${cardDTO.thumbnail}" alt="card" />
                     </figure>
                     <div class="detail">
-                      <p class="card_title detail">
+                      <p class="card_title detail"> 
                         <strong>${cardDTO.cardName}</strong><a href="#" class="modify">수정</a>
                       </p>
-                      <p class="card_id">(123456)</p>
+                      <p class="card_id">${cardDTO.cardIdentity}</p>
                       <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${cardDTO.balance}"/></strong>원</p>
                       <ul class="card_control">
                         <li>
                           <a href="<%=cp %>/members/charge.do?cardNum=${cardDTO.cardNum}" class="card_button">충전하기</a>
                         </li>
-                        <li><a href="#" class="card_button">잔액이전</a></li>
+                        <li><a href="<%=cp %>/members/close.do?cardNum=${cardDTO.cardNum}" class="card_button">해지</a></li>
                       </ul>
                     </div>
                   </li>

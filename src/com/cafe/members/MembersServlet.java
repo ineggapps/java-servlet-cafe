@@ -21,7 +21,6 @@ public class MembersServlet extends EspressoServlet {
 	private static final String CAFE = "cafe";
 	private static final String VIEW = "/WEB-INF/views";
 	private static final String VIEWS = VIEW + "/" + CAFE;
-	private static final String SESSION_INFO = "member";
 
 	// PATH(dynamic)
 	private static String contextPath;
@@ -35,6 +34,8 @@ public class MembersServlet extends EspressoServlet {
 	private static final String API_CHARGE = "/charge.do";
 	private static final String API_CHARGE_OK = "/charge_ok.do";
 	private static final String API_ORDER = "/order.do";
+	private static final String API_CLOSE_CARD = "/close.do";
+	private static final String API_CLOSE_CARD_OK = "/close_ok.do";
 
 	// JSP
 	private static final String JSP_LIST = "/members_list.jsp";
@@ -47,8 +48,10 @@ public class MembersServlet extends EspressoServlet {
 	private static final String PARAM_MODE = "mode";
 	private static final String PARAM_MODEL_NUM = "modelNum";
 	private static final String PARAM_CARD_NUM = "cardNum";
+	private static final String PARAM_TARGET_CARD_NUM = "targetCardNum";
 	private static final String PARAM_MODE_REGISTER = "register";
 	private static final String PARAM_MODE_CHARGE = "charge";
+	private static final String PARAM_MODE_CLOSE = "close";
 	private static final String PARAM_REGISTER_STEP = "register_step";
 	private static final String PARAM_CARD_NAME = "cardName";
 	private static final String PARAM_PRICE = "price";
@@ -89,6 +92,10 @@ public class MembersServlet extends EspressoServlet {
 			chargeSubmit(req, resp, attributes);
 		} else if (uri.indexOf(API_ORDER) != -1) {
 			order(req, resp, attributes);
+		} else if (uri.indexOf(API_CLOSE_CARD) != -1) {
+			closeForm(req, resp, attributes);
+		} else if (uri.indexOf(API_CLOSE_CARD_OK) != -1) {
+			closeSubmit(req, resp, attributes);
 		}
 	}
 
@@ -216,9 +223,14 @@ public class MembersServlet extends EspressoServlet {
 		String path = VIEWS + JSP_CHARGE;
 		attributes.put(PARAM_MODE, PARAM_MODE_CHARGE);
 		CardDAO dao = new CardDAO();
+		CardDTO dto = null;
 		try {
-			int cardNum = Integer.parseInt(req.getParameter(PARAM_CARD_NUM));
-			CardDTO dto = dao.readCard(cardNum, info.getUserNum());
+			String cardNum = req.getParameter(PARAM_CARD_NUM);
+			if (cardNum == null) {
+				dto = dao.readRecentCard(info.getUserNum());
+			} else {
+				dto = dao.readCard(Integer.parseInt(cardNum), info.getUserNum());
+			}
 			if (dto == null) {
 				throw new Exception("카드가 존재하지 않습니다.");
 			}
@@ -254,6 +266,54 @@ public class MembersServlet extends EspressoServlet {
 			} catch (IOException e1) {
 			}
 		}
+	}
+
+	protected void closeForm(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		SessionAuthInfo info = getSessionAuthInfo(req);
+		String path = VIEWS + JSP_CHARGE;
+		attributes.put(PARAM_MODE, PARAM_MODE_CLOSE);
+		String cardNum = req.getParameter(PARAM_CARD_NUM);
+		CardDAO dao = new CardDAO();
+		try {
+			// 현재 카드 정보 싣기
+			attributes.put(ATTRIBUTE_CARD_DTO, dao.readCard(Integer.parseInt(cardNum), info.getUserNum()));
+			// 이체할 카드 정보 싣기
+			List<CardDTO> list = dao.listCard(info.getUserNum());
+			for (int i = 0; i < list.size(); i++) {
+				// 현재 카드 정보 빼기
+				if (list.get(i).getCardNum() == Integer.parseInt(cardNum)) {
+					list.remove(i);
+					break;
+				}
+			}
+			attributes.put(ATTRIBUTE_LIST, list);
+			forward(req, resp, path, attributes);
+		} catch (Exception e) {
+			resp.sendRedirect(apiPath + API_DETAIL + "?" + PARAM_CARD_NUM + "=" + cardNum);
+			return;
+		}
+	}
+
+	protected void closeSubmit(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		// 해지할 카드번호(cardNum), 이체할 카드(targetCardNum)
+		// 해지를 위해서 이체하는 경우에만 55만원을 초과하는 것을 허락하자!
+		System.out.println("메서드 진입");
+		CardDAO dao = new CardDAO();
+		String closeCardNum = req.getParameter(PARAM_CARD_NUM);
+		String targetCardNum = req.getParameter(PARAM_TARGET_CARD_NUM);
+		try {
+			System.out.println(closeCardNum + ", " + targetCardNum + "시도");
+			int closeNum = Integer.parseInt(closeCardNum);
+			int targetNum = Integer.parseInt(targetCardNum);
+			dao.closeCard(closeNum, targetNum);
+			resp.sendRedirect(apiPath + API_LIST);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_DETAIL + "?" + PARAM_CARD_NUM + "=" + closeCardNum);
+		}
+
 	}
 
 	protected void order(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
