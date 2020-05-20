@@ -58,9 +58,9 @@ h3 {
   margin-left: 20px;
 }
 
-.card_container > ul > li > div.detail{
-  width:300px;
-  margin-left:20px;
+.card_container > ul > li > div.detail {
+  width: 300px;
+  margin-left: 20px;
 }
 
 .card_container > ul > li > div p {
@@ -240,15 +240,125 @@ h3 {
 }
 
 .text_input {
-    width: 300px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 3px;
+  width: 300px;
+  height: 30px;
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
 }
 
-.select_card{
-	padding: 10px;
-    min-width: 300px;
+.select_card {
+  padding: 10px;
+  min-width: 300px;
 }
 
+/*쿠앤크 오더*/
+
+.tab {
+  width: 100%;
+  display: table;
+  border-collapse:collapse;
+  max-width: 1180px;
+  overflow: hidden;
+  border-bottom: 2px solid #002f6c;
+  border-left: 1px solid #d9d9d9;
+  border-top: 1px solid #d9d9d9;
+  margin-top: 20px;
+}
+
+.tab li {
+  text-align: center;
+  /*width: 49.83%;*/
+  width:33.193%;
+  line-height: 49px;
+  user-select: none;
+  display: inline-block;
+  border-right: 1px solid #d9d9d9;
+}
+
+.tab li:first-child(){
+  border-left: 1px solid #d9d9d9;
+}
+
+.tab li a {
+  font-weight:bold;
+  color: #474747;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tab li.on a,
+.tab li:hover a {
+  color: #e9e9e9;
+}
+
+.tab li.on,
+.tab li:hover {
+  background-color: #002f6c;
+  border: 1px solid #002f6c;
+}
+
+/*shop*/
+
+.shop {
+  text-align: center;
+}
+
+.shop li {
+  display: inline-block;
+  text-align: center;
+}
+
+.shop li div.menu_item {
+  width: 180px;
+}
+
+.shop li div.menu_item p{
+	font-size:1.2rem;
+	font-weight:bold;
+}
+
+.menu_content{
+	height:65px;
+}
+
+.shop li div.menu_item_controller:after{
+	display:block;
+	clear:both;
+	content:"";
+}
+
+.shop li div.menu_item figure {
+  width: 100%;
+  clear: both;
+}
+
+.shop li div.menu_item img {
+  width: 100%;
+}
+
+.item_button {
+  user-select: none;
+  width: 35%;
+  display:inline-block;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+  text-align: center;
+  padding:5px;
+}
+
+.item_button:hover{
+	border:1px solid #002f6c;
+	background-color:#002f6c;
+	color:#d9d9d9;
+}
+
+.item_button:hover {
+  font-weight: bold;
+}
+
+.menu_item_controller{
+	margin-top:10px;
+	height:100%;
+}

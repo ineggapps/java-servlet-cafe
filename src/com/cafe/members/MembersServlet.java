@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cafe.auth.SessionAuthInfo;
+import com.cafe.menu.MenuDAO;
+import com.cafe.menu.MenuDTO;
 import com.util.EspressoServlet;
 
 @WebServlet("/members/*")
@@ -34,6 +36,9 @@ public class MembersServlet extends EspressoServlet {
 	private static final String API_CHARGE = "/charge.do";
 	private static final String API_CHARGE_OK = "/charge_ok.do";
 	private static final String API_ORDER = "/order.do";
+	private static final String API_BUY = "/buy.do";
+	private static final String API_BUY_OK = "/buy_ok.do";
+	private static final String API_ORDERED_LIST = "/orderedList.do";
 	private static final String API_CLOSE_CARD = "/close.do";
 	private static final String API_CLOSE_CARD_OK = "/close_ok.do";
 
@@ -55,6 +60,7 @@ public class MembersServlet extends EspressoServlet {
 	private static final String PARAM_REGISTER_STEP = "register_step";
 	private static final String PARAM_CARD_NAME = "cardName";
 	private static final String PARAM_PRICE = "price";
+	private static final String PARAM_MENU_NUM = "menuNum";
 	private static final int PARAM_REGISTER_STEP_1 = 1;
 	private static final int PARAM_REGISTER_STEP_2 = 2;
 	private static final int PARAM_REGISTER_STEP_3 = 3;
@@ -92,6 +98,12 @@ public class MembersServlet extends EspressoServlet {
 			chargeSubmit(req, resp, attributes);
 		} else if (uri.indexOf(API_ORDER) != -1) {
 			order(req, resp, attributes);
+		} else if (uri.indexOf(API_BUY) != -1) {
+			buyForm(req, resp, attributes);
+		} else if (uri.indexOf(API_BUY_OK) != -1) {
+			buySubmit(req, resp, attributes);
+		} else if(uri.indexOf(API_ORDERED_LIST)!=-1) {
+			orderedList(req, resp, attributes);
 		} else if (uri.indexOf(API_CLOSE_CARD) != -1) {
 			closeForm(req, resp, attributes);
 		} else if (uri.indexOf(API_CLOSE_CARD_OK) != -1) {
@@ -319,9 +331,75 @@ public class MembersServlet extends EspressoServlet {
 	protected void order(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_ORDER;
-		forward(req, resp, path, attributes);
+		String menuNum = req.getParameter(PARAM_MENU_NUM);
+		try {
+			// #1. 메뉴 리스트 뽑기
+			MenuDAO menuDAO = new MenuDAO();
+			List<MenuDTO> list = menuDAO.listAllMenu(0, 100);
+			// #2. 따로 장바구니 페이지를 만들어 두는 게 좋을 듯..
+			if(menuNum!=null && menuNum.length()>0) {
+				int mNum = Integer.parseInt(menuNum);
+				MenuDTO dto = menuDAO.readPhoto(mNum); //TODO: 메서드명 수정하기
+				if(dto!=null) {
+					//TODO: 세션에 주문내역 추가하기
+				}
+			}
+			// 대부분의 쇼핑몰이 얼마나 담겼는지는 안 보여주네
+			attributes.put(ATTRIBUTE_LIST, list);
+			forward(req, resp, path, attributes);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_LIST);
+			return;
+		}
+	}
+	
+	protected void buyForm(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		String path = VIEWS + JSP_ORDER;
+		try {
+			// #1. 메뉴 리스트 뽑기
+			MenuDAO menuDAO = new MenuDAO();
+			List<MenuDTO> list = menuDAO.listAllMenu(0, 100);
+			// 대부분의 쇼핑몰이 얼마나 담겼는지는 안 보여주네
+			attributes.put(ATTRIBUTE_LIST, list);
+			forward(req, resp, path, attributes);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_LIST);
+			return;
+		}
+	}
+	
+	protected void buySubmit(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		String path = apiPath + API_ORDER;
+		try {
+			//TODO: 결제
+			
+			//TODO: 현재 진행 상태 보기
+			forward(req, resp, path, attributes);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_LIST);
+			return;
+		}
 	}
 
+	protected void orderedList(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		String path = VIEWS + JSP_ORDER;
+		try {
+			// #1. 메뉴 리스트 뽑기
+			// #2. 따로 장바구니 페이지를 만들어 두는 게 좋을 듯..
+			// 대부분의 쇼핑몰이 얼마나 담겼는지는 안 보여주네
+			forward(req, resp, path, attributes);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_LIST);
+			return;
+		}
+	}
 	//////////////////////
 	protected void forward(HttpServletRequest req, HttpServletResponse resp, String path,
 			Map<String, Object> attributes) throws ServletException, IOException {

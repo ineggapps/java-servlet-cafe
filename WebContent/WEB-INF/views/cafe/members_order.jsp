@@ -33,91 +33,61 @@
               </div>
 			  <jsp:include page="/WEB-INF/views/layout/members_lnb.jsp"/>
             </div>
+			<div class="row_full alert">
+              <div class="row">
+              	<div class="box">
+              		<figure class="img">
+              			<img src="<%=cp %>/resource/images/assets/alert-240.png" alt="alert" />
+              		</figure>
+              		<div class="msg_content">
+						<div class="title">구매 개수를 초과하였습니다.</div>              		
+					  	<p class="message">커피, 베이커리, 에이드는 합쳐서 20잔(개)까지만 구매가 가능합니다.<br/>보다 맛있는 음식으로 보답하는 쿠앤크 커피가 되겠습니다.</p>
+              		</div>
+              	</div>
+			  </div>
+            </div>
             <form>
               <div class="row">
                 <div class="row_title">
                   <h3>쿠앤크 오더</h3>
                 </div>
-                <div class="card_container card_container_full">
-                  <ul>
-                    <li>
-                      <figure>
-                        <img src="<%=cp%>/resource/images/members/card/card04.png" alt="card" />
-                      </figure>
-                      <div>
-                        <p class="card_title detail">
-                          <strong>카드이름</strong><a href="#" class="modify">수정</a>
-                        </p>
-                        <p class="card_id">(123456)</p>
-                        <p class="card_remain">잔액 <strong>999,999,999</strong>원</p>
-                      </div>
-                    </li>
+              <div class="row">
+                  <ul class="tab">
+                    <li ${api=="/order.do"?"class=\"on\"":""}><a href="<%=cp%>/members/order.do">음식 고르기</a></li>
+                    <li ${api=="/buy.do"?"class=\"on\"":""}><a href="<%=cp%>/members/buy.do">주문 및 결제</a></li>
+                    <li ${api=="/orderedList.do"?"class=\"on\"":""}><a href="<%=cp%>/members/orderedList.do">주문 내역</a></li>
                   </ul>
                 </div>
               </div>
+              <c:if test="${api=='/order.do'}">
               <div class="row">
-                <table id="card_charge">
-                  <thead>
-                    <tr>
-                      <td>항목</td>
-                      <td>입력</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="col_charge_category">충전 금액 선택</td>
-                      <td class="col_charge_data">
-                        <p class="desc">
-                          충전 후 총 카드잔액: <strong class="desc_blue">999,999</strong>원
-                        </p>
-                        <ul class="charge_option">
-                          <li>
-                            <label
-                              ><input type="radio" value="100000" name="price" /><span
-                                >10만원</span
-                              ></label
-                            >
-                          </li>
-                          <li>
-                            <label
-                              ><input type="radio" value="50000" name="price" /><span
-                                >5만원</span
-                              ></label
-                            >
-                          </li>
-                          <li>
-                            <label
-                              ><input type="radio" value="30000" name="price" /><span
-                                >3만원</span
-                              ></label
-                            >
-                          </li>
-                          <li>
-                            <label
-                              ><input type="radio" value="10000" name="price" /><span
-                                >1만원</span
-                              ></label
-                            >
-                          </li>
-                        </ul>
-                        <p class="desc_red desc">
-                          ※쿠앤크 커피 온라인 충전은 1만 원 단위로 최대 55만원까지 가능하며, 충전 후
-                          합계 잔액이 55만 원을 초과할 수 없습니다.
-                        </p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="col_charge_category">결제 시점</td>
-                      <td class="col_charge_data"><strong class="desc_blue">즉시</strong> 결제</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <ul class="shop">
+                	<c:forEach var="dto" items="${list}"> 
+                		<li>
+                			<div class="menu_item">
+                				<figure class="menu_figure">
+                					<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.menuName}" />
+                				</figure>
+                		 		<div class="menu_content">
+                		 			<p>${dto.menuName}</p>
+                		 			<div class="menu_item_controller">
+						              <a href="<%=cp%>/members/order.do?menuNum=${dto.menuNum}" class="item_button">담기</a>
+						              <a href="#" class="item_button submit" onclick="submit()">주문</a>
+						            </div>
+                		 		</div>
+                			</div>
+                		</li>
+                	</c:forEach>
+                </ul>
               </div>
+              </c:if>
+              <c:if test="${api=='/order.do'}">
+              <div class="row">
+                
+              </div>
+              </c:if>
             </form>
-            <div class="row buttons">
-              <a href="./members_card_list.html" class="list_button">목록</a>
-              <a href="#" class="list_button submit" onclick="submit()">충전하기</a>
-            </div>
+            
             <!-- Content 영역 끝 -->
           </article>
         </div>
