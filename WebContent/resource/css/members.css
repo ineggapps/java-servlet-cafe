@@ -70,7 +70,7 @@ h3 {
 .card_title {
   margin-top: 20px;
 }
-.detail {
+div.detail {
   font-size: 0.8rem;
 }
 
@@ -124,29 +124,6 @@ h3 {
   color: #fff;
 }
 
-#card_history {
-  width: 100%;
-  border-top: 3px solid #233e83;
-  text-align: center;
-}
-
-#card_history thead td {
-  font-weight: bold;
-}
-
-#card_history tbody tr:hover td {
-  font-weight: bold;
-  color: #233e83;
-}
-
-#card_history tr {
-  border-bottom: 1px solid #d9d9d9;
-}
-
-#card_history td {
-  padding: 20px;
-}
-
 .col_no {
   width: 5%;
 }
@@ -158,9 +135,13 @@ h3 {
 }
 .col_store {
   width: 15%;
-}
+} 
 .col_amount {
   width: 15%;
+}
+tbody .col_amount{
+	text-align:right;
+	padding-right:5%;
 }
 .col_date {
   width: auto;
@@ -266,13 +247,19 @@ h3 {
   margin-top: 20px;
 }
 
+.tab.order li{
+	width:33.3344%;
+}
+
+.tab.detail li{
+	width:49.98%;
+}
+
 .tab li {
   text-align: center;
-  /*width: 49.83%;*/
-  /*width:33.193%;*/
-  width:33.3344%;
   box-sizing:border-box;
-  line-height: 49px;
+  line-height: 50px;
+  line-height: 50px;
   user-select: none;
   display: inline-block;
   border-right: 1px solid #d9d9d9;
@@ -298,7 +285,7 @@ h3 {
 .tab li.on,
 .tab li:hover {
   background-color: #002f6c;
-  border: 1px solid #002f6c;
+  border-right: 1px solid #002f6c;
 }
 
 /*shop*/

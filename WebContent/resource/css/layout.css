@@ -231,6 +231,10 @@ ul#right_side li {
   margin: 0 auto;
 }
 
+.row.margin_bottom{
+	margin-bottom:50px;
+}
+
 .row_full {
   width: 100%;
 }

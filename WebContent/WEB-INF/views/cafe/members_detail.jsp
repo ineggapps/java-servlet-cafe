@@ -61,27 +61,35 @@
                 </ul>
               </div>
             </div>
+            <div class="row margin_bottom">
+                 <ul class="tab detail">
+                   <li ${tab=="usage" or empty tab?"class=\"on\"":""}><a href="<%=cp%>/members/detail.do?cardNum=${cardDTO.cardNum}&amp;tab=usage">사용내역</a></li>
+                   <li ${tab=="charge"?"class=\"on\"":""}><a href="<%=cp%>/members/detail.do?cardNum=${cardDTO.cardNum}&amp;tab=charge">충전내역</a></li>
+                 </ul>
+            </div>
             <div class="row">
-              <table id="card_history">
+              <table class="table" id="card_history">
                 <thead>
                   <tr>
                     <td class="col_no">No</td>
                     <td class="col_category">구분</td>
                     <td class="col_content">내역</td>
-                    <td class="col_store">이용매장</td>
                     <td class="col_amount">금액</td>
                     <td class="col_date">날짜</td>
                   </tr>
                 </thead>
                 <tbody>
+                <c:if test="${tab=='usage'}">
+                <c:forEach var="history" items="${orderHistory}" varStatus="status">
                   <tr>
-                    <td>1</td>
-                    <td>사용</td>
-                    <td>상품구매</td>
-                    <td>동교</td>
-                    <td>-2,600</td>
-                    <td>2020-04-21 08:20:20</td>
+                    <td class="col_no">${status.count}</td>
+                    <td class="col_category">사용</td>
+                    <td class="col_content">상품구매</td>
+                    <td class="col_amount"><fmt:formatNumber value="-${history.totalPaymentAmount}"/></td>
+                    <td class="col_date">${history.orderDate}</td>
                   </tr>
+                </c:forEach>
+                </c:if>
                 </tbody>
               </table>
             </div>

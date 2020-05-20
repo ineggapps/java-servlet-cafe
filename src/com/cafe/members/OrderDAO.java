@@ -3,6 +3,7 @@ package com.cafe.members;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cafe.menu.MenuDTO;
@@ -28,13 +29,16 @@ public class OrderDAO {
 			conn.setAutoCommit(false);
 
 			//1. 결제카드 잔액 결제금액 이상인지 확인하기
-			sql = "SELECT cardNum FROM cards WHERE cardNum = ? AND balance >= ?";
+			sql = "SELECT cardNum FROM cards WHERE cardNum = ? AND balance >= ? AND userNum = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, cardNum);
 			pstmt.setInt(2, totalPaymentAmount);
+			pstmt.setInt(3, userNum); //게다가 카드 소유주까지 조회하기
 			rs = pstmt.executeQuery();
 			if(rs.next()==false) {//결제금액이 잔액보다 크다면 쿼리 값이 반환되지 않을 것임
-				throw new OrderException("잔액이 부족합니다");
+				throw new OrderException("잔액이 부족합니다.");
+				//그러나 소유주 체크 AND userNum = ? 까지 했으므로 남의 카드번호로 요청한 경우에도 이곳에서 걸린다.
+				//다만 특수한 상황이므로 오류를 세분화하여 나누지 않았음 .(DB요청 최소화)
 			}
 			returnDBResources(pstmt, rs);
 			
@@ -109,8 +113,76 @@ public class OrderDAO {
 		return result;
 	}
 	
+	//카드번호로 내역 조회하기
+	public List<OrderHistoryDTO> listOrderHistoryByCardNum(int cardNum, int userNum) {
+		List<OrderHistoryDTO> list = new ArrayList<>();
+		List<OrderDetailDTO> items;
+		Connection conn = DBCPConn.getConnection();
+		//OrderHistory 조작하는 pstmt, rs
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		//OrderDetail 조작하는 pstmt, rs
+		PreparedStatement pstmtSub = null;
+		ResultSet rsSub = null;
+		String sql;
+		try {
+			sql = "SELECT orderNum, totalPaymentAmount, storeNum, oh.statusNum, statusName, userNum, cardNum, order_date, cancelNum "
+					+ " FROM order_history oh "
+					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
+					+ "WHERE cardNum = ? AND userNum = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cardNum);
+			pstmt.setInt(2, userNum);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				OrderHistoryDTO historyDTO = new OrderHistoryDTO();
+				int orderNum = rs.getInt("orderNum");
+				historyDTO.setOrderNum(orderNum);
+				historyDTO.setTotalPaymentAmount(rs.getInt("totalPaymentAmount"));
+				historyDTO.setStoreNum(rs.getInt("storeNum"));
+				historyDTO.setStatusNum(rs.getInt("statusNum"));
+				historyDTO.setStatusName(rs.getString("statusName"));
+				historyDTO.setUserNum(userNum);
+				historyDTO.setCardNum(cardNum);
+				historyDTO.setOrderDate(rs.getDate("order_date").toString());
+				historyDTO.setCancelNum(rs.getInt("cancelNum"));
+				sql = "SELECT detailNum, orderNum, unitPrice, quantity, paymentAmount "
+						+ " FROM order_detail "
+						+ " WHERE orderNum = ?";
+				pstmtSub = conn.prepareStatement(sql);
+				pstmtSub.setInt(1, orderNum);
+				rsSub = pstmtSub.executeQuery();
+				items = new ArrayList<>();
+				while(rsSub.next()) {
+					OrderDetailDTO detailDTO = new OrderDetailDTO();
+					System.out.println(rsSub.getInt("detailNum"));
+					detailDTO.setDetailNum(rsSub.getInt("detailNum"));
+					detailDTO.setOrderNum(rsSub.getInt("orderNum"));
+					detailDTO.setUnitPrice(rsSub.getInt("unitPrice"));
+					detailDTO.setQuantity(rsSub.getInt("quantity"));
+					detailDTO.setPaymentAmount(rsSub.getInt("paymentAmount"));
+					items.add(detailDTO);
+				}
+				historyDTO.setItems(items);
+				list.add(historyDTO);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			returnDBResources(pstmt, rs);
+			returnDBResources(pstmtSub, rsSub);
+			try {
+				if(!conn.isClosed()) {
+					conn.close();
+				}
+			} catch (Exception e2) {
+			}
+		}
+		
+		return list;
+	}
 	
-	//자원반납 대신하기..
+	//////////////////////////////////////////////자원반납 대신하기..
 	public void returnDBResources(PreparedStatement pstmt, ResultSet rs) {
 		returnResultSetResource(rs);
 		returnPrepResource(pstmt);

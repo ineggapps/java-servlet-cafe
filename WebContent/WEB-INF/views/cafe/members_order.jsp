@@ -85,7 +85,7 @@
                  <h3>쿠앤크 오더</h3>
                </div>
              <div class="row">
-                 <ul class="tab">
+                 <ul class="tab order">
                    <li ${api=="/order.do"?"class=\"on\"":""}><a href="<%=cp%>/members/order.do">음식 고르기</a></li>
                    <li ${api=="/buy.do"?"class=\"on\"":""}><a href="<%=cp%>/members/buy.do">주문 및 결제</a></li>
                    <li ${api=="/orderedList.do"?"class=\"on\"":""}><a href="<%=cp%>/members/orderedList.do">주문 내역</a></li>

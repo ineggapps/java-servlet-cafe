@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +62,9 @@ public class MembersServlet extends EspressoServlet {
 	private static final String PARAM_CARD_NAME = "cardName";
 	private static final String PARAM_PRICE = "price";
 	private static final String PARAM_MENU_NUM = "menuNum";
+	private static final String PARAM_TAB = "tab";
+	private static final String PARAM_TAB_USAGE = "usage";
+	private static final String PARAM_TAB_CHARGE = "charge";
 	private static final int PARAM_REGISTER_STEP_1 = 1;
 	private static final int PARAM_REGISTER_STEP_2 = 2;
 	private static final int PARAM_REGISTER_STEP_3 = 3;
@@ -68,6 +72,7 @@ public class MembersServlet extends EspressoServlet {
 	// ATTRIBUTE
 	private static final String ATTRIBUTE_API = "api";
 	private static final String ATTRIBUTE_LIST = "list";
+	private static final String ATTRIBUTE_ORDER_HISTORY = "orderHistory";
 	private static final String ATTRIBUTE_CARDS = "cards";
 	private static final String ATTRIBUTE_ERROR_MSG = "errorMessage";
 	private static final String ATTRIBUTE_CARD_DTO = "cardDTO";
@@ -132,6 +137,7 @@ public class MembersServlet extends EspressoServlet {
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_DETAIL;
 		CardDAO dao = new CardDAO();
+		OrderDAO orderDAO = new OrderDAO();
 		CardDTO dto;
 		SessionAuthInfo info = getSessionAuthInfo(req);
 		try {
@@ -140,6 +146,9 @@ public class MembersServlet extends EspressoServlet {
 			if (dto == null) {
 				throw new Exception("카드가 존재하지 않습니다. cardNum:" + cardNum);
 			}
+			List<OrderHistoryDTO> list = orderDAO.listOrderHistoryByCardNum(cardNum, info.getUserNum());
+			attributes.put(PARAM_TAB, req.getParameter(PARAM_TAB));
+			attributes.put(ATTRIBUTE_ORDER_HISTORY, list);
 			attributes.put(ATTRIBUTE_CARD_DTO, dto);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
