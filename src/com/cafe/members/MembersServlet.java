@@ -15,6 +15,7 @@ import com.cafe.auth.SessionAuthInfo;
 import com.cafe.menu.MenuDAO;
 import com.cafe.menu.MenuDTO;
 import com.util.EspressoServlet;
+import com.util.Pager;
 
 @WebServlet("/members/*")
 public class MembersServlet extends EspressoServlet {
@@ -51,6 +52,7 @@ public class MembersServlet extends EspressoServlet {
 	private static final String JSP_ORDER = "/members_order.jsp";
 
 	// PARAM
+	private static final String PARAM_PAGE = "page";
 	private static final String PARAM_MODE = "mode";
 	private static final String PARAM_MODEL_NUM = "modelNum";
 	private static final String PARAM_CARD_NUM = "cardNum";
@@ -63,13 +65,14 @@ public class MembersServlet extends EspressoServlet {
 	private static final String PARAM_PRICE = "price";
 	private static final String PARAM_MENU_NUM = "menuNum";
 	private static final String PARAM_TAB = "tab";
-	private static final String PARAM_TAB_USAGE = "usage";
-	private static final String PARAM_TAB_CHARGE = "charge";
+//	private static final String PARAM_TAB_USAGE = "usage";
+//	private static final String PARAM_TAB_CHARGE = "charge";
 	private static final int PARAM_REGISTER_STEP_1 = 1;
 	private static final int PARAM_REGISTER_STEP_2 = 2;
 	private static final int PARAM_REGISTER_STEP_3 = 3;
 
 	// ATTRIBUTE
+	private static final int ATTRIBUTE_ROWS = 5;
 	private static final String ATTRIBUTE_API = "api";
 	private static final String ATTRIBUTE_LIST = "list";
 	private static final String ATTRIBUTE_ORDER_HISTORY = "orderHistory";
@@ -79,6 +82,15 @@ public class MembersServlet extends EspressoServlet {
 	private static final String ATTRIBUTE_CARD_DTO = "cardDTO";
 	private static final String ATTRIBUTE_CARD_MODEL_DTO = "modelDTO";
 	private static final String ATTRIBUTE_MAX_ITEM_AMOUNT = "maxItemAmount";
+	//페이징
+	private static final String ATTRIBUTE_DATA_COUNT = "dataCount";
+	private static final String ATTRIBUTE_TOTAL_PAGE = "totalPage";
+	private static final String ATTRIBUTE_CURRENT_PAGE = "currentPage";
+	private static final String ATTRIBUTE_PAGES = "pages";
+	private static final String ATTRIBUTE_URI = "uri";
+	private static final String ATTRIBUTE_QUERY = "query";
+
+	//기본 속성
 	private static final int MAX_BALANCE = 550000;
 	private static final int MAX_ITEM_AMOUNT = 15; // 최대 구매 가능 개수
 
@@ -475,7 +487,23 @@ public class MembersServlet extends EspressoServlet {
 		try {
 			SessionAuthInfo info = getSessionAuthInfo(req);
 			OrderDAO dao = new OrderDAO();
-			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum());
+			//페이징 관련 처리
+			Pager pager = new Pager();
+			String page = req.getParameter(PARAM_PAGE);
+			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
+			int dataCount = dao.orderCountByUserNum(info.getUserNum());
+			int totalPage = pager.pageCount(ATTRIBUTE_ROWS, dataCount);
+			int[] pages = pager.paging(ATTRIBUTE_ROWS, currentPage, totalPage);
+			attributes.put(ATTRIBUTE_DATA_COUNT, dataCount);
+			attributes.put(ATTRIBUTE_TOTAL_PAGE, totalPage);
+			attributes.put(ATTRIBUTE_CURRENT_PAGE, currentPage);
+			attributes.put(ATTRIBUTE_PAGES, pages);
+			attributes.put(ATTRIBUTE_URI, apiPath + API_ORDERED_LIST);
+			attributes.put(ATTRIBUTE_QUERY, "?");
+			//DB에서 불러오기
+			int start = (currentPage-1)* ATTRIBUTE_ROWS ;
+			start = start==0?1:start;
+			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum(),  start, ATTRIBUTE_ROWS);
 			attributes.put(ATTRIBUTE_ORDER_HISTORY, orderHistory);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {

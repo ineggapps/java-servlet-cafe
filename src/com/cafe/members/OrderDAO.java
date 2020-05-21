@@ -15,6 +15,45 @@ public class OrderDAO {
 	//OrderHistoryDTO (주문내역서) 먼저 추가해야 함.
 	//OrderDetailDTO (주문세부사항)
 	
+	public int orderCountByUserNum(int userNum) {
+		int count = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT NVL(count(orderNum),0) FROM order_history "
+				+ " WHERE userNum = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userNum);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+		return count;
+	}
+	
 	public int addOrderHistory(SessionCart cart, int userNum, int cardNum) throws OrderException{
 		/*
 		 결제 과정
@@ -208,7 +247,7 @@ public class OrderDAO {
 	}
 	
 	//회원번호로 내역 조회하기
-	public List<OrderHistoryDTO> listOrderHistoryByUserNum(int userNum) {
+	public List<OrderHistoryDTO> listOrderHistoryByUserNum(int userNum, int offset, int rows) {
 		List<OrderHistoryDTO> list = new ArrayList<>();
 		List<OrderDetailDTO> items;
 		Connection conn = DBCPConn.getConnection();
@@ -225,9 +264,12 @@ public class OrderDAO {
 					+ " FROM order_history oh "
 					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
 					+ " WHERE userNum = ?"
-					+ " ORDER BY orderNum DESC";
+					+ " ORDER BY orderNum DESC "
+					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, userNum);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, rows);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				OrderHistoryDTO historyDTO = new OrderHistoryDTO();
