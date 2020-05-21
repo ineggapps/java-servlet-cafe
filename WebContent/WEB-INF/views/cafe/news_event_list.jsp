@@ -5,6 +5,8 @@
 <%
 	String cp = request.getContextPath();
 %>
+
+
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -14,6 +16,15 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/event.css" />
+
+<script type="text/javascript">
+function eventList() {
+
+} 
+
+
+</script>
+
   </head>
   <body>
     <div id="wrap">
@@ -37,9 +48,40 @@
               </ul>
             </div>
             <div class="row">
-              🎈 이벤트 게시판 코드 작성 공간
-            </div>
-          </article>
+  <%--      🎈 이벤트 게시판 코드 작성 공간                --%>
+              
+            	<div class="eventBox">
+					<div class="nav-box">
+						<div class="nav">홈 &nbsp;〉 쿠앤크소식 &nbsp;〉이벤트</div>
+					</div>
+				
+				    <div>
+            		<form>
+            			<table style="width: 100%; margin: 20px auto; border-spacing: 0px;">
+              				<tr>
+              					<td width="20%">번호</td>
+              					<td width="40%"><a href="/">제목</a></td>
+              					<td width="20%">관리자</td>
+              					<td width="20%">조회수</td>
+              				</tr>
+              				<c:forEach items="${list}" var="dto">
+              				<tr>
+              					<td width="20%">${dto.num}</td>
+              					<td width="40%"><a href="/">${dto.subject}</a></td>
+              					<td width="20%">${dto.userName}</td>
+              					<td width="20%">${dto.views}</td>
+              				</tr>
+              				</c:forEach>
+            			</table>
+						
+						<div>
+							<a href="<%=cp%>/news/event/write.do">등록하기</button>
+						</div>
+            		</form>
+				    </div>   
+                 </div>
+		      </div>
+           </article>
         </div>
       </main>
       <footer id="footer">
