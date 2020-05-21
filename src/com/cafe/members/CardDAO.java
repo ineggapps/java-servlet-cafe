@@ -68,8 +68,9 @@ public class CardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = "SELECT cardNum, cardName, userNum, cards.modelNum, cardIdentity, balance, thumbnail "
-				+ "FROM cards " + "JOIN card_model ON cards.modelNum = card_model.modelNum "
-				+ "WHERE userNum = ? AND isClosed = 0";
+				+ " FROM cards " + "JOIN card_model ON cards.modelNum = card_model.modelNum "
+				+ " WHERE userNum = ? AND isClosed = 0 "
+				+ " ORDER BY cardNum DESC";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, userNum);
@@ -115,14 +116,15 @@ public class CardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = "SELECT cardNum, cardName, cards.userNum, cards.modelNum, cardIdentity, balance, thumbnail "
-				+ "FROM cards " + "JOIN card_model ON cards.modelNum = card_model.modelNum "
-				+ "JOIN member m ON cards.userNum = m.userNum " + "WHERE cards.userNum = ? AND isClosed = 0 "
-				+ "FETCH FIRST 1 ROWS ONLY";
+				+ " FROM cards " + "JOIN card_model ON cards.modelNum = card_model.modelNum "
+				+ " JOIN member m ON cards.userNum = m.userNum " + "WHERE cards.userNum = ? AND isClosed = 0 "
+						+ " ORDER BY cardNum DESC "
+				+ " FETCH FIRST 1 ROWS ONLY";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, userNum);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				int cardNum = rs.getInt("cardNum");
 				String cardName = rs.getString("cardName");
 				int modelNum = rs.getInt("modelNum");
@@ -140,14 +142,14 @@ public class CardDAO {
 				} catch (Exception e2) {
 				}
 			}
-			if(pstmt!=null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
 			try {
-				if(!conn.isClosed()) {
+				if (!conn.isClosed()) {
 					conn.close();
 				}
 			} catch (Exception e2) {
@@ -170,7 +172,8 @@ public class CardDAO {
 		String sql = "SELECT cardNum, cardName, cards.userNum, cards.modelNum, cardIdentity, balance, thumbnail "
 				+ "FROM cards " + "JOIN card_model ON cards.modelNum = card_model.modelNum "
 				+ "JOIN member m ON cards.userNum = m.userNum "
-				+ "WHERE cardNum = ? AND cards.userNum = ? AND isClosed = 0";
+				+ "WHERE cardNum = ? AND cards.userNum = ? AND isClosed = 0 "
+				+ "ORDER BY cardNum DESC";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, cardNum);

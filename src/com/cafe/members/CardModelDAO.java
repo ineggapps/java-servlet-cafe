@@ -14,7 +14,8 @@ public class CardModelDAO {
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT modelNum, modelname, text, thumbnail FROM card_model";
+		String sql = "SELECT modelNum, modelname, text, thumbnail FROM card_model "
+				+ " ORDER BY modelNum DESC";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
