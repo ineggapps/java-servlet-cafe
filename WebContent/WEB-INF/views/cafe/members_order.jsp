@@ -199,7 +199,7 @@
 						<dl id="ordered_detail">
 						<c:forEach var="item" items="${history.items}" varStatus="st">
 							<dt>${item.menuName}</dt>
-							<dd>${item.unitPrice} X ${item.quantity}개</dd>
+							<dd>${item.unitPrice}원 (${item.quantity}개)</dd>
 						</c:forEach>
 						</dl>
 					</td>

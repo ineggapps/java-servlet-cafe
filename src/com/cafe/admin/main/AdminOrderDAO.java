@@ -33,7 +33,7 @@ public class AdminOrderDAO {
 		try {
 			pstmt = conn.prepareStatement(sql.toString());
 			for (int i = 1; i <= STATUS.length; i++) {
-				pstmt.setInt(i, STATUS[i-1]);
+				pstmt.setInt(i, STATUS[i - 1]);
 			}
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -45,20 +45,20 @@ public class AdminOrderDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(rs!=null) {
+			if (rs != null) {
 				try {
 					rs.close();
 				} catch (Exception e2) {
 				}
 			}
-			if(pstmt!=null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
 			try {
-				if(!conn.isClosed()) {
+				if (!conn.isClosed()) {
 					DBCPConn.close(conn);
 				}
 			} catch (Exception e2) {
@@ -67,21 +67,21 @@ public class AdminOrderDAO {
 
 		return dto;
 	}
-	
+
 	public TodayStatusDTO getTodayStatus() {
 		TodayStatusDTO dto = new TodayStatusDTO();
-		
+
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
-		String sql = "select * from( SELECT * FROM( SELECT rownum rnum, menuName todayMenuName, thumbnail FROM ( SELECT menuName, od.menuNum, thumbnail, COUNT(od.menuNum) count from order_detail od JOIN order_history oh ON od.orderNum = oh.orderNum JOIN menu mn ON od.menuNum = mn.menuNum WHERE TO_CHAR(order_date,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD') group by (od.menuNum, menuName, thumbnail) ORDER BY count DESC)) WHERE rnum=1 ), (SELECT SUM(unitPrice) todayTotalSales FROM order_detail od JOIN order_history oh ON od.orderNum = oh.orderNum WHERE TO_CHAR(order_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD'))";
+
+		String sql = "select * from( SELECT * FROM( SELECT rownum rnum, menuName todayMenuName, quantity, thumbnail FROM ( SELECT menuName, od.menuNum, thumbnail, SUM(quantity) quantity from order_detail od JOIN order_history oh ON od.orderNum = oh.orderNum JOIN menu mn ON od.menuNum = mn.menuNum WHERE TO_CHAR(order_date,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD') group by (od.menuNum, menuName, thumbnail) ORDER BY quantity DESC)) WHERE rnum=1 ), (SELECT SUM(unitPrice*quantity) todayTotalSales FROM order_detail od JOIN order_history oh ON od.orderNum = oh.orderNum WHERE TO_CHAR(order_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD'))";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				String todayMenuName = rs.getString("todayMenuName");
-				if(todayMenuName==null || todayMenuName.length()==0) {
+				if (todayMenuName == null || todayMenuName.length() == 0) {
 					todayMenuName = "-";
 				}
 				int todayTotalSales = rs.getInt("todayTotalSales");
@@ -91,27 +91,27 @@ public class AdminOrderDAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-			if(rs!=null) {
+		} finally {
+			if (rs != null) {
 				try {
 					rs.close();
 				} catch (Exception e2) {
 				}
 			}
-			if(pstmt!=null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
 			try {
-				if(!conn.isClosed()) {
+				if (!conn.isClosed()) {
 					DBCPConn.close(conn);
 				}
 			} catch (Exception e2) {
 			}
 		}
-		
+
 		return dto;
 	}
 }

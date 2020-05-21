@@ -15,6 +15,9 @@
 
 #today_status figure{
 	width:128px;
+	height:128px;
+	line-height:128px;
+	vertical-align:middle;
 	margin:20px auto;
 }
 

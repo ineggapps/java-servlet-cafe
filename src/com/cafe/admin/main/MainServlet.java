@@ -27,11 +27,19 @@ public class MainServlet extends EspressoServlet {
 
 	// API
 	private static final String API_INDEX = "/index.do";
+	private static final String API_ORDER_PAYMENT = "/orderPayment.do";
+	private static final String API_ORDER_BEFORE_MAKING = "/orderBeforeMaking.do";
+	private static final String API_ORDER_MAKING = "/orderMaking.do";
+	private static final String API_ORDER_DONE = "/orderDone.do";
+	private static final String API_SALES_BY_MENU = "/salesByMenu.do";
+	private static final String API_SALES_BY_DATE = "/salesByDate.do";
 
 	// JSP
 	private static final String JSP_MAIN = "/admin_main.jsp";
-	
-	//ATTRIBUTE
+	private static final String JSP_ORDER = "/admin_order.jsp";
+	private static final String JSP_SALES = "/admin_sales.jsp";
+
+	// ATTRIBUTE
 	private static final String ATTRIBUTE_DASHBOARD_STATUS_DTO = "dashBoardStatusDTO";
 	private static final String ATTRIBUTE_TODAY_STATUS = "todayStatus";
 
@@ -42,9 +50,21 @@ public class MainServlet extends EspressoServlet {
 		apiPath = contextPath + API_NAME;
 		String uri = req.getRequestURI();
 		Map<String, Object> attributes = new HashMap<>();
-		
+		System.out.println(uri);
 		if (uri.indexOf(API_INDEX) != -1) {
 			main(req, resp, attributes);
+		} else if (uri.indexOf(API_ORDER_PAYMENT) != -1) {
+			orderPayment(req, resp, attributes);
+		} else if (uri.indexOf(API_ORDER_BEFORE_MAKING) != -1) {
+			orderBeforeMaking(req, resp, attributes);
+		} else if (uri.indexOf(API_ORDER_MAKING) != -1) {
+			orderMaking(req, resp, attributes);
+		} else if (uri.indexOf(API_ORDER_DONE) != -1) {
+			orderDone(req, resp, attributes);
+		} else if (uri.indexOf(API_SALES_BY_MENU) != -1) {
+			salesByMenu(req, resp, attributes);
+		} else if (uri.indexOf(API_SALES_BY_DATE) != -1) {
+			salesByDate(req, resp, attributes);
 		}
 	}
 
@@ -56,6 +76,44 @@ public class MainServlet extends EspressoServlet {
 		TodayStatusDTO todayStatus = dao.getTodayStatus();
 		attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
 		attributes.put(ATTRIBUTE_TODAY_STATUS, todayStatus);
+		forward(req, resp, path, attributes);
+	}
+
+	// 주문 관련
+	protected void orderPayment(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		String path = VIEWS + JSP_MAIN;
+		forward(req, resp, path, attributes);
+	}
+
+	protected void orderBeforeMaking(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		String path = VIEWS + JSP_MAIN;
+		forward(req, resp, path, attributes);
+	}
+
+	protected void orderMaking(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		String path = VIEWS + JSP_MAIN;
+		forward(req, resp, path, attributes);
+	}
+
+	protected void orderDone(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		String path = VIEWS + JSP_MAIN;
+		forward(req, resp, path, attributes);
+	}
+
+	// 판매 관련
+	protected void salesByMenu(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		String path = VIEWS + JSP_MAIN;
+		forward(req, resp, path, attributes);
+	}
+
+	protected void salesByDate(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		String path = VIEWS + JSP_MAIN;
 		forward(req, resp, path, attributes);
 	}
 

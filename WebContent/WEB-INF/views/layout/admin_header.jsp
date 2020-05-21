@@ -18,18 +18,25 @@
           <div class="header_middle">
             <ul id="gnb">
               <li>
+                <p>개요</p>
+                <ul class="gnb_sub">
+                  <li><a href="<%=cp%>/admin/main/index.do">대시보드</a></li>
+                </ul>
+              </li>
+              <li>
                 <p>주문관리</p>
                 <ul class="gnb_sub">
-                  <li><a href="#">접수 대기</a></li>
-                  <li><a href="#">처리 중</a></li>
-                  <li><a href="#">완료</a></li>
+                  <li><a href="<%=cp%>/admin/main/orderPayment.do">결제 완료</a></li>
+                  <li><a href="<%=cp%>/admin/main/orderBeforeMaking.do">제조 대기</a></li>
+                  <li><a href="<%=cp%>/admin/main/orderMaking.do">제조 중</a></li>
+                  <li><a href="<%=cp%>/admin/main/orderDone.do">제조 완료</a></li>
                 </ul>
               </li>
               <li>
                 <p>정산관리</p>
                 <ul class="gnb_sub">
-                  <li><a href="#">메뉴별 매출</a></li>
-                  <li><a href="#">날짜별 매출</a></li>
+                  <li><a href="<%=cp%>/admin/main/salesByMenu.do">메뉴별 매출</a></li>
+                  <li><a href="<%=cp%>/admin/main/salesByDate.do">날짜별 매출</a></li>
                 </ul>
               </li>
             </ul>
