@@ -14,52 +14,26 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/board_notice.css" />
-    <style type="text/css">
-      .notice-board {
-        min-height: 1000px;
-      }
-
-      .view-title {
-        height: 65px;
-        line-height: 65px;
-        border-top: 2px solid #233e83;
-        margin-top: 50px;
-        text-align: center;
-        border-bottom: 1px solid #d9d9d9;
-      }
-
-      .s1 {
-        width: 80%;
-        display: inline-block;
-        font-size: 20px;
-      }
-
-      .s2 {
-        width: 20%;
-        text-align: center;
-        margin: 0px auto;
-      }
-
-      .view-con {
-        min-height: 250px;
-        padding: 30px;
-        border-bottom: 2px solid #233e83;
-      }
-
-      .view-page {
-        min-height: 80px;
-      }
-
-      .vp li {
-        display: inline-block;
-      }
-
-      .vp {
-        height: 50px;
-        line-height: 50px;
-        border-bottom: 1px solid #d9d9d9;
-      }
-    </style>
+    
+    
+    <script type="text/javascript">
+	function deleteNotice(num) {
+	    var query = "num="+num+"&${query}";
+	    var url = "<%=cp%>/news/notice/delete.do?" + query;
+	
+	    if(confirm("위 자료를 삭제 하시 겠습니까 ? "))
+	    	location.href=url;
+	}
+	
+	function updateNotice(num) {
+	    var page = "${page}";
+	    var query = "num="+num+"&page="+page;
+	    var url = "<%=cp%>/news/notice/update.do?" + query;
+	
+	    location.href=url;
+	}
+</script>
+    
   </head>
   <body>
     <div id="wrap">
@@ -80,27 +54,35 @@
                 <div class="navigation">
                   <div class="nav-bar">홈&nbsp; 〉 쿠앤크소식&nbsp; 〉 공지사항</div>
                 </div>
+                <div class = "notice_viewBtn">
+                	<c:if test="${sessionScope.member.admin == true}">				    
+				        <button type="button" class="notice_updateBtn" onclick="updateNotice('${dto.num}');">수정</button>
+				        <button type="button" class="notice_deleteBtn" onclick="deleteNotice('${dto.num}');">삭제</button>
+				    </c:if>
+                </div>
                 <div class="view-title">
-                  <div class="s1">쿠앤크 멤버스 이용약관 변경 안내</div>
-                  <span class="s2">2020-04-21</span>
+                  <div class="s1">${dto.subject}</div>
+                  <span class="s2_1">${dto.updated_date }</span>
+                  <span class="s2_2">${dto.views }</span>
                 </div>
                 <div class="view-con">
-                  <p>안녕하세요. 쿠키 앤 크림입니다.</p>
-                  <p>쿠키 앤 크림을 이용해주시는 고객님들께 감사드리며,</p>
-                  <p>
-                    쿠앤크 멤버스 약관이 개정되어 변경내용에 대해 안내드리니 이용에 참고하여 주시기
-                    바랍니다.
-                  </p>
+                  ${dto.content}
                 </div>
                 <div class="view-page">
                   <ul class="vp">
                     <li class="pp">이전글</li>
-                    <li class="pt"><a href="#">제목2</a></li>
+                    <li class="pt"><c:if test="${not empty preNoticeDto}">
+			              <a href="<%=cp%>/news/notice/view.do?${query}&num=${preNoticeDto.num}">${preNoticeDto.subject}</a>
+			        </c:if></li>
                   </ul>
                   <ul class="vp">
                     <li class="pp">다음글</li>
-                    <li class="pt">다음글이 없습니다.</li>
-                    <li><a href="notice_list1.html">목록으로</a></li>
+                    <li class="pt"><c:if test="${not empty nextNoticeDto}">
+			              <a href="<%=cp%>/news/notice/view.do?${query}&num=${nextNoticeDto.num}">${nextNoticeDto.subject}</a>
+			        </c:if></li>
+                  </ul>
+                  <ul class = "go-ul">
+                    <li class = "go-li"><input type = "button" class = "go-listBtn" onclick="javascript:location.href='<%=cp%>/news/notice/list.do?${query}';" value="목록으로"></li>
                   </ul>
                 </div>
               </div>

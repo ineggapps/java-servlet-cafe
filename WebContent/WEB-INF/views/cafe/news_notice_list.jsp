@@ -15,14 +15,6 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/board_notice.css" />
     
-    <style type="text/css">
-    	.viewCount {
-    		display:inline-block;
-    		width: 50px;
-    		text-align: center;
-    	}
-    </style>
-    
     <script type="text/javascript">
     
     function searchList() {
@@ -61,10 +53,10 @@
 				    
 				    <div>
 				    <form name="listNumForm" action="<%=cp%>/news/notice/list.do" method="post">
-						<table style="width: 100%; margin-top: 20px; border-spacing: 0;">
-						   <tr height="35">
-						      <td align="right" style="border-bottom: 2px solid #233e83">
-						          <select name="rows" class="selectField" onchange="listNum()">
+						<table class = "notice_selectNum">
+						   <tr class = "notice_selectNum_tr">
+						      <td class = "notice_selectNum_td">
+						          <select name="rows" class="notice_selectField" onchange="listNum()">
 						          		<option value="5"  ${rows==5 ? "selected='selected' ": "" }>5개</option>
 						          		<option value="10" ${rows==10 ? "selected='selected' ": "" }>10개</option>
 						          		<option value="20" ${rows==20 ? "selected='selected' ": "" }>20개</option>
@@ -86,13 +78,13 @@
 			    			<div class = list-title>
 			    				<a href = "${articleUrl}&num=${dto.num}">${dto.subject }</a>
 			    				<span class = "viewCount">${dto.views }</span>
-			    				<span class = "created_date">${dto.created_date }</span>
+			    				<span class = "created_date">${dto.updated_date }</span>
 			    			</div>
 			    		</li>
 			    	</ul>
 			    </c:forEach>
 			    
-			    <div class = "btn">
+			    <div class = "noticelist-btn">
 			    	<button type="button" class="re_btn" onclick="javascript:location.href='<%=cp %>/news/notice/list.do';">새로고침</button>
 			    	<c:if test="${sessionScope.member.admin == true }">
 				    	<button type="button" class="upload_btn" onclick="javascript:location.href='<%=cp %>/news/notice/write.do';">글올리기</button>
@@ -101,22 +93,22 @@
 			   
 			   
 			   
-			    <table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			<form name="searchForm" action="<%=cp%>/news/notice/list.do" method="post">
+			    <table class = "notice_search">
 				   <tr height="40">
 				      <td align="center">
-				          <form name="searchForm" action="<%=cp%>/news/notice/list.do" method="post">
-				              <select name="condition" class="selectField">
+				              <select name="condition" class="notice_selectField">
 				                  <option value="subject"     ${condition=="subject"?"selected='selected'":"" }>제목</option>
 				                  <option value="content"     ${condition=="content"?"selected='selected'":"" }>내용</option>
 				                  <option value="created"     ${condition=="created"?"selected='selected'":"" }>등록일</option>
 				            </select>
-				            <input type="text" name="keyword" class="boxTF" value="${keyword}">
+				            <input type="text" name="keyword" class="notice_boxTF" value="${keyword}">
 				            <input type="hidden" name="rows" value="${rows}">
-				            <button type="button" class="btn" onclick="searchList()">검색</button>
-				        </form>
+				            <button type="button" class="noticeSearch_btn" onclick="searchList()">검색</button>
 				      </td>
 				   </tr>
 			    </table>
+			</form>
 			 
 			 
 			    
