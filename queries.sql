@@ -1,0 +1,89 @@
+-- 대시보드 단계별 건수 출력 SQL
+SELECT 
+    (SELECT Count(ordernum)
+    FROM   order_history
+    WHERE  statusnum = ?
+            AND To_char(order_date, 'YYYY-MM-DD') =
+                To_char(sysdate, 'YYYY-MM-DD'))
+    status1,
+    (SELECT Count(ordernum)
+    FROM   order_history
+    WHERE  statusnum = ?
+            AND To_char(order_date, 'YYYY-MM-DD') =
+                To_char(sysdate, 'YYYY-MM-DD'))
+    status2,
+    (SELECT Count(ordernum)
+    FROM   order_history
+    WHERE  statusnum = ?
+            AND To_char(order_date, 'YYYY-MM-DD') =
+                To_char(sysdate, 'YYYY-MM-DD'))
+    status3,
+    (SELECT Count(ordernum)
+    FROM   order_history
+    WHERE  statusnum = ?
+            AND To_char(order_date, 'YYYY-MM-DD') =
+                To_char(sysdate, 'YYYY-MM-DD'))
+    status4
+FROM   dual  
+
+--오늘의 베스트 셀러와 매출액
+SELECT (
+-- 오늘의 베스트 셀러
+SELECT menuName todayMenuName FROM(
+SELECT rownum rnum, menuName FROM (
+SELECT menuName, od.menuNum, COUNT(od.menuNum) count
+from order_detail od
+JOIN order_history oh ON od.orderNum = oh.orderNum
+JOIN menu mn ON od.menuNum = mn.menuNum
+WHERE TO_CHAR(order_date,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+group by (od.menuNum, menuName)
+ORDER BY count DESC)) WHERE rnum=1 ) menuName,
+--오늘의 매출액
+(SELECT SUM(unitPrice) 
+FROM order_detail od
+JOIN order_history oh ON od.orderNum = oh.orderNum
+WHERE TO_CHAR(order_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')) todayTotalSales
+FROM DUAL;
+
+--오늘의 매출 SQL
+SELECT SUM(unitPrice) 
+FROM order_detail od
+JOIN order_history oh ON od.orderNum = oh.orderNum
+WHERE TO_CHAR(order_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD');
+
+--오늘의 베스트 셀러 SQL (테스트)
+SELECT * FROM( 
+SELECT rownum rnum, menuName, menuNum, count, total FROM (
+SELECT menuName, od.menuNum, COUNT(od.menuNum) count, sum(unitPrice) total
+from order_detail od
+JOIN order_history oh ON od.orderNum = oh.orderNum
+JOIN menu mn ON od.menuNum = mn.menuNum
+WHERE TO_CHAR(order_date,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+group by (od.menuNum, menuName)
+ORDER BY count DESC)) WHERE rnum=1;
+
+
+--오늘 품목별 판매현황 (메뉴이름 포함)
+SELECT menuName, od.menuNum, COUNT(od.menuNum) count
+from order_detail od
+JOIN order_history oh ON od.orderNum = oh.orderNum
+JOIN menu mn ON od.menuNum = mn.menuNum
+WHERE TO_CHAR(order_date,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+group by (od.menuNum, menuName)
+ORDER BY count DESC; -- 메뉴별 
+
+
+--오늘의 매출현황(+thumbnail)
+select * from(
+SELECT * FROM(
+SELECT rownum rnum, menuName todayMenuName, thumbnail FROM (
+SELECT menuName, od.menuNum, thumbnail, COUNT(od.menuNum) count
+from order_detail od
+JOIN order_history oh ON od.orderNum = oh.orderNum
+JOIN menu mn ON od.menuNum = mn.menuNum
+WHERE TO_CHAR(order_date,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+group by (od.menuNum, menuName, thumbnail)
+ORDER BY count DESC)) WHERE rnum=1 ), (SELECT SUM(unitPrice) todayTotalSales 
+FROM order_detail od
+JOIN order_history oh ON od.orderNum = oh.orderNum
+WHERE TO_CHAR(order_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD'));
