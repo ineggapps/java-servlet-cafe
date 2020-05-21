@@ -375,7 +375,7 @@ public class MembersServlet extends EspressoServlet {
 				}
 			}
 			boolean isAdded = addCart(menuNum, cart, menuDAO);
-			if (isAdded == false && menuNum != null) {
+			if (isAdded == false && menuNum != null && cart.getTotalQuantity()>MAX_ITEM_AMOUNT) {
 				attributes.put(ATTRIBUTE_ERROR_MSG, new ErrorMessage("구매 개수를 초과하였습니다.", "주문은 총 수량 15개까지만 구매가 가능합니다."));
 			}
 			attributes.put(ATTRIBUTE_LIST, list);
@@ -398,13 +398,11 @@ public class MembersServlet extends EspressoServlet {
 					MenuDTO dto = getCartItem(mNum, cart);
 					if (dto != null) {
 						// 카트에 있으면 카트에서 객체 복사하기
-						System.out.println("이미 골랐으니까 객체 복사" + dto);
-						cart.addItem(dto);
+						dto.setQuantity(dto.getQuantity()+1);//수량 더하기
 					} else {
 						// 카드에 없으면 DB에서 불러오기
 						dto = menuDAO.readMenu(mNum); // TODO: 메서드명 수정하기
 						if (dto != null) {
-							System.out.println("새로운 아이템을 고르셨군!");
 							cart.addItem(dto);
 						}
 						return true;
@@ -529,14 +527,15 @@ public class MembersServlet extends EspressoServlet {
 			List<MenuDTO> items = cart.getItems();
 			for (MenuDTO dto : items) {
 				if (menuNum == dto.getMenuNum()) {
-					MenuDTO newDTO = new MenuDTO();
-					newDTO.setMenuNum(dto.getMenuNum());
-					newDTO.setCategoryNum(dto.getCategoryNum());
-					newDTO.setMenuName(dto.getMenuName());
-					newDTO.setThumbnail(dto.getThumbnail());
-					newDTO.setText(dto.getText());
-					newDTO.setPrice(dto.getPrice());
-					return newDTO;
+//					MenuDTO newDTO = new MenuDTO();
+//					newDTO.setMenuNum(dto.getMenuNum());
+//					newDTO.setCategoryNum(dto.getCategoryNum());
+//					newDTO.setMenuName(dto.getMenuName());
+//					newDTO.setThumbnail(dto.getThumbnail());
+//					newDTO.setText(dto.getText());
+//					newDTO.setPrice(dto.getPrice());
+//					return newDTO;
+					return dto;
 				}
 			}
 		} catch (Exception e) {

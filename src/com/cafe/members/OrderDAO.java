@@ -85,8 +85,8 @@ public class OrderDAO {
 				pstmt.setInt(1, orderNum);
 				pstmt.setInt(2, item.getMenuNum());
 				pstmt.setInt(3, item.getPrice());
-				pstmt.setInt(4, 1); //일단 1개로 구현
-				pstmt.setInt(5, item.getPrice()*1);//단가*수량(1로 고정)
+				pstmt.setInt(4, item.getQuantity()); //일단 1개로 구현
+				pstmt.setInt(5, item.getPrice()*item.getQuantity());//단가*수량(1로 고정)
 				pstmt.executeUpdate();
 				returnPrepResource(pstmt);
 			}
@@ -146,7 +146,8 @@ public class OrderDAO {
 					+ "TO_CHAR(order_date,'YYYY-MM-DD HH24:MI:SS') order_date, cancelNum "
 					+ " FROM order_history oh "
 					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
-					+ "WHERE cardNum = ? AND userNum = ?";
+					+ "WHERE cardNum = ? AND userNum = ? "
+					+ "ORDER BY orderNum DESC";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, cardNum);
 			pstmt.setInt(2, userNum);
@@ -166,7 +167,8 @@ public class OrderDAO {
 				sql = "SELECT detailNum, orderNum, od.menuNum, menuName, unitPrice, quantity, paymentAmount "
 						+ " FROM order_detail od "
 						+ " JOIN menu mn ON od.menuNum = mn.menuNum "
-						+ " WHERE orderNum = ?";
+						+ " WHERE orderNum = ?"
+						+ "ORDER BY detailNum, orderNum DESC";
 				pstmtSub = conn.prepareStatement(sql);
 				pstmtSub.setInt(1, orderNum);
 				rsSub = pstmtSub.executeQuery();
@@ -218,7 +220,8 @@ public class OrderDAO {
 					+ "TO_CHAR(order_date,'YYYY-MM-DD HH24:MI:SS') order_date, cancelNum "
 					+ " FROM order_history oh "
 					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
-					+ " WHERE userNum = ?";
+					+ " WHERE userNum = ?"
+					+ " ORDER BY orderNum DESC";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, userNum);
 			rs = pstmt.executeQuery();
