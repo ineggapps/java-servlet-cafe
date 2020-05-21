@@ -33,7 +33,8 @@ public class MainServlet extends EspressoServlet {
 	private static final String API_ORDER_BEFORE_MAKING = "/orderBeforeMaking.do";
 	private static final String API_ORDER_MAKING = "/orderMaking.do";
 	private static final String API_ORDER_DONE = "/orderDone.do";
-	private static final String API_ORDER_CANCEL = "/orderCancel.do";
+	private static final String API_ORDER_CANCEL = "/orderCancel.do";// 취소 처리하는 링크
+	private static final String API_ORDER_CANCEL_LIST = "/orderCancelList.do";
 	private static final String API_ORDER_STEP_UP_STATUS = "/orderStepUp.do";
 	private static final String API_SALES_BY_MENU = "/salesByMenu.do";
 	private static final String API_SALES_BY_DATE = "/salesByDate.do";
@@ -82,6 +83,8 @@ public class MainServlet extends EspressoServlet {
 			stepUpOrderStatus(req, resp, attributes);
 		} else if (uri.indexOf(API_ORDER_CANCEL) != -1) {
 			cancelOrder(req, resp, attributes);
+		} else if (uri.indexOf(API_ORDER_CANCEL_LIST) != -1) {
+			orderCancelList(req, resp, attributes);
 		}
 	}
 
@@ -107,7 +110,7 @@ public class MainServlet extends EspressoServlet {
 			int statusNum) throws ServletException, IOException {
 		String path = VIEWS + JSP_ORDER;
 		AdminOrderDAO dao = new AdminOrderDAO();
-		List<OrderHistoryDTO> list = dao.listOrderHistoryByUserNum(statusNum);
+		List<OrderHistoryDTO> list = dao.listOrderHistory(statusNum);
 		DashBoardStatusDTO dashboardDTO = dao.getTodayDashBoardStatus();
 		attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
 		attributes.put(ATTRIBUTE_ORDER_HISTORY, list);
@@ -116,15 +119,29 @@ public class MainServlet extends EspressoServlet {
 		forward(req, resp, path, attributes);
 	}
 
+	protected void orderCancelList(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		String path = VIEWS + JSP_ORDER;
+		AdminOrderDAO dao = new AdminOrderDAO();
+		List<OrderHistoryDTO> list = dao.listCancelOrderHistory();
+		DashBoardStatusDTO dashboardDTO = dao.getTodayDashBoardStatus();
+		attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
+		attributes.put(ATTRIBUTE_ORDER_HISTORY, list);
+		attributes.put(ATTRIBUTE_STATUS_NUM, -1); //JSP 활용 떄문에 상태번호 임의 삽입
+		attributes.put(ATTRIBUTE_STATUS_NAME, "결제 취소");
+		forward(req, resp, path, attributes);
+	}
+
 	// 주문 취소 관련
-	protected void cancelOrder(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes) throws ServletException, IOException {
+	protected void cancelOrder(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
 		String path = apiPath + API_ORDER_PAYMENT;
 		AdminOrderDAO dao = new AdminOrderDAO();
 		try {
 			String orderNum = req.getParameter(PARAM_ORDER_NUM);
 			int oNum = Integer.parseInt(orderNum);
 			int result = dao.insertCancelOrder(oNum);
-			System.out.println(result);
+			resp.sendRedirect(path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

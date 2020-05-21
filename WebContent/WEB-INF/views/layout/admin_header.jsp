@@ -30,6 +30,7 @@
                   <li><a href="<%=cp%>/admin/main/orderBeforeMaking.do">제조 대기</a></li>
                   <li><a href="<%=cp%>/admin/main/orderMaking.do">제조 중</a></li>
                   <li><a href="<%=cp%>/admin/main/orderDone.do">제조 완료</a></li>
+                  <li><a href="<%=cp%>/admin/main/orderCancelList.do">결제 취소</a></li>
                 </ul>
               </li>
               <%--li>

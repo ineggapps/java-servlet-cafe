@@ -89,6 +89,9 @@
                     </td>
                     <td>${history.orderDate}</td>
                     <td>
+                    	<c:if test="${statusNum<=0 }">
+                    	<span>취소됨</span>
+                    	</c:if>
                     	<c:if test="${statusNum==1}">
                     	<a href="<%=cp%>/admin/main/orderStepUp.do?orderNum=${history.orderNum}&amp;api=${api}"class="button">접수</a>
                     	<a href="<%=cp%>/admin/main/orderCancel.do?orderNum=${history.orderNum}"class="button">취소</a>
