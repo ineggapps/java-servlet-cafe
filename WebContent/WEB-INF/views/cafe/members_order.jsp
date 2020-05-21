@@ -18,7 +18,7 @@
   	<script>
   		function addCart(menuNum){
   			alert("주문한 상품이 담겼습니다.");
-  			const url = "<%=cp%>/members/order.do?menuNum="+menuNum + "#item_"+menuNum;
+  			const url = "<%=cp%>/members/order.do?menuNum="+menuNum;
   			location.href = url;
   		}
   		function goToCart(menuNum){
@@ -135,11 +135,11 @@
                					<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.menuName}" />
                				</div>
                		 		<div class="item_label">
-               		 			<span>${dto.menuName}</span>
+               		 			<span>${dto.menuName} X ${dto.quantity}개</span>
                		 		</div>
                			</div>
                		</td>
-               		<td class="col_price"><fmt:formatNumber value="${dto.price}"/></td>
+               		<td class="col_price"><fmt:formatNumber value="${dto.price * dto.quantity}"/></td>
                	</tr>
                	</c:forEach>
                </tbody>
@@ -149,7 +149,7 @@
               <span><fmt:formatNumber value="${cart.totalPaymentAmount}"/></span>
              </div>
              <div class="row" id="cart_size">
-             	<h4>총 ${fn:length(cart.items)}개 선택되었습니다.</h4>
+             	<h4>총 ${fn:length(cart.items)}개의 종류가 담겼습니다.</h4>
              </div>
              <form action="<%=cp%>/members/buy_ok.do" method="post" name="buy">
              <div class="row">
@@ -199,7 +199,7 @@
 						<dl id="ordered_detail">
 						<c:forEach var="item" items="${history.items}" varStatus="st">
 							<dt>${item.menuName}</dt>
-							<dd>${item.unitPrice}</dd>
+							<dd>${item.unitPrice} X ${item.quantity}개</dd>
 						</c:forEach>
 						</dl>
 					</td>
