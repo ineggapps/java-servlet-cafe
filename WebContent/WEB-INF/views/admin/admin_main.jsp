@@ -43,7 +43,7 @@
 					<figure>
                     	<img src="<%=cp %>/resource/images/admin/item_money.png" alt="매출 총액" />
                     </figure>
-                    <a href="#">${todayStatus.todayTotalSales}</a>
+                    <a href="#"><fmt:formatNumber value="${todayStatus.todayTotalSales}"/>원</a>
                   </div>
                 </li>
               </ul>
