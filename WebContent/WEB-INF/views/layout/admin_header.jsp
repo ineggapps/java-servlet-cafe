@@ -9,7 +9,7 @@
           <div class="header_top">
             <div class="header_row">
               <h1>
-                <a href="./index.html"
+                <a href="<%=cp %>"
                   ><img src="<%=cp%>/resource/images/admin/logo_dark.png" alt="COOKIE&amp;CREAM" class="logo" /></a
                 >매장 관리
               </h1>
@@ -32,13 +32,13 @@
                   <li><a href="<%=cp%>/admin/main/orderDone.do">제조 완료</a></li>
                 </ul>
               </li>
-              <li>
+              <%--li>
                 <p>정산관리</p>
                 <ul class="gnb_sub">
                   <li><a href="<%=cp%>/admin/main/salesByMenu.do">메뉴별 매출</a></li>
                   <li><a href="<%=cp%>/admin/main/salesByDate.do">날짜별 매출</a></li>
                 </ul>
-              </li>
+              </li--%>
             </ul>
           </div>
           <%--div class="header_bottom">

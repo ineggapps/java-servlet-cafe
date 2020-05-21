@@ -52,32 +52,32 @@
           
           <div class="content_box">
             <div class="content_title">
-              <h3>오늘의 대시보드</h3>
+              <h3>현재 주문 상태</h3>
             </div>
             <div class="content_area">
               <ul id="order_process">
                 <li>
                   <div class="order_item">
                     <span>결제 완료</span>
-                    <a href="#">${dashBoardStatusDTO.paymentCount}</a>
+                    <a href="<%=cp%>/admin/main/orderPayment.do">${dashBoardStatusDTO.paymentCount}</a>
                   </div>
                 </li>
                 <li>
                   <div class="order_item">
                     <span>제조 대기</span>
-                    <a href="#">${dashBoardStatusDTO.beforeMakingCount}</a>
+                    <a href="<%=cp%>/admin/main/orderBeforeMaking.do">${dashBoardStatusDTO.beforeMakingCount}</a>
                   </div>
                 </li>
                 <li>
                   <div class="order_item">
                     <span>제조 중</span>
-                    <a href="#">${dashBoardStatusDTO.makingCount}</a>
+                    <a href="<%=cp%>/admin/main/orderMaking.do">${dashBoardStatusDTO.makingCount}</a>
                   </div>
                 </li>
                 <li>
                   <div class="order_item">
                     <span>제조 완료</span>
-                    <a href="#">${dashBoardStatusDTO.doneCount}</a>
+                    <a href="<%=cp%>/admin/main/orderDone.do">${dashBoardStatusDTO.doneCount}</a>
                   </div>
                 </li>
               </ul>

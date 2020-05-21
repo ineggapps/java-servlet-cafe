@@ -16,7 +16,7 @@ public class AdminOrderDAO {
 	public static final int STATUS_MAKING = 3;
 	public static final int STATUS_DONE = 4;
 	public static final int STATUS[] = { STATUS_PAYMENT, STATUS_BEFORE_MAKING, STATUS_MAKING, STATUS_DONE };
-
+	public static final String STATUS_NAME[] = {"결제 완료", "제조 대기", "제조 중", "제조 완료"};//불필요한 DB접속 방지 위해서.. (어차피 고정된 값으로 쓸 거니까)
 	/**
 	 * 당일 단계별 (1: 결제완료, 2: 제조 대기, 3: 제조 중, 4: 제조 완료) 건수
 	 * 
@@ -205,6 +205,37 @@ public class AdminOrderDAO {
 		}
 
 		return list;
+	}
+	
+	//단계를 올림..
+	public int stepUpOrderStatus(int orderNum) {
+		int result = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "UPDATE order_history SET statusNum = statusNum + 1 "
+				+ "WHERE orderNum=? and statusNum < ?"; 
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, orderNum);
+			pstmt.setInt(2, STATUS.length);
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+		return result;
 	}
 
 	////////////////////////////////////////////// 자원반납 대신하기..

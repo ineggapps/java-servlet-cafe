@@ -34,7 +34,7 @@
   margin: 10px 0;
 }
 
-.order_item a.on,
+li.on .order_item a,
 .order_item:hover a {
   color: tomato;
 }
