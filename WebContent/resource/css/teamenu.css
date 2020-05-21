@@ -82,16 +82,21 @@
 
 .picture p {
 	text-align: center;
-	text
+}
+
+.menuimg{
+	width: 250px;
+	height: 250px;
+	margin-right: 40px;
 }
 
 .menus:after,
 .picture:after,
 .menu_controller:after{
-clear: both;
-  content: "";
-  display: block;
-  visibility: hidden;
+	clear: both;
+ 	content: "";
+  	display: block;
+  	visibility: hidden;
 }
 
 .menu_controller{

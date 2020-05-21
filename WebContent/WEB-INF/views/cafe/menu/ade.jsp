@@ -47,7 +47,7 @@
                 <c:forEach var="dto" items="${list}" varStatus="status">
                   <li>
                     <div>
-                      <a href="#"><img alt="" src="${dto.thumbnail}" /></a>
+                      <a href="#"><img class="menuimg" alt="" src="<%=cp%>/${dto.thumbnail}" /></a>
                       <p>${dto.menuName}</p>
                       <div class="detail">
                         <ul>
@@ -63,12 +63,12 @@
                   </li>
                   </c:forEach>
                 </ul>
-                <div class="menu_controller">
-                	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
-                </div>
               </div>
               <br />
               <hr />
+              <div class="menu_controller">
+                <button type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
+              </div>
               <br /><br />
             </div>
           </article>

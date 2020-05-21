@@ -7,6 +7,7 @@ public class MenuDTO {
 	private String thumbnail;
 	private String text;
 	private int price;
+	private int quantity=1; //주문수량
 	
 	public int getMenuNum() {
 		return menuNum;
@@ -44,4 +45,13 @@ public class MenuDTO {
 	public void setPrice(int price) {
 		this.price = price;
 	}
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	
+	
+	
 }
