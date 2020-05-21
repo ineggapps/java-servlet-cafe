@@ -1,13 +1,25 @@
 @charset "UTF-8";
 
-#order_process {
+#order_process,
+#today_status{
   width: 100%;
   text-align: center;
 }
-#order_process li {
+#order_process li,
+#today_status li {
+  vertical-align:top;
   display: inline-block;
   padding: 0 8%;
   transition: all ease-in-out 0.2s;
+}
+
+#today_status figure{
+	width:128px;
+	margin:20px auto;
+}
+
+#today_status figure img{
+	width:100%;
 }
 
 .order_item a {

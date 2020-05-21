@@ -30,6 +30,10 @@ public class MainServlet extends EspressoServlet {
 
 	// JSP
 	private static final String JSP_MAIN = "/admin_main.jsp";
+	
+	//ATTRIBUTE
+	private static final String ATTRIBUTE_DASHBOARD_STATUS_DTO = "dashBoardStatusDTO";
+	private static final String ATTRIBUTE_TODAY_STATUS = "todayStatus";
 
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,7 +42,7 @@ public class MainServlet extends EspressoServlet {
 		apiPath = contextPath + API_NAME;
 		String uri = req.getRequestURI();
 		Map<String, Object> attributes = new HashMap<>();
-
+		
 		if (uri.indexOf(API_INDEX) != -1) {
 			main(req, resp, attributes);
 		}
@@ -47,6 +51,11 @@ public class MainServlet extends EspressoServlet {
 	protected void main(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_MAIN;
+		AdminOrderDAO dao = new AdminOrderDAO();
+		DashBoardStatusDTO dashboardDTO = dao.getTodayDashBoardStatus();
+		TodayStatusDTO todayStatus = dao.getTodayStatus();
+		attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
+		attributes.put(ATTRIBUTE_TODAY_STATUS, todayStatus);
 		forward(req, resp, path, attributes);
 	}
 
