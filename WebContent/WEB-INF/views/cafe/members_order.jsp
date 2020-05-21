@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -13,8 +14,39 @@
     <title>COFFEE</title>
 	<link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
-    <link rel="stylesheet" href="<%=cp%>/resource/css/members.css" />  </head>
-  <body>
+    <link rel="stylesheet" href="<%=cp%>/resource/css/members.css" />  
+  	<script>
+  		function addCart(menuNum){
+  			alert("주문한 상품이 담겼습니다.");
+  			const url = "<%=cp%>/members/order.do?menuNum="+menuNum;
+  			location.href = url;
+  		}
+  		function goToCart(menuNum){
+  			alert("주문 내역으로 이동합니다.");
+  			const url = "<%=cp%>/members/buy.do?menuNum="+menuNum;
+  			location.href = url;
+  		}
+  		function goToError(){
+  			const err = document.getElementById("error");
+  			if(err!=null){
+  				location.href = "#error";
+  			}
+  		}
+  		function submit(){
+  		  const f = document.buy;
+          const cards = document.getElementsByName("cardNum");
+          for(let i = 0;i<cards.length;i++){
+              if(cards[i].checked){
+                  f.submit();
+                  return;
+              }
+          }
+          alert("결제 수단이 선택되지 않았습니다. 카드를 선택해 주세요");
+  		}
+  
+  	</script>
+  </head>
+  <body onload="goToError()">
     <div id="wrap">
       <header id="header">
         <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
@@ -22,103 +54,164 @@
       <main id="content">
         <div id="main">
           <article id="main_container">
-            <!-- Content영역 -->
-            <div class="banner_visual">
-              <h2><span>쿠앤크 멤버스</span></h2>
-              <div class="visual_text">
-                <span
-                  >쉽고 빠른 주문, 편리한 결제와 적립은 기본<br />친구에게 선물까지, 쿠앤크멤버스를
-                  경험해보세요.</span
-                >
-              </div>
-			  <jsp:include page="/WEB-INF/views/layout/members_lnb.jsp"/>
-            </div>
-            <form>
-              <div class="row">
-                <div class="row_title">
-                  <h3>쿠앤크 오더</h3>
-                </div>
-                <div class="card_container card_container_full">
-                  <ul>
-                    <li>
-                      <figure>
-                        <img src="<%=cp%>/resource/images/members/card/card04.png" alt="card" />
-                      </figure>
-                      <div>
-                        <p class="card_title detail">
-                          <strong>카드이름</strong><a href="#" class="modify">수정</a>
-                        </p>
-                        <p class="card_id">(123456)</p>
-                        <p class="card_remain">잔액 <strong>999,999,999</strong>원</p>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="row">
-                <table id="card_charge">
-                  <thead>
-                    <tr>
-                      <td>항목</td>
-                      <td>입력</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="col_charge_category">충전 금액 선택</td>
-                      <td class="col_charge_data">
-                        <p class="desc">
-                          충전 후 총 카드잔액: <strong class="desc_blue">999,999</strong>원
-                        </p>
-                        <ul class="charge_option">
-                          <li>
-                            <label
-                              ><input type="radio" value="100000" name="price" /><span
-                                >10만원</span
-                              ></label
-                            >
-                          </li>
-                          <li>
-                            <label
-                              ><input type="radio" value="50000" name="price" /><span
-                                >5만원</span
-                              ></label
-                            >
-                          </li>
-                          <li>
-                            <label
-                              ><input type="radio" value="30000" name="price" /><span
-                                >3만원</span
-                              ></label
-                            >
-                          </li>
-                          <li>
-                            <label
-                              ><input type="radio" value="10000" name="price" /><span
-                                >1만원</span
-                              ></label
-                            >
-                          </li>
-                        </ul>
-                        <p class="desc_red desc">
-                          ※쿠앤크 커피 온라인 충전은 1만 원 단위로 최대 55만원까지 가능하며, 충전 후
-                          합계 잔액이 55만 원을 초과할 수 없습니다.
-                        </p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="col_charge_category">결제 시점</td>
-                      <td class="col_charge_data"><strong class="desc_blue">즉시</strong> 결제</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </form>
-            <div class="row buttons">
-              <a href="./members_card_list.html" class="list_button">목록</a>
-              <a href="#" class="list_button submit" onclick="submit()">충전하기</a>
-            </div>
-            <!-- Content 영역 끝 -->
+           <!-- Content영역 -->
+           <div class="banner_visual">
+             <h2><span>쿠앤크 멤버스</span></h2>
+             <div class="visual_text">
+               <span
+                 >쉽고 빠른 주문, 편리한 결제와 적립은 기본<br />친구에게 선물까지, 쿠앤크멤버스를
+                 경험해보세요.</span
+               >
+             </div>
+		  <jsp:include page="/WEB-INF/views/layout/members_lnb.jsp"/>
+           </div>
+           <c:if test="${not empty errorMessage }">
+		<div class="row_full alert" id="error">
+             <div class="row">
+             	<div class="box">
+             		<figure class="img">
+             			<img src="<%=cp %>/resource/images/assets/alert-240.png" alt="alert" />
+             		</figure>
+             		<div class="msg_content">
+					<div class="title">${errorMessage.title}</div>              		
+				  	<p class="message">${errorMessage.content}</p>
+             		</div>
+             	</div>
+		  </div>
+           </div>
+           </c:if>
+             <div class="row">
+               <div class="row_title">
+                 <h3>쿠앤크 오더</h3>
+               </div>
+             <div class="row">
+                 <ul class="tab order">
+                   <li ${api=="/order.do"?"class=\"on\"":""}><a href="<%=cp%>/members/order.do">음식 고르기</a></li>
+                   <li ${api=="/buy.do"?"class=\"on\"":""}><a href="<%=cp%>/members/buy.do">주문 및 결제</a></li>
+                   <li ${api=="/orderedList.do"?"class=\"on\"":""}><a href="<%=cp%>/members/orderedList.do">주문 내역</a></li>
+                 </ul>
+               </div>
+             </div>
+             <c:if test="${api=='/order.do'}">
+             <div class="row">
+               <ul class="shop">
+               	<c:forEach var="dto" items="${list}"> 
+               		<li>
+               			<div class="menu_item" id="item_${dto.menuNum}">
+               				<figure class="menu_figure">
+               					<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.menuName}" />
+               				</figure>
+               		 		<div class="menu_content">
+               		 			<p>${dto.menuName}</p>
+               		 			<div class="menu_item_controller">
+					              <a href="#" class="item_button" onclick="addCart(${dto.menuNum})">담기</a>
+					              <a href="#" class="item_button submit" onclick="goToCart(${dto.menuNum})">주문</a>
+					            </div>
+               		 		</div>
+               			</div>
+               		</li>
+               	</c:forEach>
+               </ul>
+             </div>
+             </c:if>
+             <c:if test="${api=='/buy.do'}">
+             <div class="row">
+               <table class="table" id="buy">
+               <thead>
+                 <tr class="on">
+                   <th class="col_category">상품구분</th>
+                   <th class="col_menuName">상품명</th>
+                   <th class="col_price">금액</th>
+                 </tr>
+                 <tr>
+               </thead>
+               <tbody>
+               	<c:forEach var="dto" items="${cart.items}">
+               	<tr>
+               		<td class="col_category">${dto.value.categoryNum}</td>
+               		<td class="col_menuName">
+               			<div class="buy_item">
+               				<div class="item_image">
+               					<img src="<%=cp %>/${dto.value.thumbnail}" alt="${dto.value.menuName}" />
+               				</div>
+               		 		<div class="item_label">
+               		 			<span>${dto.value.menuName} X ${dto.value.quantity}개</span>
+               		 		</div>
+               			</div>
+               		</td>
+               		<td class="col_price"><fmt:formatNumber value="${dto.value.price * dto.value.quantity}"/></td>
+               	</tr>
+               	</c:forEach>
+               </tbody>
+             </table>
+             <div class="total">
+              <h3>총 주문금액</h3>
+              <span><fmt:formatNumber value="${cart.totalPaymentAmount}"/></span>
+             </div>
+             <div class="row" id="cart_size">
+             	<h4>총 ${fn:length(cart.items)}개의 종류가 담겼습니다.</h4>
+             </div>
+             <form action="<%=cp%>/members/buy_ok.do" method="post" name="buy">
+             <div class="row">
+             	<ul class="buy_method" id="cards">
+				<c:forEach var="dto" items="${cards}">
+				<li>
+					<div class="item_card">
+						<div>
+							<label for="card_${dto.cardNum}">
+								<input name="cardNum" id="card_${dto.cardNum}" class="radio_cards" type="radio" value="${dto.cardNum}"/>
+								<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.cardNum}" />
+							</label>
+							<ul>
+								<li><span>${dto.cardName}</span></li>								
+								<li><span>${dto.balance}</span></li>								
+							</ul>
+						</div>
+					</div>
+				</li>
+				</c:forEach>
+             	</ul>
+             </div>
+             <div class="row">
+              	<a href="#" class="list_button submit" onclick="submit()">결제하기</a>
+             </div>
+             </form>
+             </div>
+             </c:if>
+             <c:if test="${api=='/orderedList.do'}">
+             <div class="row">
+                <table class="table" id="ordered_history">
+                <thead>
+                  <tr>
+                    <td class="col_no">No</td>
+                    <td class="col_date">날짜</td>
+                    <td class="col_content">내역</td>
+                    <td class="col_amount">금액</td>
+                    <td class="col_status">상태</td>
+                  </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="history" items="${orderHistory}" varStatus="status">
+                  <tr>
+                    <td class="col_no">${status.count}</td>
+                    <td class="col_date">${history.orderDate}</td>
+                    <td class="col_content">
+						<dl id="ordered_detail">
+						<c:forEach var="item" items="${history.items}" varStatus="st">
+							<dt>${item.menuName}</dt>
+							<dd>${item.unitPrice}원 (${item.quantity}개)</dd>
+						</c:forEach>
+						</dl>
+					</td>
+                    <td class="col_amount"><fmt:formatNumber value="${history.totalPaymentAmount}"/></td>
+                    <td class="col_status">${history.statusName}</td>
+                  </tr>
+                </c:forEach>
+				</tbody>
+				</table>             
+             </div>
+             </c:if>
+           <!-- Content 영역 끝 -->
           </article>
         </div>
       </main>

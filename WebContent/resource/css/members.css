@@ -58,9 +58,9 @@ h3 {
   margin-left: 20px;
 }
 
-.card_container > ul > li > div.detail{
-  width:300px;
-  margin-left:20px;
+.card_container > ul > li > div.detail {
+  width: 300px;
+  margin-left: 20px;
 }
 
 .card_container > ul > li > div p {
@@ -70,7 +70,7 @@ h3 {
 .card_title {
   margin-top: 20px;
 }
-.detail {
+div.detail {
   font-size: 0.8rem;
 }
 
@@ -124,29 +124,6 @@ h3 {
   color: #fff;
 }
 
-#card_history {
-  width: 100%;
-  border-top: 3px solid #233e83;
-  text-align: center;
-}
-
-#card_history thead td {
-  font-weight: bold;
-}
-
-#card_history tbody tr:hover td {
-  font-weight: bold;
-  color: #233e83;
-}
-
-#card_history tr {
-  border-bottom: 1px solid #d9d9d9;
-}
-
-#card_history td {
-  padding: 20px;
-}
-
 .col_no {
   width: 5%;
 }
@@ -156,14 +133,24 @@ h3 {
 .col_content {
   width: 15%;
 }
+tbody .col_content{
+	text-align:center;
+}
 .col_store {
   width: 15%;
-}
+} 
 .col_amount {
   width: 15%;
 }
+tbody .col_amount{
+	text-align:right;
+	padding-right:5%;
+}
 .col_date {
   width: auto;
+}
+tbody .col_date{
+	padding-left:5%;
 }
 
 /*카드 충전*/
@@ -240,15 +227,265 @@ h3 {
 }
 
 .text_input {
-    width: 300px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 3px;
+  width: 300px;
+  height: 30px;
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
 }
 
-.select_card{
-	padding: 10px;
-    min-width: 300px;
+.select_card {
+  padding: 10px;
+  min-width: 300px;
 }
 
+/*쿠앤크 오더*/
+
+.tab {
+  width: 100%;
+  display: table;
+  border-collapse:collapse;
+  max-width: 1180px;
+  overflow: hidden;
+  border-left: 1px solid #d9d9d9;
+  border-top: 1px solid #d9d9d9;
+  border-bottom: 3px solid #002f6c;
+  margin-top: 20px;
+}
+
+.tab.order li{
+	width:33.3344%;
+}
+
+.tab.detail li{
+	width:49.98%;
+}
+
+.tab li {
+  text-align: center;
+  box-sizing:border-box;
+  line-height: 50px;
+  line-height: 50px;
+  user-select: none;
+  display: inline-block;
+  border-right: 1px solid #d9d9d9;
+}
+
+.tab li:first-child(){
+  border-left: 1px solid #d9d9d9;
+}
+
+.tab li a {
+  font-weight:bold;
+  color: #474747;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tab li.on a,
+.tab li:hover a {
+  color: #e9e9e9;
+}
+
+.tab li.on,
+.tab li:hover {
+  background-color: #002f6c;
+  border-right: 1px solid #002f6c;
+}
+
+/*shop*/
+
+.shop {
+  text-align: center;
+}
+
+.shop li {
+  user-select:none;
+  display: inline-block;
+  text-align: center;
+}
+
+.shop li div.menu_item {
+  width: 180px;
+}
+
+.shop li div.menu_item p{
+	font-size:1.2rem;
+	font-weight:bold;
+}
+
+.menu_content{
+	height:65px;
+}
+
+.shop li div.menu_item_controller:after{
+	display:block;
+	clear:both;
+	content:"";
+}
+
+.shop li div.menu_item figure {
+  width: 100%;
+  clear: both;
+}
+
+.shop li div.menu_item img {
+  width: 100%;
+}
+
+.item_button {
+  user-select: none;
+  width: 35%;
+  display:inline-block;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+  text-align: center;
+  padding:5px;
+}
+
+.item_button:hover{
+	border:1px solid #002f6c;
+	background-color:#002f6c;
+	color:#d9d9d9;
+}
+
+.item_button:hover {
+  font-weight: bold;
+}
+
+.menu_item_controller{
+	margin-top:10px;
+	height:100%;
+}
+
+/*주문 및 결제*/ 
+
+#cart_size{
+	box-sizing:border-box;
+	padding:25px;
+	text-align:right;
+}
+.col_category{
+	width:20%;
+	text-align:center;
+}
+.col_menuName{
+	width:60%;
+}
+.col_price{
+	width:20%;
+	text-align:center;
+}
+
+#buy td{
+	display:table-cell;
+	vertical-align:middle;
+}
+
+/*buy item*/
+
+.buy_item > * {
+	float:left;
+}
+
+.buy_item:after,
+.total:after{
+	content:"";
+	clear:both;
+	display:block;
+}
+
+.buy_item .item_image{
+	width:100px;
+	height:100px;
+}
+
+.buy_item .item_image img{
+	width:100%;
+}
+
+.buy_item .item_label{
+	user-select:none;
+	padding:44px 0;
+}
+
+.total h3{
+	float:left;
+	font-size:1.9rem;
+}
+
+.total span{
+	float:right;
+	font-size:1.8rem;
+	color:#002f6c;
+}
+
+.total{
+	font-weight:bold;
+	padding:50px 80px;
+	border-bottom:1px solid #d1d1d1;
+}
+
+/*카드... 결제수단*/
+.buy_method{
+	padding:50px 0;
+}
+
+.item_card input[type=radio]{
+	display:none;
+}
+.item_card{
+	width:200px;
+	float:left;
+	margin-right:20px;
+}
+
+.item_card label,
+.item_card img{
+	width:100%;
+	cursor:pointer;
+}
+
+.item_card img{
+	opacity:0.4;
+}
+
+.item_card input:checked ~ img{
+	opacity:1;
+}
+
+
+.item_card span{
+	display:block;
+	width:100%;
+	text-align:center;
+	font-weight:bold;
+}
+
+
+/*orderedList*/
+#ordered_history tbody td{
+	vertical-align:middle;
+}
+
+#ordered_history .col_content{
+	width:30%;
+}
+#ordered_history .col_amount{
+	width:20%;
+}
+#ordered_history .col_status{
+	text-align:center;
+	width:20%;
+}
+
+#ordered_detail dt,
+#ordered_detail dd{
+	float:left;
+	margin:10px;
+}
+
+#ordered_detail dt{
+	clear:both;
+}

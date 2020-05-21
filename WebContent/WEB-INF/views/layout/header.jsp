@@ -19,8 +19,9 @@
             	<li>[관리자]</li>
             </c:if>
             <c:if test="${not empty sessionScope.member}">
+              <li><a href="<%=cp%>/auth/mypage.do">마이 페이지</a></li>
+              <li><a href="<%=cp %>/members/orderedList.do">주문내역 조회</a></li>
               <li><a href="<%=cp%>/auth/logout.do">로그아웃</a></li>
-              <li><a href="<%=cp%>/auth/mypage.do">마이페이지</a></li>
             </c:if>
             </ul>
           </div>
@@ -43,7 +44,7 @@
                     <a href="<%=cp%>/members/register.do">카드 등록</a>
                   </li>
                   <li class="sub_menu"><a href="<%=cp%>/members/charge.do">카드 충전</a></li>
-                  <li class="sub_menu"><a href="<%=cp%>/members/order.do">쿠앤크오더</a></li>
+                  <li class="sub_menu"><a href="<%=cp%>/members/order.do">쿠앤크 오더</a></li>
                 </ul>
               </li>
               <li class="main_menu">

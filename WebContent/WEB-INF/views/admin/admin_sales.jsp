@@ -52,35 +52,91 @@
           
           <div class="content_box">
             <div class="content_title">
-              <h3>현재 주문 상태</h3>
+              <h3>오늘의 대시보드</h3>
             </div>
             <div class="content_area">
               <ul id="order_process">
                 <li>
                   <div class="order_item">
                     <span>결제 완료</span>
-                    <a href="<%=cp%>/admin/main/orderPayment.do">${dashBoardStatusDTO.paymentCount}</a>
+                    <a href="#">${dashBoardStatusDTO.paymentCount}</a>
                   </div>
                 </li>
                 <li>
                   <div class="order_item">
                     <span>제조 대기</span>
-                    <a href="<%=cp%>/admin/main/orderBeforeMaking.do">${dashBoardStatusDTO.beforeMakingCount}</a>
+                    <a href="#">${dashBoardStatusDTO.beforeMakingCount}</a>
                   </div>
                 </li>
                 <li>
                   <div class="order_item">
                     <span>제조 중</span>
-                    <a href="<%=cp%>/admin/main/orderMaking.do">${dashBoardStatusDTO.makingCount}</a>
+                    <a href="#">${dashBoardStatusDTO.makingCount}</a>
                   </div>
                 </li>
                 <li>
                   <div class="order_item">
                     <span>제조 완료</span>
-                    <a href="<%=cp%>/admin/main/orderDone.do">${dashBoardStatusDTO.doneCount}</a>
+                    <a href="#">${dashBoardStatusDTO.doneCount}</a>
                   </div>
                 </li>
               </ul>
+            </div>
+          </div>
+
+          <div class="content_box">
+            <div class="content_title">
+              <h3>접수 대기</h3>
+            </div>
+            <div class="content_area">
+              <table id="receive_list">
+                <thead>
+                  <tr>
+                    <td class="col_no">No</td>
+                    <td class="col_nickname">별명</td>
+                    <td class="col_product">내역</td>
+                    <td class="col_date">주문일시</td>
+                    <td class="col_status">접수</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>맛나게먹자</td>
+                    <td>
+                      <ol class="col_product_detail">
+                        <li>
+                          <p>아메리카노</p>
+                          <ul>
+                            <li>Regular</li>
+                            <li>Hot</li>
+                          </ul>
+                        </li>
+                        <li>
+                          <p>카페라떼</p>
+                          <ul>
+                            <li>Extra</li>
+                            <li>ICE</li>
+                            <li>휘핑크림 X 9회</li>
+                            <li>초콜릿 칩X 3회</li>
+                            <li>시럽(캐러멜) X 9회</li>
+                            <li>시럽(바닐라) X 2회</li>
+                          </ul>
+                        </li>
+                        <li>
+                          <p>화이트 초콜릿 모카</p>
+                          <ul>
+                            <li>Extra</li>
+                            <li>ICE</li>
+                          </ul>
+                        </li>
+                      </ol>
+                    </td>
+                    <td>2020-04-21 08:20:20</td>
+                    <td><a href="#"class="button">승인</a><a href="#"class="button">거절</a></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </article>

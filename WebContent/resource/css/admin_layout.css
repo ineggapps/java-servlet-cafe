@@ -150,6 +150,11 @@ main {
   padding: 30px 0;
 }
 
+order_item.on,
+h3.on{
+	color:tomato;
+}
+
 /* footer {
   background-color: thistle;
 }

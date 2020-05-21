@@ -1,7 +1,9 @@
 package com.cafe.menu;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -9,8 +11,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import com.cafe.auth.SessionAuthInfo;
+import com.util.FileManager;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
 
@@ -22,12 +26,18 @@ import com.util.MyUtil;
 public class MenuServlet extends MyUploadServlet {
 	private static final long serialVersionUID = 1L;
 	
+	private String pathname;
 	
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
+
 		String uri=req.getRequestURI();
 		// 이미지 저장 경로
+		HttpSession session=req.getSession();
+		String root=session.getServletContext().getRealPath("/");
+		pathname=root+File.separator+"thumbnail"+File.separator+"menu";
+		
 		if (uri.indexOf("/coffee.do") != -1 || uri.indexOf("/index.do") != -1) {
 			coffee(req, resp);
 		} else if (uri.indexOf("/ade.do") != -1) {
@@ -36,6 +46,8 @@ public class MenuServlet extends MyUploadServlet {
 			bakery(req, resp);
 		} else if (uri.indexOf("/createdMenu.do") != -1) {
 			createdMenu(req, resp);
+		} else if(uri.indexOf("/createdMenu_ok.do")!=-1) {
+			createdMenuSubmit(req, resp);
 		}
 
 	}
@@ -170,24 +182,88 @@ public class MenuServlet extends MyUploadServlet {
 	
 	protected void createdMenu(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = "/WEB-INF/views/cafe/menu/created.jsp";
-		String cp = req.getContextPath();
 		
-		SessionAuthInfo info = getSessionAuthInfo(req);
+		req.setAttribute("mode", "created");
 		
-		if(info == null) { 
-			resp.sendRedirect(cp+"/cafe/login.do");
-			return;
-		}
-		
-		if(! info.isAdmin()) {
-			
-		}
-
-		
-		
-		
-		// 포워딩
 		forward(req, resp, path);
 	}
 
+	protected void createdMenuSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String cp = req.getContextPath();
+		
+		MenuDAO dao = new MenuDAO();
+		MenuDTO dto = new MenuDTO();
+		
+		dto.setCategoryNum(Integer.parseInt(req.getParameter("categoryNum")));
+		dto.setMenuName(req.getParameter("menuName"));
+		dto.setText(req.getParameter("text"));	
+		dto.setPrice(Integer.parseInt(req.getParameter("price")));
+		
+		String thumbnail = null;
+		Part p = req.getPart("thumbnail");
+		Map<String, String> map = doFileUpload(p, pathname);
+		if(map != null) {
+			thumbnail = map.get("saveFilename");
+		}
+		
+		if(thumbnail != null) {
+			dto.setThumbnail("/thumbnail/menu/"+thumbnail);
+			dao.insertMenu(dto);
+		}
+		
+		resp.sendRedirect(cp+"/menu/coffee.do");
+	}
+	
+	protected void updateMenu(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String path = "/WEB-INF/views/cafe/menu/coffee.jsp";
+		String cp = req.getContextPath();
+		HttpSession session=req.getSession();
+		SessionAuthInfo info=(SessionAuthInfo) session.getAttribute("member");
+		
+		MenuDAO dao = new MenuDAO();
+		int menuNum = Integer.parseInt(req.getParameter("menuNum"));
+		MenuDTO dto = dao.readMenu(menuNum);
+		
+		if(! info.getUserId().equals("hello")) {
+			resp.sendRedirect(cp+"/menu/coffee.do");
+			return;
+		}
+		
+		req.setAttribute("dto", dto);
+		req.setAttribute("mode", "update");
+		
+		forward(req, resp, path);
+	}
+	
+	protected void updateMenuSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String cp = req.getContextPath();
+		MenuDAO dao = new MenuDAO();
+		MenuDTO dto = new MenuDTO();
+		
+		String thumbnail = req.getParameter("thumbnail");
+		dto.setMenuNum(Integer.parseInt(req.getParameter("menuNum")));
+		dto.setCategoryNum(Integer.parseInt(req.getParameter("categoryNum")));
+		dto.setMenuName(req.getParameter("menuName"));
+		dto.setText(req.getParameter("text"));	
+		dto.setPrice(Integer.parseInt(req.getParameter("price")));
+		
+		Part p = req.getPart("thumbnail");
+		Map<String, String> map = doFileUpload(p, pathname);
+		if(map != null) {
+			String filename = map.get("saveFilename");
+			
+			FileManager.doFiledelete(pathname, thumbnail);
+			dto.setThumbnail(filename);
+		} else {
+			dto.setThumbnail(thumbnail);
+		}
+		
+		dao.updateMenu(dto);
+		
+		resp.sendRedirect(cp+"/menu/coffee.do");
+	}
+	
+	protected void deleteMenu(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+	}
 }
