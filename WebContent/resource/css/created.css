@@ -1,16 +1,35 @@
 @charset "UTF-8";
 
+.menuForm1 {
+	margin: 0px auto;
+}
+
 .menuCreateForm {
 	width: 75%;
 	margin: 0px auto;
 }
 
-.menuinput {
-	width: 350px;
-	margin-bottom: 10px;
-	border-radius: 3px;
+.createtable tr{
+	width: 100%;
+	float: center;
+	margin: 0px auto;
+	border-bottom: 1px solid #e4e4e4;
 }
 
-.menubutton {
+.menulist {
+	width: 320px;
+}
+
+.menuinput {
+	width: 730px;
+	border-radius: 3px;
+	margin-top: 7px;
+	margin-bottom: 7px;
+}
+.menubuttontr {
+	padding-left: 100px;
+}
+
+.created_button {
 	float: right;
 }

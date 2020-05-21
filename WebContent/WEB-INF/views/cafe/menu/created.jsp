@@ -33,7 +33,7 @@ function sendMenu() {
     }
 
     var mode="${mode}";
-	  if(mode=="createdMenu"||mode=="updateMenu" && f.thumbnail.value!="") {
+	  if(mode=="created"||mode=="update" && f.thumbnail.value!="") {
 		if(! /(\.gif|\.jpg|\.png|\.jpeg)$/i.test(f.thumbnail.value)) {
 			alert('이미지 파일만 가능합니다. !!!');
 			f.thumbnail.focus();
@@ -44,7 +44,7 @@ function sendMenu() {
   	  if(mode=="created")
     		f.action="<%=cp%>/menu/createdMenu_ok.do";
   	  else if(mode=="update")
-    		f.action="<%=cp%>/menu/updateMenu_ok.do";
+    		f.action="<%=cp%>/menu/update_ok.do";
 
     f.submit();
 }
@@ -56,15 +56,15 @@ function sendMenu() {
       <header id="header">
         <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
       </header>
-      <br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
       <div class="menuCreateForm">
       <h3> | 메뉴 등록</h3>
       <hr>
 		<div>
-		<form name="menuForm" method="post" enctype="multipart/form-data">
-			<table>
+		<form class="menuForm1" style="width: 100%" name="menuForm" method="post" enctype="multipart/form-data">
+			<table class="createtable">
 				<tr>
-					<td> 메뉴 카테고리 번호 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td class="menulist"> 메뉴 카테고리 번호 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					<td> 
 						<select name="categoryNum" style="width: 120px; height:30px;">
 							<option value="none"> 선 택 </option>
@@ -76,33 +76,40 @@ function sendMenu() {
 					<td><br></td>
 				</tr>
 				<tr>
-					<td> 메뉴 이름 </td>
+					<td class="menulist"> 메뉴 이름 </td>
 					<td> <input class="menuinput" type="text" name="menuName" value="${dto.menuName}"> </td>
 				</tr>
 				<tr>
-					<td> 이미지 파일 </td>
-					<td> <input class="menuinput" type="file" name="thumbnail" accept="image/*" value="${dto.thumbnail}"></td>
+					<td class="menulist"> 이미지 파일 </td>
+					<td> <input class="menuinput" type="file" name="thumbnail" accept="image/*"></td>
 				</tr>
 				<tr>
-					<td> 메뉴 소개글 </td>
+					<td class="menulist"> 메뉴 소개글 </td>
 					<td> <input class="menuinput" type="text" name="text" value="${dto.text}"> </td>
 				</tr>
-				<tr>
-					<td> 가격 </td>
+				<tr style="border-bottom: 0px solid white;">
+					<td class="menulist"> 가격 </td>
 					<td> <input class="menuinput" type="text" name="price" value="${dto.price}"> </td>
 				</tr>
-				<tr>
-					<td>
-						<button class="menubutton" type="button" onclick="sendMenu();">등록하기</button>
-						<button type="reset" class="btn">다시입력</button>
-			        	<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/menu/coffee.do';">등록취소</button>
-					</td>
+				<tr class="menubuttontr">
 				</tr>
 			</table>
+			<div>
+						<c:if test="${mode=='update'}">
+							<input type="hidden" name="menuNum" value="${dto.menuNum}"/>
+							<input type="hidden" name="saveFilename" value="${dto.thumbnail}"/>
+						</c:if>
+						<div align="center" style="padding-top: 10px;">
+							<button class="menubutton" type="button" onclick="sendMenu();">${mode=='update'?'수정완료':'등록하기'}</button>
+							<button class="menubutton" type="reset" class="btn">다시입력</button>
+			        		<button class="menubutton" type="button" class="btn" onclick="javascript:location.href='<%=cp%>/menu/coffee.do';">${mode=='update'?'수정취소':'등록취소'}</button>
+						</div>
+				</div>
 			</form>
 		</div>
 		<hr>
 		</div>
+		<br><br><br><br><br><br><br><br><br>
       <footer id="footer">
         <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
       </footer>
