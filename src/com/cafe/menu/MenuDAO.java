@@ -251,7 +251,7 @@ public class MenuDAO {
 		String sql;
 		
 		try {
-			sql = "UPDATE menu SET categoryNum=?, menuName=?, thumbnail=?, text=?, price=?";
+			sql = "UPDATE menu SET categoryNum=?, menuName=?, thumbnail=?, text=?, price=? WHERE menuNum=? ";
 			pstmt=conn.prepareStatement(sql);
 			
 			pstmt.setInt(1, dto.getCategoryNum());
@@ -259,6 +259,7 @@ public class MenuDAO {
 			pstmt.setString(3, dto.getThumbnail());
 			pstmt.setString(4, dto.getText());
 			pstmt.setInt(5, dto.getPrice());
+			pstmt.setInt(6, dto.getMenuNum());
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {

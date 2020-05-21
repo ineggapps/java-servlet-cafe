@@ -42,6 +42,7 @@
               </div>
               <hr />
               <br /><br />
+              <form name="menuForm1" method="post" enctype="multipart/form-data">
               <div class="picture">
                 <ul>
                 <c:forEach var="dto" items="${list}" varStatus="status">
@@ -58,11 +59,18 @@
                             ${dto.text}
                           </li>
                         </ul>
-						<br>                        
                         <ul>
-                          <li>
-                          	<button type="button" onclick="updateMenu();">수정</button>
-                          	<button type="button">삭제</button>
+                        	<li class="detail_price" >&nbsp;&nbsp;&nbsp;가격 : ${dto.price}</li>
+                        </ul>
+                        <br><br><br>
+                        <ul>
+                          <li class="detail_button">
+                          <c:if test="${sessionScope.member.userId=='hello'}">
+                          	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/update.do?menuNum=${dto.menuNum}';">수정</button>
+                          </c:if>
+                          <c:if test="${sessionScope.member.userId=='hello'}">
+                          	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/delete.do?menuNum=${dto.menuNum}';">삭제</button>
+                          </c:if>
                           </li>
                         </ul>
                       </div>
@@ -71,10 +79,13 @@
                   </c:forEach>
                 </ul>
               </div>
+              </form>
               <br />
               <hr />
               <div class="menu_controller">
+              	<c:if test="${sessionScope.member.userId=='hello'}">
                 	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
+              	</c:if>
               </div>
               <br /><br />
             </div>
