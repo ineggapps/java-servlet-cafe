@@ -522,24 +522,24 @@ public class MembersServlet extends EspressoServlet {
 
 	private MenuDTO getCartItem(int menuNum, SessionCart cart) throws Exception {
 		try {
-			List<MenuDTO> items = cart.getItems();
-			for (MenuDTO dto : items) {
-				if (menuNum == dto.getMenuNum()) {
-//					MenuDTO newDTO = new MenuDTO();
-//					newDTO.setMenuNum(dto.getMenuNum());
-//					newDTO.setCategoryNum(dto.getCategoryNum());
-//					newDTO.setMenuName(dto.getMenuName());
-//					newDTO.setThumbnail(dto.getThumbnail());
-//					newDTO.setText(dto.getText());
-//					newDTO.setPrice(dto.getPrice());
-//					return newDTO;
-					return dto;
-				}
-			}
+			return cart.getItems().get(menuNum);
+//			List<MenuDTO> items = cart.getItems();
+//			for (MenuDTO dto : items) {
+//				if (menuNum == dto.getMenuNum()) {
+////					MenuDTO newDTO = new MenuDTO();
+////					newDTO.setMenuNum(dto.getMenuNum());
+////					newDTO.setCategoryNum(dto.getCategoryNum());
+////					newDTO.setMenuName(dto.getMenuName());
+////					newDTO.setThumbnail(dto.getThumbnail());
+////					newDTO.setText(dto.getText());
+////					newDTO.setPrice(dto.getPrice());
+////					return newDTO;
+//					return dto;
+//				}
+//			}
 		} catch (Exception e) {
 			throw new Exception(e);
 		}
-		return null;
 	}
 
 	private SessionCart getCart(HttpServletRequest req) throws Exception {

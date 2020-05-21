@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.cafe.menu.MenuDTO;
 import com.util.DBCPConn;
@@ -79,8 +80,9 @@ public class OrderDAO {
 			//3. 주문 상세 만들기
 			sql = "INSERT INTO order_detail(detailNum, orderNum, menuNum, unitPrice, quantity, paymentAmount) "
 					+ " VALUES(order_detail_seq.NEXTVAL, ?, ?, ?, ?, ?)";
-			List<MenuDTO> items = cart.getItems();
-			for(MenuDTO item: items) {
+			Map<Integer, MenuDTO> items = cart.getItems();
+			for(int menuNum: items.keySet()) {
+				MenuDTO item = items.get(menuNum);
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, orderNum);
 				pstmt.setInt(2, item.getMenuNum());
@@ -162,7 +164,7 @@ public class OrderDAO {
 				historyDTO.setStatusNum(rs.getInt("statusNum"));
 				historyDTO.setStatusName(rs.getString("statusName"));
 				historyDTO.setUserNum(userNum);
-				historyDTO.setUserName(rs.getString("userName"));
+				historyDTO.setNickname(rs.getString("nickname"));
 				historyDTO.setCardNum(cardNum);
 				historyDTO.setOrderDate(rs.getString("order_date"));
 				historyDTO.setCancelNum(rs.getInt("cancelNum"));

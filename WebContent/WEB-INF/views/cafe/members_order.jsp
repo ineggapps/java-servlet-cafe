@@ -128,18 +128,18 @@
                <tbody>
                	<c:forEach var="dto" items="${cart.items}">
                	<tr>
-               		<td class="col_category">${dto.categoryNum}</td>
+               		<td class="col_category">${dto.value.categoryNum}</td>
                		<td class="col_menuName">
                			<div class="buy_item">
                				<div class="item_image">
-               					<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.menuName}" />
+               					<img src="<%=cp %>/${dto.value.thumbnail}" alt="${dto.value.menuName}" />
                				</div>
                		 		<div class="item_label">
-               		 			<span>${dto.menuName} X ${dto.quantity}개</span>
+               		 			<span>${dto.value.menuName} X ${dto.value.quantity}개</span>
                		 		</div>
                			</div>
                		</td>
-               		<td class="col_price"><fmt:formatNumber value="${dto.price * dto.quantity}"/></td>
+               		<td class="col_price"><fmt:formatNumber value="${dto.value.price * dto.value.quantity}"/></td>
                	</tr>
                	</c:forEach>
                </tbody>

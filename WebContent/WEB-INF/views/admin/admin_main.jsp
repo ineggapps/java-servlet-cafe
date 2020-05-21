@@ -83,62 +83,6 @@
               </ul>
             </div>
           </div>
-
-          <div class="content_box">
-            <div class="content_title">
-              <h3>접수 대기</h3>
-            </div>
-            <div class="content_area">
-              <table id="receive_list">
-                <thead>
-                  <tr>
-                    <td class="col_no">No</td>
-                    <td class="col_nickname">별명</td>
-                    <td class="col_product">내역</td>
-                    <td class="col_date">주문일시</td>
-                    <td class="col_status">접수</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>맛나게먹자</td>
-                    <td>
-                      <ol class="col_product_detail">
-                        <li>
-                          <p>아메리카노</p>
-                          <ul>
-                            <li>Regular</li>
-                            <li>Hot</li>
-                          </ul>
-                        </li>
-                        <li>
-                          <p>카페라떼</p>
-                          <ul>
-                            <li>Extra</li>
-                            <li>ICE</li>
-                            <li>휘핑크림 X 9회</li>
-                            <li>초콜릿 칩X 3회</li>
-                            <li>시럽(캐러멜) X 9회</li>
-                            <li>시럽(바닐라) X 2회</li>
-                          </ul>
-                        </li>
-                        <li>
-                          <p>화이트 초콜릿 모카</p>
-                          <ul>
-                            <li>Extra</li>
-                            <li>ICE</li>
-                          </ul>
-                        </li>
-                      </ol>
-                    </td>
-                    <td>2020-04-21 08:20:20</td>
-                    <td><a href="#"class="button">승인</a><a href="#"class="button">거절</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
         </article>
       </main>
       <footer>
