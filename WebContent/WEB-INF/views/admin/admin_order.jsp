@@ -91,7 +91,7 @@
                     <td>
                     	<c:if test="${statusNum==1}">
                     	<a href="<%=cp%>/admin/main/orderStepUp.do?orderNum=${history.orderNum}&amp;api=${api}"class="button">접수</a>
-                    	<a href="#"class="button">취소</a>
+                    	<a href="<%=cp%>/admin/main/orderCancel.do?orderNum=${history.orderNum}"class="button">취소</a>
                     	</c:if>
                     	<c:if test="${statusNum>1 and statusNum < 4}">
                     	<a href="<%=cp%>/admin/main/orderStepUp.do?orderNum=${history.orderNum}&amp;api=${api}"class="button">완료</a>

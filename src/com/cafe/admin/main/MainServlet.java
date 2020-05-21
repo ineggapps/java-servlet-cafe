@@ -33,7 +33,8 @@ public class MainServlet extends EspressoServlet {
 	private static final String API_ORDER_BEFORE_MAKING = "/orderBeforeMaking.do";
 	private static final String API_ORDER_MAKING = "/orderMaking.do";
 	private static final String API_ORDER_DONE = "/orderDone.do";
-	private static final String API_ORDER_STEP_UP_STATUS= "/orderStepUp.do";
+	private static final String API_ORDER_CANCEL = "/orderCancel.do";
+	private static final String API_ORDER_STEP_UP_STATUS = "/orderStepUp.do";
 	private static final String API_SALES_BY_MENU = "/salesByMenu.do";
 	private static final String API_SALES_BY_DATE = "/salesByDate.do";
 
@@ -42,10 +43,10 @@ public class MainServlet extends EspressoServlet {
 	private static final String JSP_ORDER = "/admin_order.jsp";
 	private static final String JSP_SALES = "/admin_sales.jsp";
 
-	//PARAM
+	// PARAM
 	private static final String PARAM_API = "api";
 	private static final String PARAM_ORDER_NUM = "orderNum";
-	
+
 	// ATTRIBUTE
 	private static final String ATTRIBUTE_API = "api";
 	private static final String ATTRIBUTE_ORDER_HISTORY = "orderHistory";
@@ -77,8 +78,10 @@ public class MainServlet extends EspressoServlet {
 			salesByMenu(req, resp, attributes);
 		} else if (uri.indexOf(API_SALES_BY_DATE) != -1) {
 			salesByDate(req, resp, attributes);
-		} else if(uri.indexOf(API_ORDER_STEP_UP_STATUS) != -1) {
+		} else if (uri.indexOf(API_ORDER_STEP_UP_STATUS) != -1) {
 			stepUpOrderStatus(req, resp, attributes);
+		} else if (uri.indexOf(API_ORDER_CANCEL) != -1) {
+			cancelOrder(req, resp, attributes);
 		}
 	}
 
@@ -100,8 +103,8 @@ public class MainServlet extends EspressoServlet {
 	}
 
 	// 주문 관련
-	protected void orderStatus(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes, int statusNum)
-			throws ServletException, IOException {
+	protected void orderStatus(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes,
+			int statusNum) throws ServletException, IOException {
 		String path = VIEWS + JSP_ORDER;
 		AdminOrderDAO dao = new AdminOrderDAO();
 		List<OrderHistoryDTO> list = dao.listOrderHistoryByUserNum(statusNum);
@@ -109,10 +112,25 @@ public class MainServlet extends EspressoServlet {
 		attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
 		attributes.put(ATTRIBUTE_ORDER_HISTORY, list);
 		attributes.put(ATTRIBUTE_STATUS_NUM, statusNum);
-		attributes.put(ATTRIBUTE_STATUS_NAME, AdminOrderDAO.STATUS_NAME[statusNum-1]);
+		attributes.put(ATTRIBUTE_STATUS_NAME, AdminOrderDAO.STATUS_NAME[statusNum - 1]);
 		forward(req, resp, path, attributes);
 	}
-	
+
+	// 주문 취소 관련
+	protected void cancelOrder(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes) throws ServletException, IOException {
+		String path = apiPath + API_ORDER_PAYMENT;
+		AdminOrderDAO dao = new AdminOrderDAO();
+		try {
+			String orderNum = req.getParameter(PARAM_ORDER_NUM);
+			int oNum = Integer.parseInt(orderNum);
+			int result = dao.insertCancelOrder(oNum);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(path);
+	}
+
 	protected void stepUpOrderStatus(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String uri = req.getParameter(PARAM_API);
@@ -127,6 +145,7 @@ public class MainServlet extends EspressoServlet {
 			resp.sendRedirect(apiPath + API_ORDER_PAYMENT);
 		}
 	}
+
 	// 판매 관련
 	protected void salesByMenu(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {

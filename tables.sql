@@ -172,10 +172,12 @@ CREATE SEQUENCE order_history_seq -- 주문 일련번호 시퀀스
 
 CREATE TABLE order_cancel(
     cancelNum NUMBER,
-    orderNum NUMBER,
+    orderNum NUMBER NOT NULL,
     paymentAmount NUMBER,
+    cardNum NUMBER NOT NULL,
     canceled_date DATE DEFAULT SYSDATE,
     CONSTRAINT pk_cancel_num PRIMARY KEY(cancelNum),
+    CONSTRAINT fk_order_cancel_card_num FOREIGN KEY(cardNum) REFERENCES cards(cardNum),
     CONSTRAINT fk_order_cancel_num FOREIGN KEY(orderNum) REFERENCES order_history(orderNum)
 );
 
@@ -423,6 +425,38 @@ AFTER DELETE ON order_history
 FOR EACH ROW
 BEGIN
      UPDATE cards SET balance = balance + :OLD.totalPaymentAmount
+           WHERE cardNum = :OLD.cardNum;
+END;
+/
+
+--취소내역 트리거
+-- 취소내역 입력 시
+CREATE OR REPLACE TRIGGER insert_order_cancel
+AFTER INSERT ON order_cancel
+FOR EACH ROW
+
+BEGIN
+     UPDATE cards SET balance = balance + :NEW.paymentAmount
+           WHERE cardNum = :NEW.cardNum;
+END;
+/
+
+-- 취소내역 수정 시
+CREATE OR REPLACE TRIGGER update_order_cancel
+AFTER UPDATE ON order_cancel
+FOR EACH ROW
+BEGIN
+     UPDATE cards SET balance = balance - :OLD.paymentAmount + :NEW.paymentAmount
+            WHERE cardNum = :NEW.cardNum;
+END;
+/
+
+--취소내역 삭제 시
+CREATE OR REPLACE TRIGGER delete_order_cancel
+AFTER DELETE ON order_cancel
+FOR EACH ROW
+BEGIN
+     UPDATE cards SET balance = balance - :OLD.paymentAmount
            WHERE cardNum = :OLD.cardNum;
 END;
 /

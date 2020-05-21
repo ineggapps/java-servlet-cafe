@@ -4,25 +4,25 @@ SELECT
     FROM   order_history
     WHERE  statusnum = ?
             AND To_char(order_date, 'YYYY-MM-DD') =
-                To_char(sysdate, 'YYYY-MM-DD'))
+                To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL)
     status1,
     (SELECT Count(ordernum)
     FROM   order_history
     WHERE  statusnum = ?
             AND To_char(order_date, 'YYYY-MM-DD') =
-                To_char(sysdate, 'YYYY-MM-DD'))
+                To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL)
     status2,
     (SELECT Count(ordernum)
     FROM   order_history
     WHERE  statusnum = ?
             AND To_char(order_date, 'YYYY-MM-DD') =
-                To_char(sysdate, 'YYYY-MM-DD'))
+                To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL)
     status3,
     (SELECT Count(ordernum)
     FROM   order_history
     WHERE  statusnum = ?
             AND To_char(order_date, 'YYYY-MM-DD') =
-                To_char(sysdate, 'YYYY-MM-DD'))
+                To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL)
     status4
 FROM   dual  
 

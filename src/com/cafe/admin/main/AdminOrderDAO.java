@@ -27,7 +27,7 @@ public class AdminOrderDAO {
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String subSql = "SELECT COUNT(orderNum) FROM order_history WHERE statusNum=? AND TO_CHAR(order_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')";
+		String subSql = "SELECT (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status1, (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status2, (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status3, (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status4 FROM dual";
 		StringBuilder sql = new StringBuilder();
 
 		sql.append("SELECT ");
@@ -152,7 +152,7 @@ public class AdminOrderDAO {
 					+ " FROM order_history oh "
 					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
 					+ " JOIN member m ON oh.userNum = m.userNum " 
-					+ " WHERE oh.statusNum = ?"
+					+ " WHERE oh.statusNum = ? AND cancelNum IS NULL "
 					+ " ORDER BY orderNum DESC";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, statusNum);
@@ -213,7 +213,7 @@ public class AdminOrderDAO {
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		String sql = "UPDATE order_history SET statusNum = statusNum + 1 "
-				+ "WHERE orderNum=? and statusNum < ?"; 
+				+ "WHERE orderNum=? AND statusNum < ? AND cancelNum IS NULL"; 
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, orderNum);
@@ -237,6 +237,83 @@ public class AdminOrderDAO {
 		}
 		return result;
 	}
+	
+	//주문취소하기
+	public int insertCancelOrder(int orderNum) {
+		int result = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int cardNum=0;
+		int totalPaymentAmount=0;
+		String sql;
+		
+		try {
+			conn.setAutoCommit(false);
+			//#1. 기존 주문내역에서 cardNum 찾기
+			sql = "SELECT cardNum, totalPaymentAmount FROM order_history WHERE orderNum = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, orderNum);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				cardNum = rs.getInt(1);
+				totalPaymentAmount = rs.getInt(2);
+			}else {
+				throw new Exception("결제 내역이 없습니다.");
+			}
+			try {
+				returnDBResources(pstmt, rs);
+			} catch (Exception e) {
+			}
+			//#2. 취소내역 번호 가져오기
+			int cancelNum = 0;
+			sql = "SELECT order_cancel_seq.NEXTVAL FROM dual";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				cancelNum = rs.getInt(1);
+			}
+			returnDBResources(pstmt, rs);
+			
+			//#3. 취소내역 추가하기
+			sql = "INSERT INTO order_cancel(cancelNum, orderNum, cardNum, paymentAmount) "
+					+ "VALUES ("+cancelNum+", ?, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, orderNum);
+			pstmt.setInt(2, cardNum);
+			pstmt.setInt(3, totalPaymentAmount);//부분취소할 수도 있으므로. 일단은 전체 취소만 가능하도록 설정
+			result = pstmt.executeUpdate();
+			
+			returnDBResources(pstmt, rs);
+			//#4. 기존 order_history에 취소번호 추가하기
+			sql = "UPDATE order_history SET cancelNum = ? WHERE orderNum = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cancelNum);
+			pstmt.setInt(2, orderNum);
+			pstmt.executeUpdate();
+			conn.commit();
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			e.printStackTrace();
+		}finally {
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+			returnDBResources(pstmt, rs);
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+		return result;
+	}
+	
 
 	////////////////////////////////////////////// 자원반납 대신하기..
 	public void returnDBResources(PreparedStatement pstmt, ResultSet rs) {
