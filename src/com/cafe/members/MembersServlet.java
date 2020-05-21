@@ -149,8 +149,6 @@ public class MembersServlet extends EspressoServlet {
 			if (dto == null) {
 				throw new Exception("카드가 존재하지 않습니다. cardNum:" + cardNum);
 			}
-			
-			
 			List<OrderHistoryDTO> historyList; 
 			List<CardChargeDTO> chargeList;
 			if(tab==null || tab.equalsIgnoreCase("usage")) {
@@ -548,7 +546,6 @@ public class MembersServlet extends EspressoServlet {
 		try {
 			SessionCart cart = (SessionCart) req.getSession().getAttribute(SESSION_CART);
 			if (cart == null) {
-				System.out.println("카트 새로 발급");
 				cart = new SessionCart();
 				req.getSession().setAttribute(SESSION_CART, cart);
 			}

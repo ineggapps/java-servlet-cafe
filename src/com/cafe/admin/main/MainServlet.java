@@ -2,6 +2,7 @@ package com.cafe.admin.main;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cafe.members.OrderHistoryDTO;
 import com.util.EspressoServlet;
 
 @WebServlet("/admin/main/*")
@@ -40,6 +42,8 @@ public class MainServlet extends EspressoServlet {
 	private static final String JSP_SALES = "/admin_sales.jsp";
 
 	// ATTRIBUTE
+	private static final String ATTRIBUTE_API = "api";
+	private static final String ATTRIBUTE_ORDER_HISTORY = "orderHistory";
 	private static final String ATTRIBUTE_DASHBOARD_STATUS_DTO = "dashBoardStatusDTO";
 	private static final String ATTRIBUTE_TODAY_STATUS = "todayStatus";
 
@@ -50,7 +54,8 @@ public class MainServlet extends EspressoServlet {
 		apiPath = contextPath + API_NAME;
 		String uri = req.getRequestURI();
 		Map<String, Object> attributes = new HashMap<>();
-		System.out.println(uri);
+		attributes.put(ATTRIBUTE_API, uri.substring(uri.lastIndexOf("/")));
+
 		if (uri.indexOf(API_INDEX) != -1) {
 			main(req, resp, attributes);
 		} else if (uri.indexOf(API_ORDER_PAYMENT) != -1) {
@@ -71,49 +76,64 @@ public class MainServlet extends EspressoServlet {
 	protected void main(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_MAIN;
-		AdminOrderDAO dao = new AdminOrderDAO();
-		DashBoardStatusDTO dashboardDTO = dao.getTodayDashBoardStatus();
-		TodayStatusDTO todayStatus = dao.getTodayStatus();
-		attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
-		attributes.put(ATTRIBUTE_TODAY_STATUS, todayStatus);
-		forward(req, resp, path, attributes);
+		try {
+			AdminOrderDAO dao = new AdminOrderDAO();
+			DashBoardStatusDTO dashboardDTO = dao.getTodayDashBoardStatus();
+			TodayStatusDTO todayStatus = dao.getTodayStatus();
+			attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
+			attributes.put(ATTRIBUTE_TODAY_STATUS, todayStatus);
+			forward(req, resp, path, attributes);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + API_INDEX);
+			return;
+		}
 	}
 
 	// 주문 관련
 	protected void orderPayment(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		String path = VIEWS + JSP_MAIN;
+		String path = VIEWS + JSP_ORDER;
+		AdminOrderDAO dao = new AdminOrderDAO();
+		System.out.println("주문 관련");
+		List<OrderHistoryDTO> list = dao.listOrderHistoryByUserNum(AdminOrderDAO.STATUS_PAYMENT);
+		System.out.println(list.size());
+		for(OrderHistoryDTO dto : list) {
+			System.out.println(dto);
+		}
+		attributes.put(ATTRIBUTE_ORDER_HISTORY, list);
+		
 		forward(req, resp, path, attributes);
 	}
 
 	protected void orderBeforeMaking(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		String path = VIEWS + JSP_MAIN;
+		String path = VIEWS + JSP_ORDER;
 		forward(req, resp, path, attributes);
 	}
 
 	protected void orderMaking(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		String path = VIEWS + JSP_MAIN;
+		String path = VIEWS + JSP_ORDER;
 		forward(req, resp, path, attributes);
 	}
 
 	protected void orderDone(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		String path = VIEWS + JSP_MAIN;
+		String path = VIEWS + JSP_ORDER;
 		forward(req, resp, path, attributes);
 	}
 
 	// 판매 관련
 	protected void salesByMenu(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		String path = VIEWS + JSP_MAIN;
+		String path = VIEWS + JSP_SALES;
 		forward(req, resp, path, attributes);
 	}
 
 	protected void salesByDate(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		String path = VIEWS + JSP_MAIN;
+		String path = VIEWS + JSP_SALES;
 		forward(req, resp, path, attributes);
 	}
 

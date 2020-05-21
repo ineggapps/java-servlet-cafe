@@ -142,10 +142,11 @@ public class OrderDAO {
 		ResultSet rsSub = null;
 		String sql;
 		try {
-			sql = "SELECT orderNum, totalPaymentAmount, storeNum, oh.statusNum, statusName, userNum, cardNum, "
+			sql = "SELECT orderNum, totalPaymentAmount, storeNum, oh.statusNum, statusName, oh.userNum, userName, cardNum, "
 					+ "TO_CHAR(order_date,'YYYY-MM-DD HH24:MI:SS') order_date, cancelNum "
 					+ " FROM order_history oh "
 					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
+					+ "JOIN member m ON oh.userNum = m.userNum"
 					+ "WHERE cardNum = ? AND userNum = ? "
 					+ "ORDER BY orderNum DESC";
 			pstmt = conn.prepareStatement(sql);
@@ -161,6 +162,7 @@ public class OrderDAO {
 				historyDTO.setStatusNum(rs.getInt("statusNum"));
 				historyDTO.setStatusName(rs.getString("statusName"));
 				historyDTO.setUserNum(userNum);
+				historyDTO.setUserName(rs.getString("userName"));
 				historyDTO.setCardNum(cardNum);
 				historyDTO.setOrderDate(rs.getString("order_date"));
 				historyDTO.setCancelNum(rs.getInt("cancelNum"));
@@ -203,7 +205,7 @@ public class OrderDAO {
 		return list;
 	}
 	
-	//카드번호로 내역 조회하기
+	//회원번호로 내역 조회하기
 	public List<OrderHistoryDTO> listOrderHistoryByUserNum(int userNum) {
 		List<OrderHistoryDTO> list = new ArrayList<>();
 		List<OrderDetailDTO> items;
