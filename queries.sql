@@ -76,14 +76,19 @@ ORDER BY count DESC; -- 메뉴별
 --오늘의 매출현황(+thumbnail)
 select * from(
 SELECT * FROM(
-SELECT rownum rnum, menuName todayMenuName, thumbnail FROM (
-SELECT menuName, od.menuNum, thumbnail, COUNT(od.menuNum) count
+SELECT rownum rnum, menuName todayMenuName, quantity, thumbnail FROM (
+SELECT menuName, od.menuNum, thumbnail, COUNT(od.menuNum) count, sum(quantity) quantity
 from order_detail od
 JOIN order_history oh ON od.orderNum = oh.orderNum
 JOIN menu mn ON od.menuNum = mn.menuNum
 WHERE TO_CHAR(order_date,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
 group by (od.menuNum, menuName, thumbnail)
-ORDER BY count DESC)) WHERE rnum=1 ), (SELECT SUM(unitPrice) todayTotalSales 
+ORDER BY count DESC)) WHERE rnum=1 ), (SELECT SUM(unitPrice*quantity) todayTotalSales 
 FROM order_detail od
 JOIN order_history oh ON od.orderNum = oh.orderNum
 WHERE TO_CHAR(order_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD'));
+
+delete from order_detail;
+delete from order_history;
+
+commit;
