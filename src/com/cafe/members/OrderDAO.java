@@ -183,13 +183,13 @@ public class OrderDAO {
 		ResultSet rsSub = null;
 		String sql;
 		try {
-			sql = "SELECT orderNum, totalPaymentAmount, storeNum, oh.statusNum, statusName, oh.userNum, userName, cardNum, "
+			sql = "SELECT orderNum, totalPaymentAmount, storeNum, oh.statusNum, statusName, oh.userNum, nickname, cardNum, "
 					+ "TO_CHAR(order_date,'YYYY-MM-DD HH24:MI:SS') order_date, cancelNum "
 					+ " FROM order_history oh "
 					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
-					+ "JOIN member m ON oh.userNum = m.userNum"
-					+ "WHERE cardNum = ? AND userNum = ? "
-					+ "ORDER BY orderNum DESC";
+					+ " JOIN member m ON oh.userNum = m.userNum"
+					+ " WHERE oh.cardNum = ? AND oh.userNum = ? "
+					+ " ORDER BY orderNum DESC";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, cardNum);
 			pstmt.setInt(2, userNum);
