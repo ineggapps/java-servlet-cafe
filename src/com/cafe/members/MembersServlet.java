@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cafe.admin.main.DashBoardStatusDTO;
 import com.cafe.auth.SessionAuthInfo;
 import com.cafe.menu.MenuDAO;
 import com.cafe.menu.MenuDTO;
@@ -81,6 +82,7 @@ public class MembersServlet extends EspressoServlet {
 	private static final String ATTRIBUTE_CARD_DTO = "cardDTO";
 	private static final String ATTRIBUTE_CARD_MODEL_DTO = "modelDTO";
 	private static final String ATTRIBUTE_MAX_ITEM_AMOUNT = "maxItemAmount";
+	private static final String ATTRIBUTE_DASHBOARD_STATUS_DTO = "dashBoardStatusDTO";
 
 	//기본 속성
 	private static final int MAX_BALANCE = 550000;
@@ -487,6 +489,12 @@ public class MembersServlet extends EspressoServlet {
 			// 대부분의 쇼핑몰이 얼마나 담겼는지는 안 보여주네
 			attributes.put(ATTRIBUTE_LIST, list);
 			attributes.put(ATTRIBUTE_CARDS, cards);
+			// #3. 카트에 정보가 없으면..
+			SessionCart cart = getCart(req);
+			if(cart==null || cart.getItems().keySet().size()==0) {
+				//카트 없다고 에러 메시지 보여주기
+				attributes.put(ATTRIBUTE_ERROR_MSG, new ErrorMessage("아직 고른 상품이 없습니다.", "쿠앤크 오더에서 주문해 보세요!"));
+			}
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -528,6 +536,9 @@ public class MembersServlet extends EspressoServlet {
 		try {
 			SessionAuthInfo info = getSessionAuthInfo(req);
 			OrderDAO dao = new OrderDAO();
+			//대시보드
+			DashBoardStatusDTO dashboardDTO = dao.getUserDashBoardStatus(info.getUserNum());
+			attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
 			//페이징 관련 처리
 			Pager pager = new Pager();
 			String page = req.getParameter(PARAM_PAGE);

@@ -87,9 +87,9 @@
                </div>
              <div class="row">
                  <ul class="tab order">
-                   <li ${api=="/order.do"?"class=\"on\"":""}><a href="<%=cp%>/members/order.do">음식 고르기</a></li>
-                   <li ${api=="/buy.do"?"class=\"on\"":""}><a href="<%=cp%>/members/buy.do">주문 및 결제</a></li>
-                   <li ${api=="/orderedList.do"?"class=\"on\"":""}><a href="<%=cp%>/members/orderedList.do">주문 내역</a></li>
+                   <li ${api=="/order.do"?"class=\"on\"":""}><a href="<%=cp%>/members/order.do">주문하기</a></li>
+                   <li ${api=="/buy.do"?"class=\"on\"":""}><a href="<%=cp%>/members/buy.do">결제하기</a></li>
+                   <li ${api=="/orderedList.do"?"class=\"on\"":""}><a href="<%=cp%>/members/orderedList.do">주문내역 조회</a></li>
                  </ul>
                </div>
              </div>
@@ -115,7 +115,12 @@
                </ul>
              </div>
              </c:if>
-             <c:if test="${api=='/buy.do'}">
+             <c:if test="${api=='/buy.do' and fn:length(cart.items.key)==0}">
+             <div class="row border_box"> 
+             	<a href="<%=cp%>/members/order.do" class="single_button">주문하러 가기</a>
+             </div>
+             </c:if>
+             <c:if test="${api=='/buy.do' and fn:length(cart.items.key)>0}">
              <div class="row">
                <table class="table" id="buy">
                <thead>
@@ -181,6 +186,44 @@
              </c:if>
              <c:if test="${api=='/orderedList.do'}">
              <div class="row">
+             	<p class="title">오늘의 주문 현황</p>
+             	<ul class="order_process">
+             		<li>
+             			<div class="circle">
+             				<dl>
+             					<dt>결제 완료</dt>
+             					<dd>${dashBoardStatusDTO.paymentCount}</dd>
+             				</dl>
+             			</div>
+             		</li>
+             		<li>
+             			<div class="circle">
+             				<dl>
+             					<dt>제조 대기</dt>
+             					<dd>${dashBoardStatusDTO.beforeMakingCount}</dd>
+             				</dl>
+             			</div>
+             		</li>
+             		<li>
+             			<div class="circle">
+             				<dl>
+             					<dt>제조 중</dt>
+             					<dd>${dashBoardStatusDTO.makingCount}</dd>
+             				</dl>
+             			</div>
+             		</li>
+             		<li>
+             			<div class="circle">
+             				<dl>
+             					<dt>제조 완료</dt> 
+             					<dd>${dashBoardStatusDTO.doneCount}</dd>
+             				</dl>
+             			</div>
+             		</li>
+             	</ul>
+             </div>
+             <div class="row">
+                <p class="title">주문 내역 조회</p>
                 <table class="table" id="ordered_history">
                 <thead>
                   <tr>

@@ -502,3 +502,65 @@ tbody .col_date{
 #ordered_detail dt{
 	clear:both;
 }
+
+p.title {
+	text-align:center;
+	user-select:none;
+    font-size: 1.6rem;
+    color: #233e83;
+    margin:0 0 40px;
+}
+
+.order_process{
+	font-size:1rem;	
+	text-align:center;
+	margin:0 0 50px;
+}
+ 
+
+.order_process li{
+	position:relative;
+	display:inline-block;
+}
+
+.order_process li:not(:last-child)::after{
+	width:16px;
+	height:16px;
+	display:inline-block;
+	background:url("../images/assets/arrow_right.png") no-repeat;
+	content:"";
+	position:absolute;
+	right:0;
+	top:50%;
+}
+
+.order_process .circle{
+	display:inline-block;
+}
+.circle{
+	position:relative;
+	width:150px;
+	height:150px;
+	background-color:#f5f5f5;
+	border-radius:100%;
+	margin:0 3.5rem;
+}
+
+.circle dl{
+	user-select:none;
+	position:absolute;
+	width:100%;
+	left:0;
+	top:30%;
+	text-align:center;
+}
+
+.circle dt{
+	font-size:1.2rem;
+}
+
+.circle dd{
+	font-size:1.5rem;
+	font-weight:bold;
+	margin-top:16px;
+}

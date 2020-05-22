@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.cafe.admin.main.AdminOrderDAO;
+import com.cafe.admin.main.DashBoardStatusDTO;
 import com.cafe.menu.MenuDTO;
 import com.util.DBCPConn;
 
@@ -320,6 +322,66 @@ public class OrderDAO {
 		
 		return list;
 	}
+
+	
+	//사용자 대시보드 (orderedList.do)
+	public DashBoardStatusDTO getUserDashBoardStatus(int userNum) {
+		DashBoardStatusDTO dto = new DashBoardStatusDTO();
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String subSql = "SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND userNum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL";
+		StringBuilder sql = new StringBuilder();
+
+		sql.append("SELECT ");
+		for (int i = 1; i <= AdminOrderDAO.STATUS.length; i++) {
+			sql.append("(" + subSql + ") status" + i);
+			if (i != AdminOrderDAO.STATUS.length) {
+				sql.append(",");
+			}
+		}
+		sql.append(" FROM dual");
+		try {
+			System.out.println(sql.toString());
+			pstmt = conn.prepareStatement(sql.toString());
+			int idx=1;
+			for (int i = 1; i <= AdminOrderDAO.STATUS.length; i++) {
+				pstmt.setInt(idx++, AdminOrderDAO.STATUS[i - 1]);
+				pstmt.setInt(idx++, userNum);
+			}
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				dto.setPaymentCount(rs.getInt(1));
+				dto.setBeforeMakingCount(rs.getInt(2));
+				dto.setMakingCount(rs.getInt(3));
+				dto.setDoneCount(rs.getInt(4));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if (!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+
+		return dto;
+	}
+
 	
 	//////////////////////////////////////////////자원반납 대신하기..
 	public void returnDBResources(PreparedStatement pstmt, ResultSet rs) {

@@ -251,6 +251,30 @@ ul#right_side li {
   margin-bottom: 50px;
 }
 
+.single_button{
+	display:block;
+	user-select: none;
+	margin:0 auto;
+    width: 150px;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    text-align: center;
+    padding: 15px;
+    font-size: 1rem;
+}
+
+.single_button:hover{
+	background-color:#002f6c;
+	color:#fff;
+}
+
+.row.border_box{
+    padding: 60px 5%;
+    border: 1px solid #d9d9d9;
+    box-sizing: border-box;
+}
+
+
 .banner_visual h2,
 .row h3 {
   font-family: "나눔스퀘어", NanumSquare, NS, "맑은 고딕", MalgunGothic, "돋움", Dotum;
