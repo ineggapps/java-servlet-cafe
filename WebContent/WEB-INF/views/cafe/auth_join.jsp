@@ -32,7 +32,7 @@
               </div>
             </div>
             <div class="row">
-              <form action="<%=cp%>/auth/join_ok.do" method="post">
+              <form action="<%=cp%>/auth/${mode }_ok.do" method="post">
                 <div class="joinbox">
                   <div class="email_wrap component_wrap">
                     <h3>이메일을 입력해주세요.</h3>
@@ -42,7 +42,6 @@
                       <li><input type="text" class="email id" name="email1"/></li>
                       <li>@</li>
                       <li><input type="text" class="email domain" name="email2"/></li>
-                      <li>
                         <select>
                           <option>직접입력</option>
                           <option value="naver.com">naver.com</option>
@@ -152,8 +151,8 @@
                       <div class="join_item_title">
                         <h3>회원정보입력</h3>
                       </div>
-                      <div class="join_item"><strong>아이디</strong> <input type="text" name="userId"/></div>
-                      <div class="join_item"><strong>이름</strong> <input type="text" name="userName"/></div>
+                      <div class="join_item"><strong>아이디</strong> <input type="text" value="${authDTO.userId}" name="userId"/></div>
+                      <div class="join_item"><strong>이름</strong> <input type="text"  value="${authDTO.userName }" name="userName"/></div>
                       <div class="join_item">
                         <strong>별명</strong> <input type="text" name="nickname"/>
                         <p class="desc">※ 욕설 등 부적절한 단어는 제한을 받습니다.</p>

@@ -57,8 +57,8 @@
                     <button type="submit" class="navy_button">로그인</button>
                     <ul class="login_menu">
                       <li><a href="<%=cp%>/auth/join.do">회원가입</a></li>
-                      <li><a href="<%=cp%>/auth/find_email.do">이메일 찾기</a></li>
-                      <li><a href="<%=cp%>/auth/find_password.do">비밀번호 찾기</a></li>
+                      <li><a href="<%=cp%>/auth/find_id.do">아이디 찾기</a></li>
+                      <li><a href="<%=cp%>/auth/find_pwd.do">비밀번호 찾기</a></li>
                     </ul>
                   </form>
                 </div>
@@ -75,3 +75,15 @@
     </div>
   </body>
 </html>
+
+
+
+<!-- 
+
+	// 아이디 찾기 폼
+	protected void findIdForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String path = "/WEB-INF/views/cafe/auth_find_id.jsp";
+		req.setAttribute("mode", "join");
+		forward(req, resp, path);
+	}
+ -->
