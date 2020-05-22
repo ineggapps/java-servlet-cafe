@@ -61,6 +61,7 @@ public class MembersServlet extends EspressoServlet {
 	private static final String PARAM_MODE_REGISTER = "register";
 	private static final String PARAM_MODE_CHARGE = "charge";
 	private static final String PARAM_MODE_CLOSE = "close";
+	private static final String PARAM_MODE_DELETE = "delete"; //아이템 리스트 삭제
 	private static final String PARAM_REGISTER_STEP = "register_step";
 	private static final String PARAM_CARD_NAME = "cardName";
 	private static final String PARAM_PRICE = "price";
@@ -473,7 +474,24 @@ public class MembersServlet extends EspressoServlet {
 	protected void buyForm(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_ORDER;
+		String mode = req.getParameter(PARAM_MODE);
 		try {
+			// #0. 카트에 정보가 없으면..
+			SessionCart cart = getCart(req);
+			if(cart==null || cart.getItems().keySet().size()==0) {
+				//카트 없다고 에러 메시지 보여주기
+				attributes.put(ATTRIBUTE_ERROR_MSG, new ErrorMessage("아직 고른 상품이 없습니다.", "쿠앤크 오더에서 주문해 보세요!"));
+			}
+			if(mode!=null&&mode.equalsIgnoreCase(PARAM_MODE_DELETE)) {
+				//상품삭제라면?
+				int menuNum = Integer.parseInt(req.getParameter(PARAM_MENU_NUM));
+				MenuDTO dto = cart.getItems().get(menuNum);
+				if(dto!=null) {//상품 map에서 제거하기
+					cart.getItems().remove(menuNum);
+				}
+				resp.sendRedirect(apiPath + API_BUY);
+				return;
+			}
 			// #0. 추가되는 파라미터 있으면 받아서 추가 먼저 하기
 			SessionAuthInfo info = getSessionAuthInfo(req);
 			MenuDAO menuDAO = new MenuDAO();
@@ -489,12 +507,6 @@ public class MembersServlet extends EspressoServlet {
 			// 대부분의 쇼핑몰이 얼마나 담겼는지는 안 보여주네
 			attributes.put(ATTRIBUTE_LIST, list);
 			attributes.put(ATTRIBUTE_CARDS, cards);
-			// #3. 카트에 정보가 없으면..
-			SessionCart cart = getCart(req);
-			if(cart==null || cart.getItems().keySet().size()==0) {
-				//카트 없다고 에러 메시지 보여주기
-				attributes.put(ATTRIBUTE_ERROR_MSG, new ErrorMessage("아직 고른 상품이 없습니다.", "쿠앤크 오더에서 주문해 보세요!"));
-			}
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
 			e.printStackTrace();

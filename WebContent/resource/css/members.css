@@ -384,12 +384,17 @@ tbody .col_date{
 	text-align:center;
 }
 .col_menuName{
-	width:60%;
+	width:40%;
 }
-.col_price{
+.col_amount{
 	width:20%;
 	text-align:center;
 }
+.col_price{
+	width:30%;
+	text-align:center;
+}
+
 
 #buy td{
 	display:table-cell;
@@ -412,15 +417,23 @@ tbody .col_date{
 .buy_item .item_image{
 	width:100px;
 	height:100px;
+	line-height:100px;
 }
 
 .buy_item .item_image img{
 	width:100%;
+	vertical-align:middle;
 }
 
 .buy_item .item_label{
 	user-select:none;
 	padding:44px 0;
+}
+
+.item_label{
+	height:100%;
+	vertical-align:middle;
+	margin-left:30px;
 }
 
 .total h3{
@@ -441,8 +454,22 @@ tbody .col_date{
 }
 
 /*카드... 결제수단*/
+.buy_method:after,
+.buy_method li:after{
+	content:"";
+	clear:both;
+}
+
 .buy_method{
-	padding:50px 0;
+	padding:50px 33px;
+}
+
+.buy_method > li{
+	display:inline-block;
+}
+
+.buy_method > li li{
+	margin:10px;
 }
 
 .item_card input[type=radio]{
@@ -451,7 +478,7 @@ tbody .col_date{
 .item_card{
 	width:200px;
 	float:left;
-	margin-right:20px;
+	margin:10px;
 }
 
 .item_card label,
@@ -464,7 +491,8 @@ tbody .col_date{
 	opacity:0.4;
 }
 
-.item_card input:checked ~ img{
+.item_card input:checked ~ img,
+.item_card:hover img{
 	opacity:1;
 }
 

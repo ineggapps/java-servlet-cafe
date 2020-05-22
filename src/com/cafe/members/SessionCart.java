@@ -20,8 +20,13 @@ public class SessionCart {
 //			}
 //		}
 		for(int menuNum: items.keySet()) {
-			int price = items.get(menuNum).getPrice();
-			int quantity = items.get(menuNum).getQuantity();
+			MenuDTO dto = items.get(menuNum);
+			if(dto==null) {
+				items.remove(menuNum);
+				continue;
+			}
+			int price = dto.getPrice();
+			int quantity = dto.getQuantity();
 			totalPaymentAmount += price * quantity;
 		}
 		return totalPaymentAmount;

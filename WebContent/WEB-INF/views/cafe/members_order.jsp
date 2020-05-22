@@ -126,34 +126,39 @@
                <table class="table" id="buy">
                <thead>
                  <tr class="on">
-                   <th class="col_category">상품구분</th>
+                   <th class="col_category">번호</th>
                    <th class="col_menuName">상품명</th>
+                   <th class="col_amount">수량</th>
                    <th class="col_price">금액</th>
                  </tr>
                  <tr>
                </thead>
                <tbody>
-               	<c:forEach var="dto" items="${cart.items}">
+               	<c:forEach var="dto" items="${cart.items}" varStatus="st">
                	<tr>
-               		<td class="col_category">${dto.value.categoryNum}</td>
+               		<td class="col_category">${st.count}</td>
                		<td class="col_menuName">
                			<div class="buy_item">
                				<div class="item_image">
                					<img src="<%=cp %>/${dto.value.thumbnail}" alt="${dto.value.menuName}" />
                				</div>
-               		 		<div class="item_label">
-               		 			<span>${dto.value.menuName} X ${dto.value.quantity}개</span>
-               		 		</div>
+               					<div class="item_label">
+               						<span>${dto.value.menuName}</span>
+               					</div>
                			</div>
                		</td>
-               		<td class="col_price"><fmt:formatNumber value="${dto.value.price * dto.value.quantity}"/></td>
+               		<td class="col_amount">
+             				${dto.value.quantity}개&nbsp;&nbsp;
+               			<a class="button" href="<%=cp%>/members/buy.do?mode=delete&amp;menuNum=${dto.value.menuNum}">삭제</a>
+               		</td>
+               		<td class="col_price"><fmt:formatNumber value="${dto.value.price * dto.value.quantity}"/>원</td>
                	</tr>
                	</c:forEach>
                </tbody>
              </table>
              <div class="total">
               <h3>총 주문금액</h3>
-              <span><fmt:formatNumber value="${cart.totalPaymentAmount}"/></span>
+              <span><fmt:formatNumber value="${cart.totalPaymentAmount}"/>원</span>
              </div>
              <div class="row" id="cart_size">
              	<h4>총 ${fn:length(cart.items)}개의 종류가 담겼습니다.</h4>
@@ -171,7 +176,7 @@
 							</label>
 							<ul>
 								<li><span>${dto.cardName}</span></li>								
-								<li><span>${dto.balance}</span></li>								
+								<li><span><fmt:formatNumber value="${dto.balance}"/>원</span></li>								
 							</ul>
 						</div>
 					</div>
