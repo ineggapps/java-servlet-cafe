@@ -32,11 +32,11 @@ public class Pager {
 		int start, end;// 시작, 끝 페이지
 		start = current_page - centerPosition + 1 > 0 ? current_page - centerPosition + 1 : 1;
 		end = current_page + centerPosition - 1 < total_page ? current_page + centerPosition - 1 : total_page;
-		length = end - start + 1; //앞자리가 모자라면
-		if(length<maxShowPage) {
+		length = end - start + 1; // 앞자리가 모자라면
+		if (length < maxShowPage) {
 			end += maxShowPage - length;
 		}
-		if(end>total_page) {
+		if (end > total_page) {
 			end = total_page;
 		}
 //		System.out.println(String.format("start=%s, end=%s, length=%s / total_page=%s",start,end,length, total_page));
@@ -49,6 +49,10 @@ public class Pager {
 		}
 
 		return pages.stream().mapToInt(i -> i).toArray();
+	}
+
+	public int getStartNumber(int currentPage, int rows) {
+		return (currentPage - 1) * rows;
 	}
 }
 
