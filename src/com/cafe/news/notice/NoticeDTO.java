@@ -8,6 +8,7 @@ public class NoticeDTO {
 	private int views;
 	private String created_date;
 	private String updated_date;
+	private long gap;
 	
 	public int getNum() {
 		return num;
@@ -56,6 +57,12 @@ public class NoticeDTO {
 	}
 	public void setUpdated_date(String updated_date) {
 		this.updated_date = updated_date;
+	}
+	public long getGap() {
+		return gap;
+	}
+	public void setGap(long gap) {
+		this.gap = gap;
 	}
 	
 	

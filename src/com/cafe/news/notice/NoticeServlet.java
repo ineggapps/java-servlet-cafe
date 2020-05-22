@@ -3,6 +3,8 @@ package com.cafe.news.notice;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -145,6 +147,13 @@ public class NoticeServlet extends EspressoServlet {
 			list = dao.listNotice(start, end, condition, keyword);
 		}
 		
+		// new 표시
+		long gap;
+		Date curDate = new Date();
+		SimpleDateFormat sdf=
+				new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		// 글 번호
 		int listNum, n = 0;
 		
 		Iterator<NoticeDTO> it = list.iterator();
@@ -153,6 +162,17 @@ public class NoticeServlet extends EspressoServlet {
 			NoticeDTO dto = it.next();
 			listNum = dataCount-(start+n-1);
 			dto.setListNum(listNum);
+			
+			try {
+				Date date=sdf.parse(dto.getUpdated_date());
+				
+				gap = (curDate.getTime() - date.getTime()) /(1000*60*60); // 시간 
+				dto.setGap(gap);
+			}catch (Exception e) {
+			}
+			
+			dto.setUpdated_date(dto.getUpdated_date().substring(0, 10));
+			
 			n++;
 		}
 		
@@ -163,7 +183,7 @@ public class NoticeServlet extends EspressoServlet {
 		}
 		
 		
-		String listUrl = contextPath + "/news/notice/list.do";		
+		String listUrl = contextPath + "/news/notice/list.do?rows="+rows;		
 		String articleUrl = contextPath + "/news/notice/view.do?page=" + current_page + "&rows=" + rows ;
 		
 		if(query.length()!=0) {

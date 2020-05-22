@@ -24,6 +24,7 @@
 	
 	function listNum() {
 		var f=document.listNumForm;
+		f.page.value = 1;
 		f.submit();
 	}
     
@@ -76,7 +77,7 @@
 			    		<li>
 			    			<div class = list-num>${dto.listNum}</div>
 			    			<div class = list-title>
-			    				<a href = "${articleUrl}&num=${dto.num}">${dto.subject }</a>
+			    				<a href="${articleUrl}&num=${dto.num}">${dto.subject }<c:if test="${dto.gap < 1}">&nbsp;<img src="<%=cp%>/resource/images/board/new.gif"></c:if></a>
 			    				<span class = "viewCount">${dto.views }</span>
 			    				<span class = "created_date">${dto.updated_date }</span>
 			    			</div>
