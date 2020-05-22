@@ -37,7 +37,7 @@ button:focus {
   /* background-color: darkgray; */
   position: relative;
   width: 100%;
-  min-height: 100%; /*ì´ê±¸ í•´ì¤˜ì•¼ ì„¸ë¡œ í¬ê¸°ê°€ ì¤„ì–´ë„ ëª¨ì–‘ì´ ì°Œê·¸ëŸ¬ì§€ì§€ ì•ŠìŒ*/
+  min-height: 100%; /*ÀÌ°É ÇØÁà¾ß ¼¼·Î Å©±â°¡ ÁÙ¾îµµ ¸ğ¾çÀÌ Âî±×·¯ÁöÁö ¾ÊÀ½*/
 }
 .background_wrapper,
 .background_overlay {
@@ -85,7 +85,7 @@ button:focus {
   min-height: 435px;
   width: 100%;
   margin: 0 auto;
-  padding: 59px 69px 49px; /*â—€ TODO: ì´ íŒ¨ë”© ë•Œë¬¸ì— í™”ë©´ ê°€ë¡œ í­ì„ ì¶•ì†Œí•˜ë©´ ë ˆì´ì•„ì›ƒìœ¼ ê¹¨ì§„ë‹¤. ë¯¸ë””ì–´ ì¿¼ë¦¬ ì‚¬ìš©í•´ ë³´ê¸°!*/
+  padding: 59px 69px 49px; /*¢¸ TODO: ÀÌ ÆĞµù ¶§¹®¿¡ È­¸é °¡·Î ÆøÀ» Ãà¼ÒÇÏ¸é ·¹ÀÌ¾Æ¿ôÀ¸ ±úÁø´Ù. ¹Ìµğ¾î Äõ¸® »ç¿ëÇØ º¸±â!*/
 }
 
 #join_box a,
@@ -123,7 +123,7 @@ button:focus {
   vertical-align: middle;
 }
 
-/* ë¡œê·¸ì¸ í¼ ë””ìì¸ */
+/* ·Î±×ÀÎ Æû µğÀÚÀÎ */
 #login_form .text_form {
   font-size: 1.001rem;
   color: white;
@@ -162,7 +162,18 @@ button:focus {
   background-color: #183274;
 }
 
-/* íšŒì›ê°€ì… */
+/*·Î±×ÀÎ ¿À·ù »óÀÚ*/
+#errorMessage{
+	width:100%;
+	background-color:rgba(0,0,0,0.7);
+	color:#fff;
+}
+#errorMessage p.message{
+	text-align:center;
+	font-size:0.9rem;
+}
+
+/* È¸¿ø°¡ÀÔ */
 #join_box {
   font-size: 0.85rem;
   margin: 40px 0 0 !important;
@@ -218,10 +229,10 @@ hr#border {
   font-size: 0.9em;
 }
 
-/* ë°˜ì‘í˜• */
+/* ¹İÀÀÇü */
 @media (max-width: 519px) {
   #login_form {
-    padding: 59px 0 49px; /*â—€ TODO: ì´ íŒ¨ë”© ë•Œë¬¸ì— í™”ë©´ ê°€ë¡œ í­ì„ ì¶•ì†Œí•˜ë©´ ë ˆì´ì•„ì›ƒìœ¼ ê¹¨ì§„ë‹¤. ë¯¸ë””ì–´ ì¿¼ë¦¬ ì‚¬ìš©í•´ ë³´ê¸°!*/
+    padding: 59px 0 49px; /*¢¸ TODO: ÀÌ ÆĞµù ¶§¹®¿¡ È­¸é °¡·Î ÆøÀ» Ãà¼ÒÇÏ¸é ·¹ÀÌ¾Æ¿ôÀ¸ ±úÁø´Ù. ¹Ìµğ¾î Äõ¸® »ç¿ëÇØ º¸±â!*/
     width: 90%;
     max-width: 100%;
     margin: 0 auto;
@@ -237,7 +248,7 @@ hr#border {
     visibility: visible;
   }
 }
-/*ë ˆì´ì•„ì›ƒ ê¹¨ì§ ë°©ì§€*/
+/*·¹ÀÌ¾Æ¿ô ±úÁü ¹æÁö*/
 @media (max-width: 295px) {
   #login_wrap {
     min-width: 295px;

@@ -22,7 +22,7 @@ public class MainServlet extends EspressoServlet {
 	private static final String ADMIN = "admin";
 	private static final String VIEW = "/WEB-INF/views";
 	private static final String VIEWS = VIEW + "/" + ADMIN;
-	private static final String SESSION_INFO = "member";
+	public static final String SESSION_INFO = "member";
 
 	// PATH(dynamic)
 	private static String contextPath;

@@ -4,7 +4,7 @@
   margin: 0;
 }
 
-<!-- 공지 윗 부분 css -->
+/*공지 윗 부분 css */
  .notice-board {
         min-height: 1000px;
       }
@@ -227,7 +227,7 @@
     	}
     	
     	.notice_selectNum_tr {
-    		height=35;
+    		height:35px;
     	}
     	
     	.notice_selectNum_td {

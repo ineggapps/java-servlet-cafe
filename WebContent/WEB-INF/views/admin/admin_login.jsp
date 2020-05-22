@@ -34,25 +34,30 @@
                 <input
                   class="text_form"
                   type="text"
-                  name="id"
+                  name="userId"
                   id="user_id"
-                  placeholder="계정 (이메일 또는 전화번호)"
+                  placeholder="관리자 아이디"
                 />
               </div>
               <div class="login_item">
                 <input
                   class="text_form"
                   type="password"
-                  name="password"
+                  name="userPwd"
                   id="user_password"
                   placeholder="비밀번호"
                 />
               </div>
               <div class="login_item login_item_deep">
-                <input type="checkbox" name="check_account" id="check_account" /><label
+                <%--input type="checkbox" name="check_account" id="check_account" /><label
                   for="check_account"
                   >로그인 상태 유지</label
-                >
+                > --%>
+                <c:if test="${not empty errorMessage}">
+                <div id="errorMessage">
+                	<p class="message">${errorMessage.content}</p>
+                </div>
+                </c:if>
               </div>
               <div class="login_item">
                 <!--링크만 걸었음-->
