@@ -115,12 +115,13 @@
                </ul>
              </div>
              </c:if>
-             <c:if test="${api=='/buy.do' and fn:length(cart.items.key)==0}">
+             <c:if test="${api=='/buy.do' and fn:length(cart.items)==0}">
              <div class="row border_box"> 
+				<p class="title">아직 주문하지 않았습니다.</p>
              	<a href="<%=cp%>/members/order.do" class="single_button">주문하러 가기</a>
              </div>
              </c:if>
-             <c:if test="${api=='/buy.do' and fn:length(cart.items.key)>0}">
+             <c:if test="${api=='/buy.do' and fn:length(cart.items)>0}">
              <div class="row">
                <table class="table" id="buy">
                <thead>
