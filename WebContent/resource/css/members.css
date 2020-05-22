@@ -74,6 +74,19 @@ div.detail {
   font-size: 0.8rem;
 }
 
+/*카드수정 폼*/
+form[name=modifyCardName]{
+	margin-left:-10px;
+}
+p.card_title.detail.modify input{
+	border: 1px solid #cccccc;
+    border-radius: 3px;
+    padding: 10px;
+} 
+p.modify.controller{
+ 	display:none;
+}
+
 .modify {
   font-size: 0.8rem;
   margin-left: 10px;

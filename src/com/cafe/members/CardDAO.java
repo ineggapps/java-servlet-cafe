@@ -356,5 +356,36 @@ public class CardDAO {
 		return result;
 
 	}
+	
+	public int updateCardName(int userNum, int cardNum, String cardName) {
+		int result = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "UPDATE cards SET cardName = ? WHERE cardNum = ? AND userNum = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, cardName);
+			pstmt.setInt(2,cardNum);
+			pstmt.setInt(3, userNum);
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+		
+		return result;
+	}
 
 }

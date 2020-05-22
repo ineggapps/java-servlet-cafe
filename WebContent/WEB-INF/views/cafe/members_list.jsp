@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="p" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="cd" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -53,7 +54,7 @@
                         <a href="<%=cp%>/members/detail.do?cardNum=${dto.cardNum}"><strong>${dto.cardName}</strong></a
                         ><!--a href="#" class="modify">수정</a-->
                       </p>
-                      <p class="card_id">${dto.cardIdentity}</p>
+                      <p class="card_id"><cd:card identity="${dto.cardIdentity }"/> </p>
                       <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${dto.balance}"/></strong>원</p>
                     </div>
                   </li>

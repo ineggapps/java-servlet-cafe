@@ -34,6 +34,7 @@ public class MembersServlet extends EspressoServlet {
 	private static final String API_INDEX = "/index.do";
 	private static final String API_LIST = "/list.do";
 	private static final String API_DETAIL = "/detail.do";
+	private static final String API_MODIFY_CARD_NAME = "/modifyCardName.do";
 	private static final String API_REGISTER = "/register.do";
 	private static final String API_CHARGE = "/charge.do";
 	private static final String API_CHARGE_OK = "/charge_ok.do";
@@ -124,6 +125,8 @@ public class MembersServlet extends EspressoServlet {
 			closeForm(req, resp, attributes);
 		} else if (uri.indexOf(API_CLOSE_CARD_OK) != -1) {
 			closeSubmit(req, resp, attributes);
+		} else if (uri.indexOf(API_MODIFY_CARD_NAME)!=-1) {
+			updateCardName(req, resp, attributes);
 		}
 	}
 
@@ -288,6 +291,22 @@ public class MembersServlet extends EspressoServlet {
 		}
 	}
 
+	protected void updateCardName(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		SessionAuthInfo info = getSessionAuthInfo(req);
+		String uri = req.getRequestURI();
+		String cardNum = req.getParameter(PARAM_CARD_NUM);
+		String cardName = req.getParameter(PARAM_CARD_NAME);
+		try {
+			CardDAO dao = new CardDAO();
+			int cNum = Integer.parseInt(cardNum);
+			dao.updateCardName(info.getUserNum(), cNum, cardName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(apiPath + API_DETAIL + "?" + PARAM_CARD_NUM + "=" + cardNum);
+	}
+	
 	protected void chargeForm(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		SessionAuthInfo info = getSessionAuthInfo(req);
