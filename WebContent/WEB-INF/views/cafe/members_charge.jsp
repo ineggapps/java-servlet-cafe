@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="cd" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -84,11 +85,17 @@
 						</c:if>
                       </figure>
                       <div class="detail">
+                        <c:if test="${mode=='register'}"><%--등록모드일 경우 모델이름 --%>
+                        <p class="card_title detail">
+                          <strong>${modelDTO.modelName}</strong><!-- a href="#" class="modify">수정</a-->
+                        </p>
+                        <p class="card_remain">${modelDTO.text}</p>
+                      	</c:if>
                         <c:if test="${mode!='register'}">
                         <p class="card_title detail">
                           <strong>${cardDTO.cardName}</strong><!-- a href="#" class="modify">수정</a-->
                         </p>
-                        <p class="card_id">${cardDTO.cardIdentity}</p>
+                        <p class="card_id"><cd:card identity="${cardDTO.cardIdentity }"/></p>
                         <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${cardDTO.balance}"/></strong>원</p>
                       	</c:if>
                       </div>

@@ -94,7 +94,7 @@ public class NoticeDAO {
 			sb.append("SELECT * FROM (");
 			sb.append(" SELECT ROWNUM rnum, tb.* FROM (");
 			sb.append("   SELECT num, subject, views, ");
-			sb.append("     TO_CHAR(created_date, 'YYYY-MM-DD') created_date  ");
+			sb.append("     TO_CHAR(updated_date, 'YYYY-MM-DD') updated_date  ");
 			sb.append("	  FROM notice ");
 			sb.append("   ORDER BY num DESC ");
 			sb.append(" )  tb WHERE ROWNUM <= ? ");
@@ -112,7 +112,7 @@ public class NoticeDAO {
 				dto.setNum(rs.getInt("num"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setViews(rs.getInt("views"));
-				dto.setCreated_date(rs.getString("created_date"));
+				dto.setUpdated_date(rs.getString("updated_date"));
 				list.add(dto);
 			}
 
@@ -150,7 +150,7 @@ public class NoticeDAO {
 		try {
 			if (condition.equalsIgnoreCase("created")) {
 				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-				sql = "SELECT NVL(COUNT(*), 0) FROM notice WHERE TO_CHAR(created_date, 'YYYYMMDD') = ?  "; // 날짜(등록일)로 검색
+				sql = "SELECT NVL(COUNT(*), 0) FROM notice WHERE TO_CHAR(updated_date, 'YYYYMMDD') = ?  "; // 날짜(등록일)로 검색
 			} else {
 				sql = "SELECT NVL(COUNT(*), 0) FROM notice WHERE INSTR(" + condition + ", ? ) >= 1 "; // 제목,내용으로 검색 : 포함하는 내용을 다 검색
 			}
@@ -196,11 +196,11 @@ public class NoticeDAO {
 			sb.append("SELECT * FROM (");
 			sb.append("    SELECT ROWNUM rnum, tb.* FROM (");
 			sb.append("        SELECT num, subject, views ");
-			sb.append("            ,TO_CHAR(created_date, 'YYYY-MM-DD') created_date");
+			sb.append("            ,TO_CHAR(updated_date, 'YYYY-MM-DD') updated_date");
 			sb.append("         FROM notice");
 			if(condition.equalsIgnoreCase("created")) {
 				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-				sb.append("      WHERE TO_CHAR(created_date, 'YYYYMMDD') = ? ");
+				sb.append("      WHERE TO_CHAR(updated_date, 'YYYYMMDD') = ? ");
 			} else {
 				sb.append("      WHERE INSTR(" + condition + ", ?) >= 1 ");
 			}
@@ -221,7 +221,7 @@ public class NoticeDAO {
                 dto.setNum(rs.getInt("num"));
                 dto.setSubject(rs.getString("subject"));
                 dto.setViews(rs.getInt("views"));
-                dto.setCreated_date(rs.getString("created_date"));
+                dto.setUpdated_date(rs.getString("updated_date"));
             
                 list.add(dto);
             }
@@ -255,7 +255,7 @@ public class NoticeDAO {
 		Connection conn = DBCPConn.getConnection();
 		
 		try {
-			sql = "SELECT num, subject, content, views, created_date FROM notice WHERE num = ?";
+			sql = "SELECT num, subject, content, views, TO_CHAR(updated_date, 'YYYY-MM-DD') updated_date FROM notice WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setInt(1, num);
@@ -267,7 +267,7 @@ public class NoticeDAO {
 				dto.setNum(rs.getInt("num"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setViews(rs.getInt("views"));
-				dto.setCreated_date(rs.getString("created_date"));
+				dto.setUpdated_date(rs.getString("updated_date"));
 				dto.setContent(rs.getString("content"));
 			}
 			
@@ -337,7 +337,7 @@ public class NoticeDAO {
                 sb.append("     SELECT num, subject FROM notice ");
                 if(condition.equalsIgnoreCase("created")) {
                 	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-                	sb.append("     WHERE (TO_CHAR(created_date, 'YYYYMMDD') = ?) ");
+                	sb.append("     WHERE (TO_CHAR(updated_date, 'YYYYMMDD') = ?) ");
                 } else {
     				sb.append("     WHERE (INSTR(" + condition + ", ?) >= 1) ");
                 }
@@ -406,7 +406,7 @@ public class NoticeDAO {
 	                sb.append("     SELECT num, subject FROM notice ");
 	                if(condition.equalsIgnoreCase("created")) {
 	                	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-	                	sb.append("     WHERE (TO_CHAR(created_date, 'YYYYMMDD') = ?) ");
+	                	sb.append("     WHERE (TO_CHAR(updated_date, 'YYYYMMDD') = ?) ");
 	                } else {
 	    				sb.append("     WHERE (INSTR(" + condition + ", ?) >= 1) ");
 	                }
@@ -470,7 +470,7 @@ public class NoticeDAO {
 			Connection conn = DBCPConn.getConnection();
 
 			try {
-				sql = "UPDATE notice SET subject = ?, content = ? WHERE num = ?";
+				sql = "UPDATE notice SET subject = ?, content = ?, updated_date = SYSDATE WHERE num = ?";
 				pstmt = conn.prepareStatement(sql);
 				
 				pstmt.setString(1, dto.getSubject());

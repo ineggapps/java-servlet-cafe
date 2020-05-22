@@ -2,6 +2,8 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="p" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -33,7 +35,7 @@
               <div class="contents_header">
                 <h3>매장 목록</h3>
                 <form id="search">
-                  <input type="text" name="search_text" class="input_text_search" />
+                  <input type="text" name="search_text" class="input_text_search" value="${keyword}"/>
                   <button type="button">🔍</button>
                 </form>
               </div>
@@ -51,6 +53,9 @@
                   </c:forEach>
                 </tbody>
               </table>
+            </div>
+			<div class="row">
+            	<p:pager pages="${pages}" data_count="${dataCount}" total_page="${totalPage}" uri="${uri}" query="${query}" current_page="${currentPage}"/>
             </div>
           </article>
         </div>

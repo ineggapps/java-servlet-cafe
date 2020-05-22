@@ -9,6 +9,7 @@ public class OrderHistoryDTO {
 	private int statusNum;
 	private String statusName;
 	private int userNum;
+	private String nickname;
 	private int cardNum;
 	private String orderDate;
 	private int cancelNum = -1;
@@ -41,7 +42,7 @@ public class OrderHistoryDTO {
 	public int getStatusNum() {
 		return statusNum;
 	}
-	
+
 	public void setStatusNum(int statusNum) {
 		this.statusNum = statusNum;
 	}
@@ -60,6 +61,14 @@ public class OrderHistoryDTO {
 
 	public void setUserNum(int userNum) {
 		this.userNum = userNum;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public int getCardNum() {
@@ -94,4 +103,13 @@ public class OrderHistoryDTO {
 		this.items = items;
 	}
 
+	@Override
+	public String toString() {
+		return "OrderHistoryDTO [orderNum=" + orderNum + ", totalPaymentAmount=" + totalPaymentAmount + ", storeNum="
+				+ storeNum + ", statusNum=" + statusNum + ", statusName=" + statusName + ", userNum=" + userNum
+				+ ", nickname=" + nickname + ", cardNum=" + cardNum + ", orderDate=" + orderDate + ", cancelNum="
+				+ cancelNum + ", items=" + items + "]";
+	}
+
+	
 }

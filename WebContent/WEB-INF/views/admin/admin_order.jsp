@@ -2,6 +2,8 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="p" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -24,26 +26,32 @@
         <article id="main_container">
           <div class="content_box">
             <div class="content_title">
-              <h3>오늘의 판매현황</h3>
+              <h3>현재 주문 상태</h3>
             </div>
             <div class="content_area">
-              <ul id="today_status">
-                <li>
-                  <div class="order_item deep">
-                    <span>베스트 셀러</span> 
-                    <figure>
-                    	<img src="<%=cp %>/${todayStatus.thumbnail}" alt="${todayStatus.todayMenuName}" />
-                    </figure>
-                    <a href="#">${todayStatus.todayMenuName}</a>
+              <ul id="order_process">
+                <li ${api=='/orderPayment.do'?"class=\"on\"":""}>
+                  <div class="order_item" >
+                    <span>결제 완료</span>
+                    <a href="<%=cp%>/admin/main/orderPayment.do">${dashBoardStatusDTO.paymentCount}</a>
                   </div>
                 </li>
-                <li>
+                <li ${api=='/orderBeforeMaking.do'?"class=\"on\"":""}>
                   <div class="order_item">
-                    <span>매출 총액</span>
-					<figure>
-                    	<img src="<%=cp %>/resource/images/admin/item_money.png" alt="매출 총액" />
-                    </figure>
-                    <a href="#"><fmt:formatNumber value="${todayStatus.todayTotalSales}"/>원</a>
+                    <span>제조 대기</span>
+                    <a href="<%=cp%>/admin/main/orderBeforeMaking.do">${dashBoardStatusDTO.beforeMakingCount}</a>
+                  </div>
+                </li>
+                <li ${api=='/orderMaking.do'?"class=\"on\"":""}>
+                  <div class="order_item" >
+                    <span>제조 중</span>
+                    <a href="<%=cp%>/admin/main/orderMaking.do">${dashBoardStatusDTO.makingCount}</a>
+                  </div>
+                </li>
+                <li ${api=='/orderDone.do'?"class=\"on\"":""}>
+                  <div class="order_item">
+                    <span>제조 완료</span>
+                    <a href="<%=cp%>/admin/main/orderDone.do">${dashBoardStatusDTO.doneCount}</a>
                   </div>
                 </li>
               </ul>
@@ -52,91 +60,58 @@
           
           <div class="content_box">
             <div class="content_title">
-              <h3>오늘의 대시보드</h3>
-            </div>
-            <div class="content_area">
-              <ul id="order_process">
-                <li>
-                  <div class="order_item">
-                    <span>결제 완료</span>
-                    <a href="#">${dashBoardStatusDTO.paymentCount}</a>
-                  </div>
-                </li>
-                <li>
-                  <div class="order_item">
-                    <span>제조 대기</span>
-                    <a href="#">${dashBoardStatusDTO.beforeMakingCount}</a>
-                  </div>
-                </li>
-                <li>
-                  <div class="order_item">
-                    <span>제조 중</span>
-                    <a href="#">${dashBoardStatusDTO.makingCount}</a>
-                  </div>
-                </li>
-                <li>
-                  <div class="order_item">
-                    <span>제조 완료</span>
-                    <a href="#">${dashBoardStatusDTO.doneCount}</a>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="content_box">
-            <div class="content_title">
-              <h3>접수 대기</h3>
+              <h3>${statusName}</h3>
             </div>
             <div class="content_area">
               <table id="receive_list">
                 <thead>
                   <tr>
                     <td class="col_no">No</td>
-                    <td class="col_nickname">별명</td>
+                    <td class="col_nickname">주문자(별명)</td>
                     <td class="col_product">내역</td>
                     <td class="col_date">주문일시</td>
-                    <td class="col_status">접수</td>
+                    <td class="col_status">상태 변경</td>
                   </tr>
                 </thead>
                 <tbody>
+				<c:forEach var="history" items="${orderHistory}" varStatus="status">
                   <tr>
                     <td>1</td>
-                    <td>맛나게먹자</td>
+                    <td>${history.nickname}</td>
                     <td>
                       <ol class="col_product_detail">
+                          <c:forEach var="item" items="${history.items}">
                         <li>
-                          <p>아메리카노</p>
-                          <ul>
-                            <li>Regular</li>
-                            <li>Hot</li>
-                          </ul>
+                          <p>
+                          	${item.menuName} X ${item.quantity}개
+                          </p>
                         </li>
-                        <li>
-                          <p>카페라떼</p>
-                          <ul>
-                            <li>Extra</li>
-                            <li>ICE</li>
-                            <li>휘핑크림 X 9회</li>
-                            <li>초콜릿 칩X 3회</li>
-                            <li>시럽(캐러멜) X 9회</li>
-                            <li>시럽(바닐라) X 2회</li>
-                          </ul>
-                        </li>
-                        <li>
-                          <p>화이트 초콜릿 모카</p>
-                          <ul>
-                            <li>Extra</li>
-                            <li>ICE</li>
-                          </ul>
-                        </li>
+                          </c:forEach>
                       </ol>
                     </td>
-                    <td>2020-04-21 08:20:20</td>
-                    <td><a href="#"class="button">승인</a><a href="#"class="button">거절</a></td>
+                    <td>${history.orderDate}</td>
+                    <td>
+                    	<c:if test="${statusNum<=0 }">
+                    	<span>취소됨</span>
+                    	</c:if>
+                    	<c:if test="${statusNum==1}">
+                    	<a href="<%=cp%>/admin/main/orderStepUp.do?orderNum=${history.orderNum}&amp;api=${api}"class="button">접수</a>
+                    	<a href="<%=cp%>/admin/main/orderCancel.do?orderNum=${history.orderNum}"class="button">취소</a>
+                    	</c:if>
+                    	<c:if test="${statusNum>1 and statusNum < 4}">
+                    	<a href="<%=cp%>/admin/main/orderStepUp.do?orderNum=${history.orderNum}&amp;api=${api}"class="button">완료</a>
+                    	</c:if>
+                    	<c:if test="${statusNum==4}">
+                    	<span>제조 완료</span>
+                    	</c:if>
+                    </td>
                   </tr>
+                </c:forEach>
                 </tbody>
               </table>
+            </div>
+            <div class="content_area">
+            	<p:pager pages="${pages}" data_count="${dataCount}" total_page="${totalPage}" uri="${uri}" query="${query}" current_page="${currentPage}"/>
             </div>
           </div>
         </article>

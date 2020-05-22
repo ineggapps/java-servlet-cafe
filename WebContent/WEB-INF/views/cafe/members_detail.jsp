@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="cd" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -14,6 +15,16 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/members.css" />
+    <script src="<%=cp %>/resource/js/jquery-3.5.1.min.js"></script>
+    <script>
+    $(function(){
+    	$("p.controller a.modify").click(function(){
+    		$(this).closest("div.detail").find("p.controller").eq(0).css("display","none");
+    		$(this).closest("div.detail").find("p.controller").eq(1).css("display","block");
+    		return false;
+    	});
+    });
+    </script>
   </head>
   <body>
     <div id="wrap">
@@ -45,10 +56,16 @@
                       <img src="<%=cp %>${cardDTO.thumbnail}" alt="card" />
                     </figure>
                     <div class="detail">
-                      <p class="card_title detail"> 
+                      <p class="card_title detail controller"> 
                         <strong>${cardDTO.cardName}</strong><a href="#" class="modify">수정</a>
                       </p>
-                      <p class="card_id">${cardDTO.cardIdentity}</p>
+                      <form action="<%=cp%>/members/modifyCardName.do" method="post" name="modifyCardName">
+	                      <p class="card_title detail modify controller">
+								<input type="hidden" name="cardNum" value="${cardDTO.cardNum}" />
+		                      	<input type="text" name="cardName" value="${cardDTO.cardName}" maxlength="10"/><a href="#" class="modify" onclick="javascript:document.modifyCardName.submit();">수정</a>
+	                      </p>
+	                  </form>
+                      <p class="card_id"><cd:card identity="${cardDTO.cardIdentity }"/></p>
                       <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${cardDTO.balance}"/></strong>원</p>
                       <ul class="card_control">
                         <li>

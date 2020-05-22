@@ -4,14 +4,20 @@
   margin: 0;
 }
 
+<!-- 공지 윗 부분 css -->
+ .notice-board {
+        min-height: 1000px;
+      }
+
+
 .noticelist-img {
-  width: 100%;
+  width: 1903px;
   height: 400px;
   background-image: url("../images/board/banner_notice.jpg");
   background-repeat: no-repeat;
   text-align: center;
-  background-size: cover;
   background-position: 0% 90%;
+  margin: 0 auto;
 }
 
 .line1 {
@@ -94,3 +100,150 @@
 .num3 {
   color: #002f6c;
 }
+
+
+      .view-title {
+        height: 65px;
+        line-height: 65px;
+        border-top: 2px solid #233e83;
+        margin-top: 10px;
+        text-align: center;
+        border-bottom: 1px solid #d9d9d9;
+      }
+
+      .s1 {
+        width: 80%;
+        display: inline-block;
+        font-size: 20px;
+      }
+
+      .s2_1 {
+       width: 80px;
+	    text-align: center;
+	    display: inline-block;
+      }
+      
+    
+      .s2_2 {
+	    width: 70px;
+	    display: inline-block;
+	    text-align: center
+	    }
+      
+
+      .view-con {
+        min-height: 250px;
+        padding: 30px;
+        border-bottom: 2px solid #233e83;
+      }
+
+      .view-page {
+        min-height: 80px;
+      }
+
+      .vp li {
+        display: inline-block;
+      }
+
+      .vp {
+        height: 50px;
+        line-height: 50px;
+        border-bottom: 1px solid #d9d9d9;
+      }
+      
+      .go-ul {
+      	height: 100px;
+        line-height: 50px;
+        border-top: 2px solid #233e83;
+      }
+      
+      .go-li {
+      	height: 100%;
+      	text-align: right;
+      	padding: auto 0;
+      }
+      
+      
+      .go-listBtn {
+      	width: 80px;
+      	height: 50px;
+		margin: 25px 0px;
+		}
+		
+		
+		.notice_vieBtn {
+			height: 65px;
+			width: 100%;
+		}
+		
+		.notice_viewBtn button {
+			width : 80px;
+			height: 40px;
+			margin: 10px;
+		}
+		
+		.notice_deleteBtn {
+			float: right;
+		}
+
+
+		.viewCount {
+    		display:inline-block;
+    		width: 50px;
+    		text-align: center;
+    	}
+    	
+    	.noticelist-btn button {
+    		width: 80px;
+    		height: 40px;
+    		margin: 12px;
+    	}
+    	
+    	.upload_btn {
+    		float: right;
+    	}
+    	
+    	.noticeSearch_btn {
+    		width: 50px;
+    		height: 30px;
+    	}
+    	
+    	.notice_boxTF {
+    		width: 200px;
+    		height: 26px;
+    	}
+    	
+    	.notice_selectField {
+    		width: 80px;
+   	 		height: 30px;
+    	}
+    	
+    	.notice_selectNum {
+    		width: 100%;
+    		margin-top: 20px; 
+    		border-spacing: 0;
+    	}
+    	
+    	.notice_selectNum_tr {
+    		height=35;
+    	}
+    	
+    	.notice_selectNum_td {
+    		width : 100%;
+    		border-bottom: 2px solid #233e83;
+    	}
+    	
+    	.notice_selectField {
+    		margin: 10px;
+    	}
+    	
+    	.notice_search {
+    		width: 100%;
+    		margin: 10px auto;
+			border-spacing: 0px;
+    	}
+    	
+    	
+    	
+    	
+    	
