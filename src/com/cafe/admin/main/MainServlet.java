@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.cafe.members.OrderHistoryDTO;
 import com.util.EspressoServlet;
+import com.util.Pager;
 
 @WebServlet("/admin/main/*")
 public class MainServlet extends EspressoServlet {
@@ -108,14 +109,30 @@ public class MainServlet extends EspressoServlet {
 	// 林巩 包访
 	protected void orderStatus(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes,
 			int statusNum) throws ServletException, IOException {
+		final int rows= 5;
 		String path = VIEWS + JSP_ORDER;
-		AdminOrderDAO dao = new AdminOrderDAO();
-		List<OrderHistoryDTO> list = dao.listOrderHistory(statusNum);
-		DashBoardStatusDTO dashboardDTO = dao.getTodayDashBoardStatus();
-		attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
-		attributes.put(ATTRIBUTE_ORDER_HISTORY, list);
-		attributes.put(ATTRIBUTE_STATUS_NUM, statusNum);
-		attributes.put(ATTRIBUTE_STATUS_NAME, AdminOrderDAO.STATUS_NAME[statusNum - 1]);
+		String uri = req.getRequestURI();
+		try {
+			AdminOrderDAO dao = new AdminOrderDAO();
+			DashBoardStatusDTO dashboardDTO = dao.getTodayDashBoardStatus();
+			//其捞隆 包访 贸府
+			Pager pager = new Pager();
+			String page = req.getParameter(PARAM_PAGE);
+			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
+			int dataCount = dao.countOrderHistory(statusNum);
+			int totalPage = pager.pageCount(rows, dataCount);
+			int[] pages = pager.paging(rows, currentPage, totalPage);
+			List<OrderHistoryDTO> list = dao.listOrderHistory(statusNum, pager.getOffset(currentPage, rows), rows);
+			//其捞隆 包访 attributes 火涝
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + "/" +uri , "", attributes);
+			attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
+			attributes.put(ATTRIBUTE_ORDER_HISTORY, list);
+			attributes.put(ATTRIBUTE_STATUS_NUM, statusNum);
+			attributes.put(ATTRIBUTE_STATUS_NAME, AdminOrderDAO.STATUS_NAME[statusNum - 1]);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		forward(req, resp, path, attributes);
 	}
 

@@ -29,7 +29,8 @@ public class AdminOrderDAO {
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String subSql = "SELECT (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status1, (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status2, (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status3, (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status4 FROM dual";
+//		String subSql = "SELECT () status1, (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status2, (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status3, (SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL) status4 FROM dual";
+		String subSql = "SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL";
 		StringBuilder sql = new StringBuilder();
 
 		sql.append("SELECT ");
@@ -131,6 +132,39 @@ public class AdminOrderDAO {
 		return dto;
 	}
 
+	/***
+	 * 
+	 * @param statusNum
+	 * @return 상태번호별(취소건 제외) 데이터 목록 개수 반환
+	 */
+	public int countOrderHistory(int statusNum) {
+		int count = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT NVL(COUNT(orderNum),0) FROM order_history WHERE statusNum = ? AND cancelNum IS NULL ";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, statusNum);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			returnDBResources(pstmt, rs);
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+		return count;
+	}
+	
+	
 	/**
 	 * 단계별 현황
 	 * 
@@ -138,7 +172,7 @@ public class AdminOrderDAO {
 	 * @return
 	 */
 
-	public List<OrderHistoryDTO> listOrderHistory(int statusNum) {
+	public List<OrderHistoryDTO> listOrderHistory(int statusNum, int offset, int rows) {
 		List<OrderHistoryDTO> list = new ArrayList<>();
 		List<OrderDetailDTO> items;
 		Connection conn = DBCPConn.getConnection();
@@ -155,9 +189,12 @@ public class AdminOrderDAO {
 					+ "TO_CHAR(order_date,'YYYY-MM-DD HH24:MI:SS') order_date, cancelNum " + " FROM order_history oh "
 					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
 					+ " JOIN member m ON oh.userNum = m.userNum " + " WHERE oh.statusNum = ? AND cancelNum IS NULL "
-					+ " ORDER BY orderNum DESC";
+					+ " ORDER BY orderNum DESC "
+					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, statusNum);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, rows);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				OrderHistoryDTO historyDTO = new OrderHistoryDTO();
