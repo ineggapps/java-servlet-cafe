@@ -2,7 +2,7 @@ package com.cafe.auth;
 
 public class AuthDTO {
 	private int userNum; // 회원번호
-	private String email; // 이메일 
+	private String email; 
 	private String userId; 
 	private String userPwd;
 	private String userName;
@@ -101,11 +101,14 @@ public class AuthDTO {
 		this.isAdmin = isAdmin;
 	}
 
+	
+
 	@Override
 	public String toString() {
-		return "AuthDTO [userNum=" + userNum + ", email=" + email + ", userId=" + userId + ", userName=" + userName
-				+ ", nickname=" + nickname + ", createdDate=" + createdDate + ", updatedDate=" + updatedDate
-				+ ", phone=" + phone + ", enabled=" + enabled + "]";
+		return "AuthDTO [userNum=" + userNum + ", email=" + email + ", userId=" + userId + ", userPwd=" + userPwd
+				+ ", userName=" + userName + ", nickname=" + nickname + ", createdDate=" + createdDate
+				+ ", updatedDate=" + updatedDate + ", phone=" + phone + ", enabled=" + enabled + ", isAdmin=" + isAdmin
+				+ "]";
 	}
 
 	public AuthDTO() {

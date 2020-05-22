@@ -1,16 +1,21 @@
 package com.cafe.auth;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.util.DBCPConn;
 
 public class AuthDAO {
+	private Connection conn = DBCPConn.getConnection();
 
 	public int insertMember(AuthDTO dto) { // 회원가입
 		int result = 0;
-		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		String sql = "INSERT INTO member(userNum, email, userId, userPwd, userName, nickname, phone) VALUES(MEMBER_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?)";
 		try {
@@ -84,7 +89,71 @@ public class AuthDAO {
 					rs.close();
 				} catch (Exception e2) {
 				}
+			} if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			} try {
+				if (!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
 			}
+		}
+		return dto;
+	}
+
+	public int updateMember(AuthDTO dto) throws Exception { // 회원정보 수정
+
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		Connection conn = DBCPConn.getConnection();
+
+		try {
+			sql = "UPDATE member SET userPwd=?, nickname=?, phone=? WHERE userNum=? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getUserPwd());
+			pstmt.setString(2, dto.getNickname());
+			pstmt.setString(3, dto.getPhone());
+			pstmt.setInt(4, dto.getUserNum());
+			result = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(e);
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			} try {
+				if (!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+		return result;
+	}
+
+	// 회원탈퇴
+	public void deleteMember(int userNum, String userPwd) {
+		PreparedStatement pstmt = null;
+		Connection conn = DBCPConn.getConnection();
+		String sql;
+
+		try {
+			sql = "UPDATE member SET enabled=0 WHERE userNum=?, userPwd=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userNum);
+			pstmt.setString(2, userPwd);
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 			if (pstmt != null) {
 				try {
 					pstmt.close();
@@ -98,29 +167,25 @@ public class AuthDAO {
 			} catch (Exception e2) {
 			}
 		}
-		return dto;
 	}
-	
-	public int updateMember(AuthDTO dto) { // 회원정보 수정 
-		
-		int result = 0;
+
+	// 아이디 찾기 (이름, 핸드폰번호)
+	protected String findId(String userName, String phone) throws ServletException, IOException {
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql;
-		
+		String userId = null;
+		String sql = "SELECT userId FROM member WHERE userName=? and phone=?";
+
 		try {
-			sql = "UPDATE member SET eamil=?, userPwd=?, userName=?, nickname=?, phone=? WHERE userNum=? ";
-			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, dto.getEmail());
-			pstmt.setString(2, dto.getUserPwd());
-			pstmt.setString(3, dto.getUserName());
-			pstmt.setString(4, dto.getNickname());
-			pstmt.setString(5, dto.getPhone());
-			pstmt.setInt(6, dto.getUserNum());
-			
-			result = pstmt.executeUpdate();
-			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userName);
+			pstmt.setString(2, phone);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				userId = rs.getString("userId");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -131,9 +196,122 @@ public class AuthDAO {
 				}
 			}
 		}
-		return result;
-		
-		
-		
+		try {
+			if (!conn.isClosed()) {
+				DBCPConn.close(conn);
+			}
+		} catch (Exception e) {
+		}
+		return userId;
+
 	}
+
+	// 비밀번호 찾기 (아이디, 핸드폰번호)
+	public int findPwd(String userPwd, String userId, String phone) {
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		int result=0;
+		String sql = "UPDATE member SET userPwd=? WHERE userId=? and phone=?";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, userPwd);
+			pstmt.setString(2, userId);
+			pstmt.setString(3, phone);
+
+			result=pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		try {
+
+			if (!conn.isClosed()) {
+				DBCPConn.close(conn);
+			}
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	// 아이디 중복체크
+	protected boolean memberIdCheck(String userId) {
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		boolean x = false;
+
+		try {
+			StringBuffer query = new StringBuffer();
+			query.append("SELECT userId FROM member WHERE userId=?");
+
+			conn = DBCPConn.getConnection();
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setString(1, userId);
+			rs = pstmt.executeQuery();
+
+			if (rs.next())
+				x = true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		try {
+			if (!conn.isClosed()) {
+				DBCPConn.close(conn);
+			}
+		} catch (Exception e) {
+		}
+		return x;
+	}
+	
 }
+/*
+ * protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String path = "/WEB-INF/views/cafe/auth_mypage2.jsp";
+		SessionAuthInfo info = getSessionAuthInfo(req);
+
+		try {
+			AuthDAO dao = new AuthDAO();
+			String email1 = req.getParameter(PARAM_EMAIL1);
+			String email2 = req.getParameter(PARAM_EMAIL2);
+			String userPwd = req.getParameter(PARAM_USER_PWD);
+			String nickname = req.getParameter(PARAM_NICKNAME);
+			String phone = req.getParameter(PARAM_PHONE);
+			int userNum = Integer.parseInt(req.getParameter(PARAM_USER_NUM));
+
+			AuthDTO dto = new AuthDTO();
+			dto.setEmail(email1 + "@" + email2);
+			dto.setUserPwd(userPwd);
+			dto.setNickname(nickname);
+			dto.setPhone(phone);
+			dto.setUserNum(userNum);
+			System.out.println(dto);
+
+			dao.updateMember(dto);
+			forward(req, resp, path);
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath + "/update.do");
+			return;
+		}
+
+	}
+	*/
