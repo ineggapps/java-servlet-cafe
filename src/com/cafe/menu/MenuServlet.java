@@ -38,12 +38,8 @@ public class MenuServlet extends MyUploadServlet {
 		String root=session.getServletContext().getRealPath("/");
 		pathname=root+File.separator+"thumbnail"+File.separator+"menu";
 		
-		if (uri.indexOf("/coffee.do") != -1 || uri.indexOf("/index.do") != -1) {
-			coffee(req, resp);
-		} else if (uri.indexOf("/ade.do") != -1) {
-			ade(req, resp);
-		} else if (uri.indexOf("/bakery.do") != -1) {
-			bakery(req, resp);
+		if (uri.indexOf("/coffee.do") != -1 || uri.indexOf("/index.do") != -1 || uri.indexOf("/ade.do") != -1 || uri.indexOf("/bakery.do") != -1) {
+			list(req, resp);
 		} else if (uri.indexOf("/createdMenu.do") != -1) {
 			createdMenu(req, resp);
 		} else if(uri.indexOf("/createdMenu_ok.do")!=-1) {
@@ -67,124 +63,61 @@ public class MenuServlet extends MyUploadServlet {
 		return info;
 	}
 
-	protected void coffee(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = "/WEB-INF/views/cafe/menu/coffee.jsp";
-		String cp = req.getContextPath();
-		MenuDAO dao = new MenuDAO();
-		MyUtil util = new MyUtil();
-		
-		String page = req.getParameter("page");
-		int current_page=1;
-		if(page!=null) {
-			current_page = Integer.parseInt(page);
-		}
-		
-		int dataCount  = dao.dataCount();
-		
-		int rows = 6;
-		int total_page = util.pageCount(rows, dataCount);
-		if(current_page>total_page) {
-			current_page = total_page;
-		}
-		
-		int offset = (current_page-1)*rows;
-		
+	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {	// 페이징 처리 리스트 마다 한 것 
+		String uri=req.getRequestURI();
+		String view="coffee";	// 커피일 경우에
 		int categoryNum = 1;
-		List<MenuDTO> list = dao.listMenu(offset, rows, categoryNum);
+		if(uri.indexOf("/ade.do") != -1) {	// 에이드일 경우에
+			view="ade";
+			categoryNum = 2;
+		} else if(uri.indexOf("/bakery.do") != -1) {  // 베이커리일 경우에
+			view="bakery";
+			categoryNum = 3;
+		}
 		
-		String listUrl = cp+"/menu/coffee.do";
-		String createdUrl = cp + "/menu/create.do?page="+current_page;
-		String paging = util.paging(current_page, total_page, listUrl);
-		
-		req.setAttribute("list", list);
-		req.setAttribute("dataCount", dataCount);
-		req.setAttribute("createdUrl", createdUrl);
-		req.setAttribute("page", current_page);
-		req.setAttribute("total_page", total_page);
-		req.setAttribute("paging", paging);
-		
-		
+		String path = "/WEB-INF/views/cafe/menu/"+view+".jsp";	// view를 따로 나누어서 path 주소를 설정
+		try {
+			
+			String cp = req.getContextPath();
+			MenuDAO dao = new MenuDAO();
+			MyUtil util = new MyUtil();
+			
+			String page = req.getParameter("page");
+			int current_page=1;
+			if(page!=null) {
+				current_page = Integer.parseInt(page);
+			}
+			
+			int dataCount  = dao.dataCount(categoryNum);
+			
+			int rows = 6;
+			int total_page = util.pageCount(rows, dataCount);
+			if(current_page>total_page) {
+				current_page = total_page;
+			}
+			
+			int offset = (current_page-1)*rows;
+			
+			List<MenuDTO> list = dao.listMenu(offset, rows, categoryNum);
+			
+			String listUrl = cp+"/menu/"+view+".do";
+			String createdUrl = cp + "/menu/create.do?page="+current_page;
+			String paging = util.paging(current_page, total_page, listUrl);
+			
+			req.setAttribute("list", list);
+			req.setAttribute("dataCount", dataCount);
+			req.setAttribute("createdUrl", createdUrl);
+			req.setAttribute("page", current_page);
+			req.setAttribute("total_page", total_page);
+			req.setAttribute("paging", paging);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		// 포워딩
 		forward(req, resp, path);
 	}
-
-	protected void ade(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = "/WEB-INF/views/cafe/menu/ade.jsp";
-		String cp = req.getContextPath();
-		MenuDAO dao = new MenuDAO();
-		MyUtil util = new MyUtil();
-		
-		String page = req.getParameter("page");
-		int current_page=1;
-		if(page!=null) {
-			current_page = Integer.parseInt(page);
-		}
-		
-		int dataCount  = dao.dataCount();
-		
-		int rows = 6;
-		int total_page = util.pageCount(rows, dataCount);
-		if(current_page>total_page) {
-			current_page = total_page;
-		}
-		
-		int offset = (current_page-1)*rows;
-		
-		int categoryNum = 2;
-		List<MenuDTO> list = dao.listMenu(offset, rows, categoryNum);
-		
-		String listUrl = cp+"/menu/ade.do";
-		String createdUrl = cp + "/menu/create.do?page="+current_page;
-		String paging = util.paging(current_page, total_page, listUrl);
-		
-		req.setAttribute("list", list);
-		req.setAttribute("dataCount", dataCount);
-		req.setAttribute("createdUrl", createdUrl);
-		req.setAttribute("page", current_page);
-		req.setAttribute("total_page", total_page);
-		req.setAttribute("paging", paging);
-		// 포워딩
-		forward(req, resp, path);
-	}
-
-	protected void bakery(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = "/WEB-INF/views/cafe/menu/bakery.jsp";
-		String cp = req.getContextPath();
-		MenuDAO dao = new MenuDAO();
-		MyUtil util = new MyUtil();
-		
-		String page = req.getParameter("page");
-		int current_page=1;
-		if(page!=null) {
-			current_page = Integer.parseInt(page);
-		}
-		
-		int dataCount  = dao.dataCount();
-		
-		int rows = 6;
-		int total_page = util.pageCount(rows, dataCount);
-		if(current_page>total_page) {
-			current_page = total_page;
-		}
-		
-		int offset = (current_page-1)*rows;
-		
-		int categoryNum = 3;
-		List<MenuDTO> list = dao.listMenu(offset, rows, categoryNum);
-		
-		String listUrl = cp+"/menu/bakery.do";
-		String createdUrl = cp + "/menu/create.do?page="+current_page;
-		String paging = util.paging(current_page, total_page, listUrl);
-		
-		req.setAttribute("list", list);
-		req.setAttribute("dataCount", dataCount);
-		req.setAttribute("createdUrl", createdUrl);
-		req.setAttribute("page", current_page);
-		req.setAttribute("total_page", total_page);
-		req.setAttribute("paging", paging);
-		// 포워딩
-		forward(req, resp, path);
-	}
+	
 	
 	protected void createdMenu(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = "/WEB-INF/views/cafe/menu/created.jsp";

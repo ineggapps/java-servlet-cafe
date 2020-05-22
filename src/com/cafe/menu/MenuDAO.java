@@ -88,6 +88,48 @@ public class MenuDAO {
 		
 		return result;
 	}
+
+	public int dataCount(int categoryNum) {	//  페이징 처리를 하기 위한 dataCount 
+		int result=0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql;
+		
+		try {
+			sql="SELECT NVL(COUNT(*), 0) FROM menu WHERE categoryNum = ?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, categoryNum);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+				result=rs.getInt(1);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+				
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+		
+		return result;
+	}
 	
 	public List<MenuDTO> listMenu(int offset, int rows, int categoryNum) {
 		List<MenuDTO> list = new ArrayList<MenuDTO>();

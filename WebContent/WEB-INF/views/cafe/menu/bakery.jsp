@@ -56,7 +56,7 @@
                             <p style="text-align: center;"><span>${dto.menuName}</span></p>
                           </li>
                           <li style="border-top: 2px solid black; padding-top: 20px;">
-                            ${dto.text}
+                            &nbsp;&nbsp;&nbsp;&nbsp;${dto.text}
                           </li>
                         </ul>
                         <ul>
@@ -82,12 +82,20 @@
               </form>
               <br />
               <hr />
+              <div>
+              	<ul>
+              		<li>
+              			${dataCount==0 ? "등록된 게시물이 없습니다." : paging}
+              		</li>
+              	</ul>
+              </div>
               <div class="menu_controller">
               	<c:if test="${sessionScope.member.userId=='hello'}">
                 	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
               	</c:if>
               </div>
               <br /><br />
+              <ul><li>&nbsp;</li></ul>
             </div>
           </article>
         </div>
