@@ -17,6 +17,7 @@ import com.cafe.auth.SessionAuthInfo;
 import com.util.FileManager;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
+import com.util.Pager;
 
 @WebServlet("/menu/*")
 @MultipartConfig(						
@@ -99,17 +100,25 @@ public class MenuServlet extends MyUploadServlet {
 			int offset = (current_page-1)*rows;
 			
 			List<MenuDTO> list = dao.listMenu(offset, rows, categoryNum);
+			//其捞隆 包访 贸府
+			Pager pager = new Pager();
+			int[] pages = pager.paging(rows, current_page, total_page);
+
 			
 			String listUrl = cp+"/menu/"+view+".do";
 			String createdUrl = cp + "/menu/create.do?page="+current_page;
-			String paging = util.paging(current_page, total_page, listUrl);
+//			String paging = util.paging(current_page, total_page, listUrl);
 			
 			req.setAttribute("list", list);
 			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("createdUrl", createdUrl);
 			req.setAttribute("page", current_page);
 			req.setAttribute("total_page", total_page);
-			req.setAttribute("paging", paging);
+//			req.setAttribute("paging", paging);
+			req.setAttribute("pages", pages);
+			req.setAttribute("listUrl", listUrl);
+			req.setAttribute("current_page", current_page);
+			req.setAttribute("api", req.getRequestURI().substring(cp.length()));
 			
 		} catch (Exception e) {
 			e.printStackTrace();

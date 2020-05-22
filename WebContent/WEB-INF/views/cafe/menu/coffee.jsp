@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="p" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -28,9 +29,9 @@
               <br /><br /><br />
               <div class="menu">
                 <ul>
-                  <li><a href="<%=cp%>/menu/coffee.do">커피</a></li>
-                  <li><a href="<%=cp%>/menu/ade.do">에이드</a></li>
-                  <li><a href="<%=cp%>/menu/bakery.do">베이커리</a></li>
+                  <li ${api=='/menu/coffee.do'?"class='on'":""}><a href="<%=cp%>/menu/coffee.do">커피</a></li>
+                  <li ${api=='/menu/ade.do'?"class='on'":""}><a href="<%=cp%>/menu/ade.do">에이드</a></li>
+                  <li ${api=='/menu/bakery.do'?"class='on'":""}><a href="<%=cp%>/menu/bakery.do">베이커리</a></li>
                 </ul>
               </div>
             </div>
@@ -47,7 +48,7 @@
                 <c:forEach var="dto" items="${list}" varStatus="status">
                   <li>
                     <div class="detail1">
-                      <a href="#"><img class="menuimg" alt="" src="<%=cp%>/${dto.thumbnail}" /></a>
+                      <a href="#"><img class="menuimg" alt="" src="<%=cp%>${dto.thumbnail}" /></a>
                       <p>${dto.menuName}</p>
                      </div>
                       <div class="detail">
@@ -60,7 +61,7 @@
                           </li>
                         </ul>
                         <ul>
-                        	<li class="detail_price" >&nbsp;&nbsp;&nbsp;가격 : ${dto.price}</li>
+                        	<li class="detail_price" >가격 : <fmt:formatNumber value="${dto.price}"/>원</li>
                         </ul>
                         <br><br><br>
                         <ul>
@@ -81,11 +82,7 @@
               <br />
               <hr />
               <div>
-              	<ul>
-              		<li>
-              			${dataCount==0 ? "등록된 게시물이 없습니다." : paging}
-              		</li>
-              	</ul>
+            	<p:pager pages="${pages}" data_count="${dataCount}" total_page="${total_page}" uri="${uri}" query="${query}" current_page="${current_page}"/>
               </div>
               <div class="menu_controller" style="margin-bottom: 10px;">
               	<c:if test="${sessionScope.member.userId=='hello'}">
