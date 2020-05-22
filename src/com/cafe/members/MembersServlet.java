@@ -440,13 +440,25 @@ public class MembersServlet extends EspressoServlet {
 			return;
 		}
 	}
+	
+	private int getTotalAmount(SessionCart cart) {
+		int count = 0;
+		if(cart.getItems()==null) {
+			return 0;
+		}
+		Map<Integer, MenuDTO> map = cart.getItems();
+		for(int key: map.keySet()) {
+			count += map.get(key).getQuantity();
+		}
+		return count;
+	}
 
 	private boolean addCart(String menuNum, SessionCart cart, MenuDAO menuDAO) {
 		// 카트에 추가되면 true/ 안 되면 false를 반환함
 		try {
 			if (menuNum != null && menuNum.length() > 0) {
-				if (cart.getItems().size() < MAX_ITEM_AMOUNT) {
-					// 20개 미만만 카트에 담을 수 있음
+				if (getTotalAmount(cart) < MAX_ITEM_AMOUNT) {
+					// MAX개 미만만 카트에 담을 수 있음
 					int mNum = Integer.parseInt(menuNum);
 					MenuDTO dto = getCartItem(mNum, cart);
 					if (dto != null) {
@@ -460,8 +472,7 @@ public class MembersServlet extends EspressoServlet {
 						}
 						return true;
 					}
-				} else {// 20개를 초과한 경우 메시지 출력하기
-						// TODO: 코드 작성
+				} else {// 20개를 초과한 경우 실패 반환
 					return false;
 				}
 			}
