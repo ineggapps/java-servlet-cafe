@@ -37,7 +37,7 @@
             </div>
             <div class="row">
               <div class="row_title">
-                <h3>보유 카드 현황 <span>(보유카드: ${fn:length(list)}장)</span></h3>
+                <h3>보유 카드 현황 <span>(보유카드: ${dataCount}장)</span></h3>
               </div>
               <div class="card_container">
                 <ul>

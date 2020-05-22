@@ -51,7 +51,7 @@
                     </figure>
                     <div class="next_line">
                       <p class="card_title">
-                        <a href="./members_card_register_step2.html"><strong>${dto.modelName}</strong></a>
+                        <a href="<%=cp%>/members/register.do?register_step=2&amp;modelNum=${dto.modelNum}"><strong>${dto.modelName}</strong></a>
                       </p>
                     </div>
                   </li>

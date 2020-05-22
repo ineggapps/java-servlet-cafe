@@ -71,7 +71,6 @@ public class MembersServlet extends EspressoServlet {
 	private static final int PARAM_REGISTER_STEP_3 = 3;
 
 	// ATTRIBUTE
-	private static final int ATTRIBUTE_ROWS = 5;
 	private static final String ATTRIBUTE_API = "api";
 	private static final String ATTRIBUTE_LIST = "list";
 	private static final String ATTRIBUTE_ORDER_HISTORY = "orderHistory";
@@ -130,7 +129,7 @@ public class MembersServlet extends EspressoServlet {
 
 	protected void list(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		int rows = 10;
+		int rows = 6;
 		String path = VIEWS + JSP_LIST;
 		try {
 			CardDAO dao = new CardDAO();
@@ -146,7 +145,7 @@ public class MembersServlet extends EspressoServlet {
 			//페이징 관련 attributes 삽입
 			System.out.println(pager.getOffset(currentPage, rows) + "번부터 시작");
 			System.out.println(currentPage + "/" + totalPage + ">" + pager.getOffset(currentPage, rows) );
-			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_ORDERED_LIST, "", attributes);
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_LIST, "", attributes);
 			List<CardDTO> list = dao.listCard(info.getUserNum(), pager.getOffset(currentPage, rows),rows);
 			attributes.put(ATTRIBUTE_LIST, list);
 		} catch (Exception e) {
@@ -219,7 +218,7 @@ public class MembersServlet extends EspressoServlet {
 
 	protected void registerStep1(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		final int rows = 8;
+		final int rows = 12;
 		String path = VIEWS + JSP_REGISTER_STEP1;
 		// 카드모델 고르기 페이지
 		CardModelDAO dao = new CardModelDAO();
@@ -506,6 +505,7 @@ public class MembersServlet extends EspressoServlet {
 	protected void orderedList(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_ORDER;
+		final int rows = 10;
 		try {
 			SessionAuthInfo info = getSessionAuthInfo(req);
 			OrderDAO dao = new OrderDAO();
@@ -514,12 +514,12 @@ public class MembersServlet extends EspressoServlet {
 			String page = req.getParameter(PARAM_PAGE);
 			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
 			int dataCount = dao.orderCountByUserNum(info.getUserNum());
-			int totalPage = pager.pageCount(ATTRIBUTE_ROWS, dataCount);
-			int[] pages = pager.paging(ATTRIBUTE_ROWS, currentPage, totalPage);
+			int totalPage = pager.pageCount(rows, dataCount);
+			int[] pages = pager.paging(rows, currentPage, totalPage);
 			//페이징 관련 attributes 삽입
 			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_ORDERED_LIST, "", attributes);
 			//DB에서 불러오기
-			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum(),  pager.getOffset(currentPage, ATTRIBUTE_ROWS), ATTRIBUTE_ROWS);
+			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum(),  pager.getOffset(currentPage, rows), rows);
 			attributes.put(ATTRIBUTE_ORDER_HISTORY, orderHistory);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
