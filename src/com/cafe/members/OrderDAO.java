@@ -8,12 +8,53 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.cafe.admin.main.AdminOrderDAO;
+import com.cafe.admin.main.DashBoardStatusDTO;
 import com.cafe.menu.MenuDTO;
 import com.util.DBCPConn;
 
 public class OrderDAO {
 	//OrderHistoryDTO (주문내역서) 먼저 추가해야 함.
 	//OrderDetailDTO (주문세부사항)
+	
+	public int orderCountByUserNum(int userNum) {
+		int count = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT NVL(count(orderNum),0) FROM order_history "
+				+ " WHERE userNum = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userNum);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if(!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+		return count;
+	}
 	
 	public int addOrderHistory(SessionCart cart, int userNum, int cardNum) throws OrderException{
 		/*
@@ -144,13 +185,13 @@ public class OrderDAO {
 		ResultSet rsSub = null;
 		String sql;
 		try {
-			sql = "SELECT orderNum, totalPaymentAmount, storeNum, oh.statusNum, statusName, oh.userNum, userName, cardNum, "
+			sql = "SELECT orderNum, totalPaymentAmount, storeNum, oh.statusNum, statusName, oh.userNum, nickname, cardNum, "
 					+ "TO_CHAR(order_date,'YYYY-MM-DD HH24:MI:SS') order_date, cancelNum "
 					+ " FROM order_history oh "
 					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
-					+ "JOIN member m ON oh.userNum = m.userNum"
-					+ "WHERE cardNum = ? AND userNum = ? "
-					+ "ORDER BY orderNum DESC";
+					+ " JOIN member m ON oh.userNum = m.userNum"
+					+ " WHERE oh.cardNum = ? AND oh.userNum = ? "
+					+ " ORDER BY orderNum DESC";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, cardNum);
 			pstmt.setInt(2, userNum);
@@ -208,7 +249,7 @@ public class OrderDAO {
 	}
 	
 	//회원번호로 내역 조회하기
-	public List<OrderHistoryDTO> listOrderHistoryByUserNum(int userNum) {
+	public List<OrderHistoryDTO> listOrderHistoryByUserNum(int userNum, int offset, int rows) {
 		List<OrderHistoryDTO> list = new ArrayList<>();
 		List<OrderDetailDTO> items;
 		Connection conn = DBCPConn.getConnection();
@@ -225,9 +266,12 @@ public class OrderDAO {
 					+ " FROM order_history oh "
 					+ " JOIN  order_status os ON oh.statusNum = os.statusNum "
 					+ " WHERE userNum = ?"
-					+ " ORDER BY orderNum DESC";
+					+ " ORDER BY orderNum DESC "
+					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, userNum);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, rows);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				OrderHistoryDTO historyDTO = new OrderHistoryDTO();
@@ -278,6 +322,66 @@ public class OrderDAO {
 		
 		return list;
 	}
+
+	
+	//사용자 대시보드 (orderedList.do)
+	public DashBoardStatusDTO getUserDashBoardStatus(int userNum) {
+		DashBoardStatusDTO dto = new DashBoardStatusDTO();
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String subSql = "SELECT Count(ordernum) FROM order_history WHERE statusnum = ? AND userNum = ? AND To_char(order_date, 'YYYY-MM-DD') = To_char(sysdate, 'YYYY-MM-DD') AND cancelNum IS NULL";
+		StringBuilder sql = new StringBuilder();
+
+		sql.append("SELECT ");
+		for (int i = 1; i <= AdminOrderDAO.STATUS.length; i++) {
+			sql.append("(" + subSql + ") status" + i);
+			if (i != AdminOrderDAO.STATUS.length) {
+				sql.append(",");
+			}
+		}
+		sql.append(" FROM dual");
+		try {
+			System.out.println(sql.toString());
+			pstmt = conn.prepareStatement(sql.toString());
+			int idx=1;
+			for (int i = 1; i <= AdminOrderDAO.STATUS.length; i++) {
+				pstmt.setInt(idx++, AdminOrderDAO.STATUS[i - 1]);
+				pstmt.setInt(idx++, userNum);
+			}
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				dto.setPaymentCount(rs.getInt(1));
+				dto.setBeforeMakingCount(rs.getInt(2));
+				dto.setMakingCount(rs.getInt(3));
+				dto.setDoneCount(rs.getInt(4));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if (!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+
+		return dto;
+	}
+
 	
 	//////////////////////////////////////////////자원반납 대신하기..
 	public void returnDBResources(PreparedStatement pstmt, ResultSet rs) {

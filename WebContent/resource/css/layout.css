@@ -251,6 +251,30 @@ ul#right_side li {
   margin-bottom: 50px;
 }
 
+.single_button{
+	display:block;
+	user-select: none;
+	margin:0 auto;
+    width: 150px;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    text-align: center;
+    padding: 15px;
+    font-size: 1rem;
+}
+
+.single_button:hover{
+	background-color:#002f6c;
+	color:#fff;
+}
+
+.row.border_box{
+    padding: 60px 5%;
+    border: 1px solid #d9d9d9;
+    box-sizing: border-box;
+}
+
+
 .banner_visual h2,
 .row h3 {
   font-family: "나눔스퀘어", NanumSquare, NS, "맑은 고딕", MalgunGothic, "돋움", Dotum;
@@ -481,3 +505,59 @@ p.message{
 .table th{
   padding: 20px;
 }
+
+/*페이징*/
+
+.paging {
+  text-align: center;
+  margin:30px 0;
+}
+
+/*.paging li:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.paging li:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}*/
+
+.paging li {
+  user-select: none;
+  display: inline-block;
+  min-width: 48px;
+  line-height: 40px;
+  height: 40px;
+  margin: 0 5px;
+  /*background-color: #e9ecf3;*/
+}
+
+.paging li:hover {
+  background-color: #233e83;
+  color:#fff;
+}
+
+.paging li.on {
+  background-color: #233e83;
+  color: #fff;
+}
+
+/*.paging li.on:hover {
+  background-color: #233e83;
+}*/
+
+.paging li a {
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  color:inherit;
+}
+
+/*p.alert*/
+
+p.alert {
+  text-align: center;
+}
+

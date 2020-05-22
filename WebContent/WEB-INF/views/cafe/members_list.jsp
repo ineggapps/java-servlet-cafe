@@ -3,6 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="p" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="cd" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -36,7 +38,7 @@
             </div>
             <div class="row">
               <div class="row_title">
-                <h3>보유 카드 현황 <span>(보유카드: ${fn:length(list)}장)</span></h3>
+                <h3>보유 카드 현황 <span>(보유카드: ${dataCount}장)</span></h3>
               </div>
               <div class="card_container">
                 <ul>
@@ -52,13 +54,16 @@
                         <a href="<%=cp%>/members/detail.do?cardNum=${dto.cardNum}"><strong>${dto.cardName}</strong></a
                         ><!--a href="#" class="modify">수정</a-->
                       </p>
-                      <p class="card_id">${dto.cardIdentity}</p>
+                      <p class="card_id"><cd:card identity="${dto.cardIdentity }"/> </p>
                       <p class="card_remain">잔액:&nbsp;<strong><fmt:formatNumber value="${dto.balance}"/></strong>원</p>
                     </div>
                   </li>
                 </c:forEach>
                 </ul>
               </div>
+            </div>
+            <div class="row">
+            	<p:pager pages="${pages}" data_count="${dataCount}" total_page="${totalPage}" uri="${uri}" query="${query}" current_page="${currentPage}"/>
             </div>
             <!-- Content 영역 끝 -->
           </article>

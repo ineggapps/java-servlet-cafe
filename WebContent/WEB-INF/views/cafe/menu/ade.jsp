@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/teamenu.css" />
+
   </head>
   <body>
     <div id="wrap">
@@ -58,6 +59,20 @@
                             ${dto.text}
                           </li>
                         </ul>
+                        <ul>
+                        	<li class="detail_price" >&nbsp;&nbsp;&nbsp;가격 : ${dto.price}</li>
+                        </ul>
+                        <br><br><br>
+                        <ul>
+                          <li class="detail_button">
+                          <c:if test="${sessionScope.member.userId=='hello'}">
+                          	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/update.do?menuNum=${dto.menuNum}';">수정</button>
+                          </c:if>
+                          <c:if test="${sessionScope.member.userId=='hello'}">
+                          	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/delete.do?menuNum=${dto.menuNum}';">삭제</button>
+                          </c:if>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </li>
@@ -67,7 +82,9 @@
               <br />
               <hr />
               <div class="menu_controller">
-                <button type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
+              	<c:if test="${sessionScope.member.userId=='hello'}">
+                	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
+              	</c:if>
               </div>
               <br /><br />
             </div>

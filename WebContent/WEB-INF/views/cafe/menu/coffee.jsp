@@ -46,20 +46,34 @@
                 <ul class="menus">
                 <c:forEach var="dto" items="${list}" varStatus="status">
                   <li>
-                    <div>
+                    <div class="detail1">
                       <a href="#"><img class="menuimg" alt="" src="<%=cp%>/${dto.thumbnail}" /></a>
                       <p>${dto.menuName}</p>
+                     </div>
                       <div class="detail">
                         <ul>
                           <li style="width: 100%; padding-top: 20px; padding-bottom: 20px;">
                             <p style="text-align: center;"><span>${dto.menuName}</span></p>
                           </li>
-                          <li style="border-top: 2px solid black; padding-top: 20px;">
-                            ${dto.text}
+                          <li style="border-top: 2px solid black; padding-top: 20px; width: 100%">
+                            &nbsp;&nbsp;&nbsp;&nbsp;${dto.text}
+                          </li>
+                        </ul>
+                        <ul>
+                        	<li class="detail_price" >&nbsp;&nbsp;&nbsp;가격 : ${dto.price}</li>
+                        </ul>
+                        <br><br><br>
+                        <ul>
+                          <li class="detail_button">
+                          <c:if test="${sessionScope.member.userId=='hello'}">
+                          	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/update.do?menuNum=${dto.menuNum}';">수정</button>
+                          </c:if>
+                          <c:if test="${sessionScope.member.userId=='hello'}">
+                          	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/delete.do?menuNum=${dto.menuNum}';">삭제</button>
+                          </c:if>
                           </li>
                         </ul>
                       </div>
-                    </div>
                   </li>
                   </c:forEach>
                 </ul>
@@ -67,7 +81,9 @@
               <br />
               <hr />
               <div class="menu_controller">
-                	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
+              	<c:if test="${sessionScope.member.userId=='hello'}">
+                	<button style="width: 45px; height: 30px;" type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
+              	</c:if>
               </div>
               <br /><br />
             </div>

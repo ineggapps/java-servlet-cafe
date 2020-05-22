@@ -316,6 +316,31 @@ INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_s
 INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '스튜던트 카드', '초심으로 돌아가 연필을 잡자 카드', '/resource/images/members/card/card06.png');
 INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '나는야 백조카드', '핑크핑크한 백조를 보셨나요?', '/resource/images/members/card/card07.png');
 INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '네추럴 카드', '로이더 아니고 네추럴 카드', '/resource/images/members/card/card08.png');
+
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '우주를 줄게카드', '우주의 별만큼 원두가 한가득', '/resource/images/members/card/card09.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '빛망울 카드', '아름다운 당신의 미래를 응원하는 카드', '/resource/images/members/card/card10.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '사랑이 넘치는 카드', '사먹는 만큼 늘어나는 풋풋한 사랑카드', '/resource/images/members/card/card11.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '바다에 퐁당 카드', '무더운 여름 시원한 카드를 만들면 행복해져요', '/resource/images/members/card/card12.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '아몰라 카드', '카드이름 뭐라고 지을지 몰라서 막 만든 카드', '/resource/images/members/card/card13.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '엄브렐라 카드', '너의 우산이 되어줄게', '/resource/images/members/card/card14.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '고급진 카드', '명품 브랜드 숍에서나 볼 수 있을 법한 명품 카드입니다.', '/resource/images/members/card/card15.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '커피좋아 카드', '나는 커피가 너무 좋아 카드', '/resource/images/members/card/card16.png');
+
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '시티가좋아 카드', '평생 도시에서만 살고 싶은 카드', '/resource/images/members/card/card17.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '책벌레 카드', '책을 읽을 땐 항상 커피가 옆에 있으면 좋겠어', '/resource/images/members/card/card18.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '소망을 담아 카드', '소망을 담아 하늘로 훨훨 날려 버려', '/resource/images/members/card/card19.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '신발끈 카드', '더는 신발끈이 풀리지 않아', '/resource/images/members/card/card20.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '생일축하 카드', '마음을 담아 생일을 축하해 보세요!', '/resource/images/members/card/card21.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '도넛만 먹고파 카드', '알록달록한 도넛을 보면 배가 고파', '/resource/images/members/card/card22.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '탄수화물 중독 카드', '탄수화물 섭취 뒤엔 커피를 마셔야 꿀맛', '/resource/images/members/card/card23.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '젤리빈 카드', '참 색이 영롱하니 먹기에도 좋아 보인다.', '/resource/images/members/card/card24.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '개발자 카드', '개발자라면 1클래스 1커피', '/resource/images/members/card/card25.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '하늘을 담아 카드', '저 하늘의 별을 따다 줘 해가 뜨기 전에', '/resource/images/members/card/card26.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '용자 카드', '산 정상에 올라간 사람만 구매하세요', '/resource/images/members/card/card27.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '나무를 부탁해 카드', '환경보호를 위해 힘쓰는 사람만 구매할 수 있습니다', '/resource/images/members/card/card28.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '지구를 지켜라 카드', '코로나로부터 지구를 구해주세요', '/resource/images/members/card/card29.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '새싹틔움 카드', '1년 365일이 식목일인 카드', '/resource/images/members/card/card30.png');
+
 COMMIT;
 
 -- 메뉴 카테고리 샘플

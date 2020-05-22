@@ -11,10 +11,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cafe.admin.main.DashBoardStatusDTO;
 import com.cafe.auth.SessionAuthInfo;
 import com.cafe.menu.MenuDAO;
 import com.cafe.menu.MenuDTO;
 import com.util.EspressoServlet;
+import com.util.Pager;
 
 @WebServlet("/members/*")
 public class MembersServlet extends EspressoServlet {
@@ -33,6 +35,7 @@ public class MembersServlet extends EspressoServlet {
 	private static final String API_INDEX = "/index.do";
 	private static final String API_LIST = "/list.do";
 	private static final String API_DETAIL = "/detail.do";
+	private static final String API_MODIFY_CARD_NAME = "/modifyCardName.do";
 	private static final String API_REGISTER = "/register.do";
 	private static final String API_CHARGE = "/charge.do";
 	private static final String API_CHARGE_OK = "/charge_ok.do";
@@ -63,8 +66,8 @@ public class MembersServlet extends EspressoServlet {
 	private static final String PARAM_PRICE = "price";
 	private static final String PARAM_MENU_NUM = "menuNum";
 	private static final String PARAM_TAB = "tab";
-	private static final String PARAM_TAB_USAGE = "usage";
-	private static final String PARAM_TAB_CHARGE = "charge";
+//	private static final String PARAM_TAB_USAGE = "usage";
+//	private static final String PARAM_TAB_CHARGE = "charge";
 	private static final int PARAM_REGISTER_STEP_1 = 1;
 	private static final int PARAM_REGISTER_STEP_2 = 2;
 	private static final int PARAM_REGISTER_STEP_3 = 3;
@@ -79,6 +82,9 @@ public class MembersServlet extends EspressoServlet {
 	private static final String ATTRIBUTE_CARD_DTO = "cardDTO";
 	private static final String ATTRIBUTE_CARD_MODEL_DTO = "modelDTO";
 	private static final String ATTRIBUTE_MAX_ITEM_AMOUNT = "maxItemAmount";
+	private static final String ATTRIBUTE_DASHBOARD_STATUS_DTO = "dashBoardStatusDTO";
+
+	//기본 속성
 	private static final int MAX_BALANCE = 550000;
 	private static final int MAX_ITEM_AMOUNT = 15; // 최대 구매 가능 개수
 
@@ -121,16 +127,35 @@ public class MembersServlet extends EspressoServlet {
 			closeForm(req, resp, attributes);
 		} else if (uri.indexOf(API_CLOSE_CARD_OK) != -1) {
 			closeSubmit(req, resp, attributes);
+		} else if (uri.indexOf(API_MODIFY_CARD_NAME)!=-1) {
+			updateCardName(req, resp, attributes);
 		}
 	}
 
 	protected void list(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
+		int rows = 6;
 		String path = VIEWS + JSP_LIST;
-		CardDAO dao = new CardDAO();
-		SessionAuthInfo info = getSessionAuthInfo(req);
-		List<CardDTO> list = dao.listCard(info.getUserNum());
-		attributes.put(ATTRIBUTE_LIST, list);
+		try {
+			CardDAO dao = new CardDAO();
+			SessionAuthInfo info = getSessionAuthInfo(req);
+			//페이징 관련 처리
+			Pager pager = new Pager();
+			String page = req.getParameter(PARAM_PAGE);
+			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
+			int dataCount = dao.count(info.getUserNum());
+			System.out.println(dataCount+"개 보유");
+			int totalPage = pager.pageCount(rows, dataCount);
+			int[] pages = pager.paging(rows, currentPage, totalPage);
+			//페이징 관련 attributes 삽입
+			System.out.println(pager.getOffset(currentPage, rows) + "번부터 시작");
+			System.out.println(currentPage + "/" + totalPage + ">" + pager.getOffset(currentPage, rows) );
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_LIST, "", attributes);
+			List<CardDTO> list = dao.listCard(info.getUserNum(), pager.getOffset(currentPage, rows),rows);
+			attributes.put(ATTRIBUTE_LIST, list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		forward(req, resp, path, attributes);
 	}
 
@@ -198,13 +223,26 @@ public class MembersServlet extends EspressoServlet {
 
 	protected void registerStep1(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		System.out.println("step1");
+		final int rows = 12;
 		String path = VIEWS + JSP_REGISTER_STEP1;
 		// 카드모델 고르기 페이지
 		CardModelDAO dao = new CardModelDAO();
-		List<CardModelDTO> list = dao.listCardModel();
-		attributes.put(PARAM_MODE, PARAM_MODE_REGISTER);
-		attributes.put(ATTRIBUTE_LIST, list);
+		try {
+			//페이징 관련 처리
+			Pager pager = new Pager();
+			String page = req.getParameter(PARAM_PAGE);
+			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
+			int dataCount = dao.count();
+			int totalPage = pager.pageCount(rows, dataCount);
+			int[] pages = pager.paging(rows, currentPage, totalPage);
+			List<CardModelDTO> list = dao.listCardModel(pager.getOffset(currentPage, rows), rows);
+			//페이징 관련 attributes 삽입
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_REGISTER, "step=" + PARAM_REGISTER_STEP_1, attributes);
+			attributes.put(PARAM_MODE, PARAM_MODE_REGISTER);
+			attributes.put(ATTRIBUTE_LIST, list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		forward(req, resp, path, attributes);
 	}
 
@@ -255,6 +293,22 @@ public class MembersServlet extends EspressoServlet {
 		}
 	}
 
+	protected void updateCardName(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
+			throws ServletException, IOException {
+		SessionAuthInfo info = getSessionAuthInfo(req);
+		String uri = req.getRequestURI();
+		String cardNum = req.getParameter(PARAM_CARD_NUM);
+		String cardName = req.getParameter(PARAM_CARD_NAME);
+		try {
+			CardDAO dao = new CardDAO();
+			int cNum = Integer.parseInt(cardNum);
+			dao.updateCardName(info.getUserNum(), cNum, cardName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(apiPath + API_DETAIL + "?" + PARAM_CARD_NUM + "=" + cardNum);
+	}
+	
 	protected void chargeForm(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		SessionAuthInfo info = getSessionAuthInfo(req);
@@ -435,6 +489,12 @@ public class MembersServlet extends EspressoServlet {
 			// 대부분의 쇼핑몰이 얼마나 담겼는지는 안 보여주네
 			attributes.put(ATTRIBUTE_LIST, list);
 			attributes.put(ATTRIBUTE_CARDS, cards);
+			// #3. 카트에 정보가 없으면..
+			SessionCart cart = getCart(req);
+			if(cart==null || cart.getItems().keySet().size()==0) {
+				//카트 없다고 에러 메시지 보여주기
+				attributes.put(ATTRIBUTE_ERROR_MSG, new ErrorMessage("아직 고른 상품이 없습니다.", "쿠앤크 오더에서 주문해 보세요!"));
+			}
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -472,10 +532,24 @@ public class MembersServlet extends EspressoServlet {
 	protected void orderedList(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		String path = VIEWS + JSP_ORDER;
+		final int rows = 10;
 		try {
 			SessionAuthInfo info = getSessionAuthInfo(req);
 			OrderDAO dao = new OrderDAO();
-			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum());
+			//대시보드
+			DashBoardStatusDTO dashboardDTO = dao.getUserDashBoardStatus(info.getUserNum());
+			attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
+			//페이징 관련 처리
+			Pager pager = new Pager();
+			String page = req.getParameter(PARAM_PAGE);
+			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
+			int dataCount = dao.orderCountByUserNum(info.getUserNum());
+			int totalPage = pager.pageCount(rows, dataCount);
+			int[] pages = pager.paging(rows, currentPage, totalPage);
+			//페이징 관련 attributes 삽입
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_ORDERED_LIST, "", attributes);
+			//DB에서 불러오기
+			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum(),  pager.getOffset(currentPage, rows), rows);
 			attributes.put(ATTRIBUTE_ORDER_HISTORY, orderHistory);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {

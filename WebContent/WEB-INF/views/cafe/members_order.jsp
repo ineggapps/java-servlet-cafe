@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="p" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -86,9 +87,9 @@
                </div>
              <div class="row">
                  <ul class="tab order">
-                   <li ${api=="/order.do"?"class=\"on\"":""}><a href="<%=cp%>/members/order.do">음식 고르기</a></li>
-                   <li ${api=="/buy.do"?"class=\"on\"":""}><a href="<%=cp%>/members/buy.do">주문 및 결제</a></li>
-                   <li ${api=="/orderedList.do"?"class=\"on\"":""}><a href="<%=cp%>/members/orderedList.do">주문 내역</a></li>
+                   <li ${api=="/order.do"?"class=\"on\"":""}><a href="<%=cp%>/members/order.do">주문하기</a></li>
+                   <li ${api=="/buy.do"?"class=\"on\"":""}><a href="<%=cp%>/members/buy.do">결제하기</a></li>
+                   <li ${api=="/orderedList.do"?"class=\"on\"":""}><a href="<%=cp%>/members/orderedList.do">주문내역 조회</a></li>
                  </ul>
                </div>
              </div>
@@ -114,7 +115,13 @@
                </ul>
              </div>
              </c:if>
-             <c:if test="${api=='/buy.do'}">
+             <c:if test="${api=='/buy.do' and fn:length(cart.items)==0}">
+             <div class="row border_box"> 
+				<p class="title">아직 주문하지 않았습니다.</p>
+             	<a href="<%=cp%>/members/order.do" class="single_button">주문하러 가기</a>
+             </div>
+             </c:if>
+             <c:if test="${api=='/buy.do' and fn:length(cart.items)>0}">
              <div class="row">
                <table class="table" id="buy">
                <thead>
@@ -180,6 +187,44 @@
              </c:if>
              <c:if test="${api=='/orderedList.do'}">
              <div class="row">
+             	<p class="title">오늘의 주문 현황</p>
+             	<ul class="order_process">
+             		<li>
+             			<div class="circle">
+             				<dl>
+             					<dt>결제 완료</dt>
+             					<dd>${dashBoardStatusDTO.paymentCount}</dd>
+             				</dl>
+             			</div>
+             		</li>
+             		<li>
+             			<div class="circle">
+             				<dl>
+             					<dt>제조 대기</dt>
+             					<dd>${dashBoardStatusDTO.beforeMakingCount}</dd>
+             				</dl>
+             			</div>
+             		</li>
+             		<li>
+             			<div class="circle">
+             				<dl>
+             					<dt>제조 중</dt>
+             					<dd>${dashBoardStatusDTO.makingCount}</dd>
+             				</dl>
+             			</div>
+             		</li>
+             		<li>
+             			<div class="circle">
+             				<dl>
+             					<dt>제조 완료</dt> 
+             					<dd>${dashBoardStatusDTO.doneCount}</dd>
+             				</dl>
+             			</div>
+             		</li>
+             	</ul>
+             </div>
+             <div class="row">
+                <p class="title">주문 내역 조회</p>
                 <table class="table" id="ordered_history">
                 <thead>
                   <tr>
@@ -211,6 +256,9 @@
 				</table>             
              </div>
              </c:if>
+             <div class="row">
+				<p:pager pages="${pages}" data_count="${dataCount}" total_page="${totalPage}" uri="${uri}" query="${query}" current_page="${currentPage}"/>
+             </div>
            <!-- Content 영역 끝 -->
           </article>
         </div>

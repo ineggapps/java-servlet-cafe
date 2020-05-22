@@ -2,6 +2,8 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="p" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -89,6 +91,9 @@
                     </td>
                     <td>${history.orderDate}</td>
                     <td>
+                    	<c:if test="${statusNum<=0 }">
+                    	<span>취소됨</span>
+                    	</c:if>
                     	<c:if test="${statusNum==1}">
                     	<a href="<%=cp%>/admin/main/orderStepUp.do?orderNum=${history.orderNum}&amp;api=${api}"class="button">접수</a>
                     	<a href="<%=cp%>/admin/main/orderCancel.do?orderNum=${history.orderNum}"class="button">취소</a>
@@ -104,6 +109,9 @@
                 </c:forEach>
                 </tbody>
               </table>
+            </div>
+            <div class="content_area">
+            	<p:pager pages="${pages}" data_count="${dataCount}" total_page="${totalPage}" uri="${uri}" query="${query}" current_page="${currentPage}"/>
             </div>
           </div>
         </article>
