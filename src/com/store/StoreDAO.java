@@ -18,26 +18,26 @@ public class StoreDAO {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				count = rs.getInt(1);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(rs!=null) {
+			if (rs != null) {
 				try {
 					rs.close();
 				} catch (Exception e2) {
 				}
 			}
-			if(pstmt!=null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
 			try {
-				if(!conn.isClosed()) {
+				if (!conn.isClosed()) {
 					DBCPConn.close(conn);
 				}
 			} catch (Exception e2) {
@@ -45,6 +45,7 @@ public class StoreDAO {
 		}
 		return count;
 	}
+
 	public List<StoreDTO> listStore(int offset, int rows) {
 		List<StoreDTO> list = new ArrayList<>();
 		Connection conn = DBCPConn.getConnection();
@@ -90,20 +91,62 @@ public class StoreDAO {
 		return list;
 	}
 
-	public List<StoreDTO> listStore(String keyword) {
+	public int storeCount(String keyword) {
+		int count = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT NVL(COUNT(storeNum),0) FROM store "
+				+ "WHERE visible=1 AND INSTR(storeName, ?) > 0 OR INSTR(storeAddress, ?) > 0 ";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, keyword);
+			pstmt.setString(2, keyword);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if (!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
+		}
+		return count;
+	}
+
+	public List<StoreDTO> listStore(String keyword, int offset, int rows) {
 		List<StoreDTO> list = new ArrayList<>();
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT storeNum, storeName, tel, storeAddress, visible "
-				+ "FROM store "
-				+ "WHERE visible=1 AND INSTR(storeName, ?) > 0 OR INSTR(storeAddress, ?) > 0 ";
+		String sql = "SELECT storeNum, storeName, tel, storeAddress, visible " + "FROM store "
+				+ "WHERE visible=1 AND INSTR(storeName, ?) > 0 OR INSTR(storeAddress, ?) > 0 "
+				+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,keyword);
+			pstmt.setString(1, keyword);
 			pstmt.setString(2, keyword);
+			pstmt.setInt(3, offset);
+			pstmt.setInt(4, rows);
 			rs = pstmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				int storeNum = rs.getInt("storeNum");
 				String storeName = rs.getString("storeName");
 				String tel = rs.getString("tel");

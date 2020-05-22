@@ -39,6 +39,7 @@ public class StoreServlet extends EspressoServlet {
 	// ATTRIBUTe
 	private static final String ATTRIBUTE_LIST = "list";
 	private static final String ATTRIBUTE_API = "api";
+	private static final String ATTRIBUTE_KEYWORD = "keyword";
 
 	// JSP
 	private static final String JSP_LIST = "/store_list.jsp";
@@ -66,20 +67,23 @@ public class StoreServlet extends EspressoServlet {
 			//페이징 관련 처리
 			Pager pager = new Pager();
 			String page = req.getParameter(PARAM_PAGE);
-			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
-			int dataCount = dao.storeCount();
-			int totalPage = pager.pageCount(rows, dataCount);
-			int[] pages = pager.paging(rows, currentPage, totalPage);
 			String query = "";
+			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
+			int dataCount;
 			if(keyword!=null&&keyword.length()>0) {
 				System.out.println(keyword + "검색어로 검색");
-				list = dao.listStore(keyword);
+				list = dao.listStore(keyword, pager.getOffset(currentPage, rows), rows);
+				dataCount = dao.storeCount(keyword);
 				query = PARAM_SEARCH_TEXT + "=" + keyword;
 			}else {
 				list = dao.listStore(pager.getOffset(currentPage, rows), rows);
+				dataCount = dao.storeCount();
 			}
+			int totalPage = pager.pageCount(rows, dataCount);
+			int[] pages = pager.paging(rows, currentPage, totalPage);
 			//페이징 관련 attributes 삽입
 			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_STORES, query, attributes);
+			attributes.put(ATTRIBUTE_KEYWORD, keyword);
 			attributes.put(ATTRIBUTE_LIST, list);
 		} catch (Exception e) {
 			e.printStackTrace();

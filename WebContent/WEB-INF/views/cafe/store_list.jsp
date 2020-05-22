@@ -35,7 +35,7 @@
               <div class="contents_header">
                 <h3>매장 목록</h3>
                 <form id="search">
-                  <input type="text" name="search_text" class="input_text_search" />
+                  <input type="text" name="search_text" class="input_text_search" value="${keyword}"/>
                   <button type="button">🔍</button>
                 </form>
               </div>

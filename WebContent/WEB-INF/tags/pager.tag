@@ -5,6 +5,7 @@
 
 <%@ attribute name="uri" required="true"%>
 <%@ attribute name="query"%>
+<%@ attribute name="alert"%>
 <%@ attribute name="pages" required="true" type="Integer[]"%>
 <%@ attribute name="data_count" required="true" type="Integer"%>
 <%@ attribute name="current_page" required="true" type="Integer"%>
@@ -36,5 +37,5 @@
 	</ul>
 </c:if>
 <c:if test="${dataCount<=0}">
-	<p class="alert">등록된 게시물이 없습니다.</p>
+	<p class="alert">${alert}</p>
 </c:if>
