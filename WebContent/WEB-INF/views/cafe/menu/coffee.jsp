@@ -80,12 +80,20 @@
               </div>
               <br />
               <hr />
-              <div class="menu_controller">
+              <div>
+              	<ul>
+              		<li>
+              			${dataCount==0 ? "등록된 게시물이 없습니다." : paging}
+              		</li>
+              	</ul>
+              </div>
+              <div class="menu_controller" style="margin-bottom: 10px;">
               	<c:if test="${sessionScope.member.userId=='hello'}">
-                	<button style="width: 45px; height: 30px;" type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
+                	<button type="button" onclick="javascript:location.href='<%=cp%>/menu/createdMenu.do';">추가</button>
               	</c:if>
               </div>
               <br /><br />
+              <ul><li>&nbsp;</li></ul>
             </div>
           </article>
         </div>
