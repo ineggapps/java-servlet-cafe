@@ -93,8 +93,7 @@ public class NoticeDAO {
 		try {
 			sb.append("SELECT * FROM (");
 			sb.append(" SELECT ROWNUM rnum, tb.* FROM (");
-			sb.append("   SELECT num, subject, views, ");
-			sb.append("     TO_CHAR(updated_date, 'YYYY-MM-DD') updated_date  ");
+			sb.append("   SELECT num, subject, views, updated_date ");
 			sb.append("	  FROM notice ");
 			sb.append("   ORDER BY num DESC ");
 			sb.append(" )  tb WHERE ROWNUM <= ? ");
@@ -196,7 +195,7 @@ public class NoticeDAO {
 			sb.append("SELECT * FROM (");
 			sb.append("    SELECT ROWNUM rnum, tb.* FROM (");
 			sb.append("        SELECT num, subject, views ");
-			sb.append("            ,TO_CHAR(updated_date, 'YYYY-MM-DD') updated_date");
+			sb.append("            , updated_date");
 			sb.append("         FROM notice");
 			if(condition.equalsIgnoreCase("created")) {
 				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");

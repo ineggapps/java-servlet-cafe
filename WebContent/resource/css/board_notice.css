@@ -143,6 +143,7 @@
 
       .vp li {
         display: inline-block;
+        margin-left: 30px;
       }
 
       .vp {
@@ -150,6 +151,7 @@
         line-height: 50px;
         border-bottom: 1px solid #d9d9d9;
       }
+      
       
       .go-ul {
       	height: 100px;
