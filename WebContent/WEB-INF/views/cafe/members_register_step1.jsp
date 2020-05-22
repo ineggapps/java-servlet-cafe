@@ -43,7 +43,7 @@
               <div class="card_container card_register">
                 <ul>
                   <c:forEach var="dto" items="${list}">
-                  <li>
+                  <li class="transform">
                     <figure>
                       <a href="<%=cp%>/members/register.do?register_step=2&amp;modelNum=${dto.modelNum}">
                         <img src="<%=cp%>${dto.thumbnail}" alt="card" />

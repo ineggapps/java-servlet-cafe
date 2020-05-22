@@ -44,7 +44,7 @@
                 <ul>
                   <c:forEach var="dto" items="${list}">
                   <li>
-                    <figure>
+                    <figure class="transform">
                       <a href="<%=cp%>/members/detail.do?cardNum=${dto.cardNum}">
                         <img src="<%=cp%>/${dto.thumbnail}" alt="card" />
                       </a>

@@ -48,6 +48,14 @@ h3 {
   float: left;
 }
 
+.transform{
+	transition: transform linear 0.1s;
+}
+
+.transform:hover{
+	transform: scale(1.2);
+}
+
 .card_container > ul > li > figure img {
   width: 333px;
   height: 210px;

@@ -168,7 +168,7 @@
              	<ul class="buy_method" id="cards">
 				<c:forEach var="dto" items="${cards}">
 				<li>
-					<div class="item_card">
+					<div class="item_card transform">
 						<div>
 							<label for="card_${dto.cardNum}">
 								<input name="cardNum" id="card_${dto.cardNum}" class="radio_cards" type="radio" value="${dto.cardNum}"/>
