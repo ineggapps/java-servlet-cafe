@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.util.EspressoServlet;
+import com.util.Pager;
 
 @WebServlet("/store/*")
 public class StoreServlet extends EspressoServlet {
@@ -57,16 +58,32 @@ public class StoreServlet extends EspressoServlet {
 
 	protected void list(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes) throws ServletException, IOException {
 		String path = VIEWS + JSP_LIST;
-		String keyword = req.getParameter(PARAM_SEARCH_TEXT);
-		StoreDAO dao = new StoreDAO();
-		List<StoreDTO> list;
-		if(keyword!=null&&keyword.length()>0) {
-			System.out.println(keyword + "검색어로 검색");
-			list = dao.listStore(keyword);
-		}else {
-			list = dao.listStore();
+		final int rows = 5;
+		try {
+			String keyword = req.getParameter(PARAM_SEARCH_TEXT);
+			StoreDAO dao = new StoreDAO();
+			List<StoreDTO> list;
+			//페이징 관련 처리
+			Pager pager = new Pager();
+			String page = req.getParameter(PARAM_PAGE);
+			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
+			int dataCount = dao.storeCount();
+			int totalPage = pager.pageCount(rows, dataCount);
+			int[] pages = pager.paging(rows, currentPage, totalPage);
+			String query = "";
+			if(keyword!=null&&keyword.length()>0) {
+				System.out.println(keyword + "검색어로 검색");
+				list = dao.listStore(keyword);
+				query = PARAM_SEARCH_TEXT + "=" + keyword;
+			}else {
+				list = dao.listStore(pager.getOffset(currentPage, rows), rows);
+			}
+			//페이징 관련 attributes 삽입
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_STORES, query, attributes);
+			attributes.put(ATTRIBUTE_LIST, list);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		attributes.put(ATTRIBUTE_LIST, list);
 		forward(req, resp, path,attributes);
 	}
 

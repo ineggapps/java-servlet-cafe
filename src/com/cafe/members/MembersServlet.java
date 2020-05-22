@@ -52,7 +52,6 @@ public class MembersServlet extends EspressoServlet {
 	private static final String JSP_ORDER = "/members_order.jsp";
 
 	// PARAM
-	private static final String PARAM_PAGE = "page";
 	private static final String PARAM_MODE = "mode";
 	private static final String PARAM_MODEL_NUM = "modelNum";
 	private static final String PARAM_CARD_NUM = "cardNum";
@@ -82,13 +81,6 @@ public class MembersServlet extends EspressoServlet {
 	private static final String ATTRIBUTE_CARD_DTO = "cardDTO";
 	private static final String ATTRIBUTE_CARD_MODEL_DTO = "modelDTO";
 	private static final String ATTRIBUTE_MAX_ITEM_AMOUNT = "maxItemAmount";
-	//페이징
-	private static final String ATTRIBUTE_DATA_COUNT = "dataCount";
-	private static final String ATTRIBUTE_TOTAL_PAGE = "totalPage";
-	private static final String ATTRIBUTE_CURRENT_PAGE = "currentPage";
-	private static final String ATTRIBUTE_PAGES = "pages";
-	private static final String ATTRIBUTE_URI = "uri";
-	private static final String ATTRIBUTE_QUERY = "query";
 
 	//기본 속성
 	private static final int MAX_BALANCE = 550000;
@@ -138,11 +130,28 @@ public class MembersServlet extends EspressoServlet {
 
 	protected void list(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
+		int rows = 10;
 		String path = VIEWS + JSP_LIST;
-		CardDAO dao = new CardDAO();
-		SessionAuthInfo info = getSessionAuthInfo(req);
-		List<CardDTO> list = dao.listCard(info.getUserNum());
-		attributes.put(ATTRIBUTE_LIST, list);
+		try {
+			CardDAO dao = new CardDAO();
+			SessionAuthInfo info = getSessionAuthInfo(req);
+			//페이징 관련 처리
+			Pager pager = new Pager();
+			String page = req.getParameter(PARAM_PAGE);
+			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
+			int dataCount = dao.count(info.getUserNum());
+			System.out.println(dataCount+"개 보유");
+			int totalPage = pager.pageCount(rows, dataCount);
+			int[] pages = pager.paging(rows, currentPage, totalPage);
+			//페이징 관련 attributes 삽입
+			System.out.println(pager.getOffset(currentPage, rows) + "번부터 시작");
+			System.out.println(currentPage + "/" + totalPage + ">" + pager.getOffset(currentPage, rows) );
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_ORDERED_LIST, "", attributes);
+			List<CardDTO> list = dao.listCard(info.getUserNum(), pager.getOffset(currentPage, rows),rows);
+			attributes.put(ATTRIBUTE_LIST, list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		forward(req, resp, path, attributes);
 	}
 
@@ -210,13 +219,26 @@ public class MembersServlet extends EspressoServlet {
 
 	protected void registerStep1(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		System.out.println("step1");
+		final int rows = 8;
 		String path = VIEWS + JSP_REGISTER_STEP1;
 		// 카드모델 고르기 페이지
 		CardModelDAO dao = new CardModelDAO();
-		List<CardModelDTO> list = dao.listCardModel();
-		attributes.put(PARAM_MODE, PARAM_MODE_REGISTER);
-		attributes.put(ATTRIBUTE_LIST, list);
+		try {
+			//페이징 관련 처리
+			Pager pager = new Pager();
+			String page = req.getParameter(PARAM_PAGE);
+			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
+			int dataCount = dao.count();
+			int totalPage = pager.pageCount(rows, dataCount);
+			int[] pages = pager.paging(rows, currentPage, totalPage);
+			List<CardModelDTO> list = dao.listCardModel(pager.getOffset(currentPage, rows), rows);
+			//페이징 관련 attributes 삽입
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_REGISTER, "step=" + PARAM_REGISTER_STEP_1, attributes);
+			attributes.put(PARAM_MODE, PARAM_MODE_REGISTER);
+			attributes.put(ATTRIBUTE_LIST, list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		forward(req, resp, path, attributes);
 	}
 
@@ -494,16 +516,10 @@ public class MembersServlet extends EspressoServlet {
 			int dataCount = dao.orderCountByUserNum(info.getUserNum());
 			int totalPage = pager.pageCount(ATTRIBUTE_ROWS, dataCount);
 			int[] pages = pager.paging(ATTRIBUTE_ROWS, currentPage, totalPage);
-			attributes.put(ATTRIBUTE_DATA_COUNT, dataCount);
-			attributes.put(ATTRIBUTE_TOTAL_PAGE, totalPage);
-			attributes.put(ATTRIBUTE_CURRENT_PAGE, currentPage);
-			attributes.put(ATTRIBUTE_PAGES, pages);
-			attributes.put(ATTRIBUTE_URI, apiPath + API_ORDERED_LIST);
-			attributes.put(ATTRIBUTE_QUERY, "?");
+			//페이징 관련 attributes 삽입
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_ORDERED_LIST, "", attributes);
 			//DB에서 불러오기
-			int start = (currentPage-1)* ATTRIBUTE_ROWS ;
-			start = start==0?1:start;
-			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum(),  start, ATTRIBUTE_ROWS);
+			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum(),  pager.getOffset(currentPage, ATTRIBUTE_ROWS), ATTRIBUTE_ROWS);
 			attributes.put(ATTRIBUTE_ORDER_HISTORY, orderHistory);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {

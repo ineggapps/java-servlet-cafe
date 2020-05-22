@@ -51,7 +51,7 @@ public class Pager {
 		return pages.stream().mapToInt(i -> i).toArray();
 	}
 
-	public int getStartNumber(int currentPage, int rows) {
+	public int getOffset(int currentPage, int rows) {
 		return (currentPage - 1) * rows;
 	}
 }
