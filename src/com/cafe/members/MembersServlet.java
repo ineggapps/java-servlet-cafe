@@ -145,12 +145,9 @@ public class MembersServlet extends EspressoServlet {
 			String page = req.getParameter(PARAM_PAGE);
 			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
 			int dataCount = dao.count(info.getUserNum());
-			System.out.println(dataCount+"개 보유");
 			int totalPage = pager.pageCount(rows, dataCount);
 			int[] pages = pager.paging(rows, currentPage, totalPage);
 			//페이징 관련 attributes 삽입
-			System.out.println(pager.getOffset(currentPage, rows) + "번부터 시작");
-			System.out.println(currentPage + "/" + totalPage + ">" + pager.getOffset(currentPage, rows) );
 			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_LIST, "", attributes);
 			List<CardDTO> list = dao.listCard(info.getUserNum(), pager.getOffset(currentPage, rows),rows);
 			attributes.put(ATTRIBUTE_LIST, list);
@@ -297,7 +294,6 @@ public class MembersServlet extends EspressoServlet {
 	protected void updateCardName(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
 		SessionAuthInfo info = getSessionAuthInfo(req);
-		String uri = req.getRequestURI();
 		String cardNum = req.getParameter(PARAM_CARD_NUM);
 		String cardName = req.getParameter(PARAM_CARD_NAME);
 		try {
@@ -441,23 +437,23 @@ public class MembersServlet extends EspressoServlet {
 		}
 	}
 	
-	private int getTotalAmount(SessionCart cart) {
-		int count = 0;
-		if(cart.getItems()==null) {
-			return 0;
-		}
-		Map<Integer, MenuDTO> map = cart.getItems();
-		for(int key: map.keySet()) {
-			count += map.get(key).getQuantity();
-		}
-		return count;
-	}
+//	private int getTotalAmount(SessionCart cart) {
+//		int count = 0;
+//		if(cart==null || cart.getItems()==null) {
+//			return 0;
+//		}
+//		Map<Integer, MenuDTO> map = cart.getItems();
+//		for(int key: map.keySet()) {
+//			count += map.get(key).getQuantity();
+//		}
+//		return count;
+//	}
 
 	private boolean addCart(String menuNum, SessionCart cart, MenuDAO menuDAO) {
 		// 카트에 추가되면 true/ 안 되면 false를 반환함
 		try {
 			if (menuNum != null && menuNum.length() > 0) {
-				if (getTotalAmount(cart) < MAX_ITEM_AMOUNT) {
+				if (cart !=null && cart.getTotalQuantity() < MAX_ITEM_AMOUNT) {
 					// MAX개 미만만 카트에 담을 수 있음
 					int mNum = Integer.parseInt(menuNum);
 					MenuDTO dto = getCartItem(mNum, cart);
@@ -487,12 +483,8 @@ public class MembersServlet extends EspressoServlet {
 		String path = VIEWS + JSP_ORDER;
 		String mode = req.getParameter(PARAM_MODE);
 		try {
-			// #0. 카트에 정보가 없으면..
 			SessionCart cart = getCart(req);
-			if(cart==null || cart.getItems().keySet().size()==0) {
-				//카트 없다고 에러 메시지 보여주기
-				attributes.put(ATTRIBUTE_ERROR_MSG, new ErrorMessage("아직 고른 상품이 없습니다.", "쿠앤크 오더에서 주문해 보세요!"));
-			}
+			// #1 상품 삭제 파라미터(API) 처리면 여기서 처리하고 나가기
 			if(mode!=null&&mode.equalsIgnoreCase(PARAM_MODE_DELETE)) {
 				//상품삭제라면?
 				int menuNum = Integer.parseInt(req.getParameter(PARAM_MENU_NUM));
@@ -503,7 +495,7 @@ public class MembersServlet extends EspressoServlet {
 				resp.sendRedirect(apiPath + API_BUY);
 				return;
 			}
-			// #0. 추가되는 파라미터 있으면 받아서 추가 먼저 하기
+			// #2. 추가되는 파라미터 있으면 받아서 추가 먼저 하기
 			SessionAuthInfo info = getSessionAuthInfo(req);
 			MenuDAO menuDAO = new MenuDAO();
 			CardDAO cardDAO = new CardDAO();
@@ -511,13 +503,19 @@ public class MembersServlet extends EspressoServlet {
 			if (menuNum != null && menuNum.length() > 0) {
 				addCart(menuNum, getCart(req), menuDAO);
 			}
-			// #1. 메뉴 리스트 뽑기
+			// #3. 메뉴 리스트 뽑기
 			List<MenuDTO> list = menuDAO.listAllMenu(0, 100);
-			// #2. 결제수단 고르기 위해 카드 목록 뽑기
+			// #4. 결제수단 고르기 위해 카드 목록 뽑기
 			List<CardDTO> cards = cardDAO.listCard(info.getUserNum());
 			// 대부분의 쇼핑몰이 얼마나 담겼는지는 안 보여주네
 			attributes.put(ATTRIBUTE_LIST, list);
 			attributes.put(ATTRIBUTE_CARDS, cards);
+			// #6. 카트에 정보가 없으면..
+			if(cart==null || cart.getTotalQuantity()==0) {
+				//카트 없다고 에러 메시지 보여주기
+				attributes.put(ATTRIBUTE_ERROR_MSG, new ErrorMessage("아직 고른 상품이 없습니다.", "쿠앤크 오더에서 주문해 보세요!"));
+			}
+
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
 			e.printStackTrace();
