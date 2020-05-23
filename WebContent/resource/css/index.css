@@ -1,0 +1,199 @@
+@charset "UTF-8";
+.row_full.no-margin,
+.row_full.no-margin .row{
+	margin-bottom:0;
+}
+.row_full.overlay{
+	position:relative;/*overlay*/
+}
+
+.intro_pic_bg{
+	background:url("../images/index/welcome-coffee.jpg") no-repeat;
+	background-size:cover;
+	background-position:0 80%;
+	background-attachment:fixed;
+}
+.intro_pic_bg .row{
+	position:relative;
+	height:100%;
+	min-height:750px;
+}
+.pic_your_coffee{
+	position:absolute;
+	background:url("../images/index/pic-your-coffee.png") no-repeat;
+	width:300px;
+	height:209px;
+	top:15%;
+	right:20%;
+}
+.pic_your_coffee_desc{
+	position:absolute;
+	background:url("../images/index/pic-your-coffee-desc.png") no-repeat;
+	width:400px;
+	height:165px;
+	top:50%;
+	right:20%;
+}
+.text_hidden{
+	text-indent:-10000em;
+}
+
+.intro_pic_bg .button_link{
+	position:absolute;
+	bottom:20%;
+	right:20%;	
+}
+
+.button_link{
+	margin:0 auto;
+	color:#fff;
+	width:100px;
+	height:30px;
+	line-height:30px;
+	border:2px solid #fff;
+	background:transparent;
+	border-radius:3px;
+	transition:all linear 0.8s;
+	transition-property:background-color, color;
+}
+
+.button_link:hover{
+	background-color:#fff;
+}
+
+.button_link a{
+	font-size:0.9rem;
+	color:#fff;
+	display:block;
+	width:100%;
+	height:100%;
+	text-align:center;
+	user-select:none;
+	transition:all linear 0.8s;
+	transition-property:background-color;
+}
+
+.button_link a:hover{
+	color:#000;
+	text-decoration:underline;
+	transition-property:color;
+}
+
+.row_full .overlay{
+	position:absolute;
+	top:0;left:0;
+	width:100%;
+	height:100%;
+	background-color:rgba(0,0,0,0.4);
+}
+
+/**/
+.intro_shop_bg{
+	background:url("../images/index/welcome-coffee-shop.jpg");
+	background-attachment:fixed;
+	width:100%;
+	min-height:700px;
+}
+
+.logoWrap{
+	position:absolute;
+	 left:50%; 
+	 top:50%;
+	 transform:translate(-50%, -50%);
+	cursor:pointer;
+	width:300px;
+	height:300px;
+}
+.logoWrap > *{
+	text-align:center;
+}
+
+.logoWrap > div{
+	width:300px;
+	min-height:300px;
+	top:0;
+	left:0;
+}
+
+.logoWrap .front{
+	display:table;
+	text-align:center;
+}
+
+
+p.title {
+	font-weight:bold;
+	text-align:center;
+	user-select:none;
+    font-size: 1.6rem;
+    color: #233e83;
+    margin:0 0 40px;
+}
+
+.description{
+	margin-top:20%;
+}
+
+.description p{
+	width:75%;
+	margin:0 auto;
+}
+
+.description p.title{
+	margin-bottom:35px;
+}
+
+.description p.desc{	
+	line-height:1.5rem;
+}
+
+.logoWrap .button_link{
+	position:absolute;
+  	left: 50%;
+  	margin-left: -50px;
+	bottom:15%;
+}
+
+.button_link.black-color{
+	height:35px;
+	line-height:35px;
+	background-color:#fff;
+	border-color:#000;
+}
+.button_link.black-color:hover{
+	background-color:#000;
+}
+
+.button_link.black-color a{
+	color:#000;
+}
+.button_link.black-color a:hover{
+	color:#fff;
+}
+
+.front{
+	position:absolute;
+	transform:rotateY(180deg);
+	border-radius:100%;
+	background-color:#fff;
+	backface-visibility: hidden;
+	transform-style: preserve-3d;
+	transition: transform 0.5s ease-out 0s;
+}
+
+.logoWrap:hover .front{
+	transform:rotateY(0);
+}
+
+.logo{
+	background:url("../images/index/logo-light.png") 50% 50% no-repeat;
+	background-size:200px;
+	backface-visibility: hidden;
+	transition: transform 0.5s ease-out 0s;
+	transform:rotateY(0);
+}
+
+.logoWrap:hover .logo,
+.logoWrap:hover .front ~ .logo{
+	transform:rotateY(180deg);
+}

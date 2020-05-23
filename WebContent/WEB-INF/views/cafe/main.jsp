@@ -15,6 +15,7 @@
     <title>COFFEE</title>
     <link rel="stylesheet" href="<%=cp %>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp %>/resource/css/layout.css" />
+    <link rel="stylesheet" href="<%=cp %>/resource/css/index.css" />
   </head>
   <body>
     <div id="wrap">
@@ -25,18 +26,32 @@
         <div id="main">
           <article id="main_container">
             <!-- Content영역 -->
-            <p style="text-align: center;"> 
-              프로젝트 시작
-            </p>
-            <div class="row">
-	             <p>
-	             ${fn:length(pages)}페이지 / ${dataCount}건 / ${totalPage }까지 / ${uri }
-	             <c:forEach var="i" begin="0" end="${fn:length(pages)}">
-	             	<a>${pages[i] }</a>
-	             </c:forEach>
-	             </p> 
-					<p:pager pages="${pages}" data_count="${dataCount}" total_page="${totalPage}" uri="${uri}" query="${query}" current_page="${currentPage}"/>
-             </div>
+			<div class="row_full intro_pic_bg overlay no-margin">
+				<div class="overlay"></div>
+				<div class="row">
+					<div class="pic_your_coffee text_hidden">PICK YOUR COFFEE!</div>
+					<div class="pic_your_coffee_desc text_hidden">쿠앤크커피입니다.</div>
+					<div class="button_link">
+						<a href="<%=cp%>/menu/index.do">자세히 보기</a>
+					</div>
+				</div>
+			</div>
+			<div class="row_full intro_shop_bg overlay no-margin">
+				<div class="row">
+					<div class="logoWrap">
+						<div class="front">
+							<div class="description">
+								<p class="title">쿠앤크 매장</p>
+								<p class="desc">최상의 서비스를 제공하는<br/>쿠앤크 매장을 확인하려면<br/><strong>매장보기</strong>를 눌러주세요.</p>
+							</div>
+							<div class="button_link black-color">
+								<a href="<%=cp%>/store/stores.do">매장 보기</a>
+							</div>
+						</div>
+						<div class="logo back"></div>
+					</div>
+				</div>
+			</div>
             <!-- Content 영역 끝 -->
           </article>
         </div>
