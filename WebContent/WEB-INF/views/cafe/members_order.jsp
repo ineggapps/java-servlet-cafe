@@ -243,7 +243,7 @@
                 <tbody>
                 <c:forEach var="history" items="${orderHistory}" varStatus="status">
                   <tr>
-                    <td class="col_no">${status.count}</td>
+                    <td class="col_no">${dataCount - ((currentPage-1)*rows+status.index)}</td>
                     <td class="col_date">${history.orderDate}</td>
                     <td class="col_content">
 						<dl id="ordered_detail">

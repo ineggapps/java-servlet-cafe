@@ -84,6 +84,7 @@ public class MembersServlet extends EspressoServlet {
 	private static final String ATTRIBUTE_CARD_MODEL_DTO = "modelDTO";
 	private static final String ATTRIBUTE_MAX_ITEM_AMOUNT = "maxItemAmount";
 	private static final String ATTRIBUTE_DASHBOARD_STATUS_DTO = "dashBoardStatusDTO";
+	private static final String ATTRIBUTE_ROWS = "rows";
 
 	//기본 속성
 	private static final int MAX_BALANCE = 550000;
@@ -572,6 +573,7 @@ public class MembersServlet extends EspressoServlet {
 			//DB에서 불러오기
 			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum(),  pager.getOffset(currentPage, rows), rows);
 			attributes.put(ATTRIBUTE_ORDER_HISTORY, orderHistory);
+			attributes.put(ATTRIBUTE_ROWS, rows);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
 			e.printStackTrace();
