@@ -36,13 +36,14 @@
 			document.getElementById('after_balance').innerText =	new Intl.NumberFormat().format(balance);
 		}
 		
-		window.onload = function(){
-			printBalance();
-		}
-		
 		function submit(){
+			
+			if(!confirm("충전하시겠습니까?")){
+				return;
+			}
+			
 			const f = document.chargeForm;
-			<c:if test="${mode=='register'}">
+	 		<c:if test="${mode=='register'}">
 			f.action = "<%=cp%>/members/register.do";
 			</c:if>
 			<c:if test="${mode=='charge'}">
@@ -51,14 +52,91 @@
 			<c:if test="${mode=='close'}">
 			f.action = "<%=cp%>/members/close_ok.do";
 			</c:if>
-			f.submit();
+			
+			for(let i=0;i<f.length;i++){
+				let type = f[i].getAttribute("type");
+				if(type=="radio" && f[i].checked){
+					f.submit();
+					return;
+				}
+			}
+			
+			alert("충전 금액을 선택하세요.");
 		}
+		
+    window.onload = function(){
+  	  	printBalance();
+    }
 	</script>    
    
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
   <script type="text/javascript" src="<%=cp %>/resource/js/jquery-3.5.1.min.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="https:///cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <c:if test="${mode=='charge'}">
+  <script>
+  $(document).ready(function () {
+		//충전모드
+	  $(".charge-cards").slick({
+	    nextArrow: "",
+	    prevArrow: "",
+	    centerMode: true,
+	    arrows: true,
+	    focusOnSelect: true,
+	    centerPadding: "60px",
+	    slidesToShow: 1,
+	    variableWidth: true,
+	    infinite: true,
+	    initialSlide: ${cardChargeIndex},
+	    responsive: [
+	      {
+	        breakpoint: 768,
+	        settings: {
+	          arrows: false,
+	          centerMode: true,
+	          centerPadding: "40px",
+	          slidesToShow: 3,
+	        },
+	      },
+	      {
+	        breakpoint: 480,
+	        settings: {
+	          arrows: false,
+	          centerMode: true,
+	          centerPadding: "40px",
+	          slidesToShow: 1,
+	        },
+	      },
+	    ],	
+	  });
+	
+	  $(".charge-cards").on("beforeChange", function (event, slick, currentSlide, nextSlide) {
+	    const $next = $(this).find("li[data-slick-index=" + nextSlide + "]");
+	    const cardNum = $next.attr("data-card-num");
+	    const cardName = $next.attr("data-card-name");
+	    const cardIdentity = $next.attr("data-card-identity");
+	    const cardThumbnail = $next.attr("data-card-thumbnail");
+	    const cardBalance = new Number($next.attr("data-card-balance"));
+	    //카드 프로필 고치기
+	    const $card = $("#card_profile");
+	    $card.find(".card_title strong").text(cardName); //카드이름
+	    $card.find(".card_id").text(cardIdentity); //카드이름
+	    $card.find("img").attr("src", cardThumbnail); //썸네일
+	    $card.find(".card_remain strong").text(cardBalance); //잔액
+	    //충전 후 잔액 수정
+	    const priceChk = $("input[name=price]:checked");
+	    let price = 0;
+	    if (priceChk.length > 0) {
+	      price = new Number(priceChk.eq(0).attr("value"));
+	    }
+	    const balance = cardBalance + price;
+	    $("#after_balance").text(new Intl.NumberFormat().format(balance));
+	    //카드 정보 접근
+	    $("#controller input[name=cardNum]").attr("value", cardNum);
+	  });
+  });
+  </script>
+  </c:if>
   <script type="text/javascript" src="<%=cp %>/resource/js/slick-cards.js"></script>
 </head>
   <body>

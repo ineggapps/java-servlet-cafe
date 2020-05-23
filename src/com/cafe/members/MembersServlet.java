@@ -78,6 +78,7 @@ public class MembersServlet extends EspressoServlet {
 	private static final String ATTRIBUTE_LIST = "list";
 	private static final String ATTRIBUTE_ORDER_HISTORY = "orderHistory";
 	private static final String ATTRIBUTE_CARD_CHARGE_LIST = "cardChargeList";
+	private static final String ATTRIBUTE_CARD_CHARGE_INDEX ="cardChargeIndex";
 	private static final String ATTRIBUTE_CARDS = "cards";
 	private static final String ATTRIBUTE_ERROR_MSG = "errorMessage";
 	private static final String ATTRIBUTE_CARD_DTO = "cardDTO";
@@ -327,6 +328,13 @@ public class MembersServlet extends EspressoServlet {
 			}
 			attributes.put(ATTRIBUTE_LIST, list);
 			attributes.put(ATTRIBUTE_CARD_DTO, dto);
+			//리스트에서 몇 번째인지
+			for(int i=0;i<list.size();i++) {
+				if(list.get(i).getCardNum()==dto.getCardNum()) {
+					attributes.put(ATTRIBUTE_CARD_CHARGE_INDEX, i);
+					break;
+				}
+			}
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
 			e.printStackTrace();
