@@ -381,6 +381,8 @@ INSERT INTO order_status(statusNum, statusName) VALUES(order_status_seq.NEXTVAL,
 INSERT INTO order_status(statusNum, statusName) VALUES(order_status_seq.NEXTVAL, '제조 대기');
 INSERT INTO order_status(statusNum, statusName) VALUES(order_status_seq.NEXTVAL, '제조 중');
 INSERT INTO order_status(statusNum, statusName) VALUES(order_status_seq.NEXTVAL, '제조 완료');
+INSERT INTO order_status(statusNum, statusName) VALUES(-1, '결제 취소');
+
 
 COMMIT;
 
