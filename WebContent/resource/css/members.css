@@ -269,13 +269,12 @@ tbody .col_date{
   max-width: 1180px;
   overflow: hidden;
   border-left: 1px solid #d9d9d9;
-  border-top: 1px solid #d9d9d9;
   border-bottom: 3px solid #002f6c;
   margin-top: 20px;
 }
 
 .tab.order li{
-	width:33.3344%;
+	width:33.33%;
 }
 
 .tab.detail li{
@@ -283,12 +282,14 @@ tbody .col_date{
 }
 
 .tab li {
+  margin:0;padding:0;
   text-align: center;
   box-sizing:border-box;
   line-height: 50px;
   line-height: 50px;
   user-select: none;
-  display: inline-block;
+  float:left;
+  border-top: 1px solid #d9d9d9;
   border-right: 1px solid #d9d9d9;
 }
 
@@ -312,7 +313,7 @@ tbody .col_date{
 .tab li.on,
 .tab li:hover {
   background-color: #002f6c;
-  border-right: 1px solid #002f6c;
+  border: 1px solid #002f6c;
 }
 
 /*shop*/
@@ -480,7 +481,41 @@ tbody .col_date{
 .buy_method > li li{
 	margin:10px;
 }
+/*슬라이드 형식*/
+.cards.close{
+	width:962px;
+}
 
+.card-item{
+	width: 200px;
+    float: left;
+    margin: 0;
+}
+
+.card-item figure{
+	margin-bottom:10px;
+}
+
+.card-item figure img{
+	width:100%;
+	opacity:0.5;
+	transform:scale(0.7);
+	transition:transform linear 0.2s;
+}
+
+li.slick-current .card-item figure img{
+	opacity:1;
+	transform:scale(1);
+}
+.card-item{
+	cursor:pointer;
+}
+.card-item ul li{
+	width:100%;
+	text-align:center;
+}
+
+/*체크형식*/
 .item_card input[type=radio]{
 	display:none;
 }

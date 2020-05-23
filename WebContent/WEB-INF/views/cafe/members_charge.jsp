@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="cd" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
@@ -43,6 +44,12 @@
 			f.submit();
 		}
 	</script>    
+   
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <script type="text/javascript" src="<%=cp %>/resource/js/jquery-3.5.1.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="https:///cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script type="text/javascript" src="<%=cp %>/resource/js/slick-cards.js"></script>
 </head>
   <body>
     <div id="wrap">
@@ -116,11 +123,40 @@
                   	<tr>
                   		<td class="col_charge_category">잔액을 이체할 카드</td>
                   		<td class="col_charge_data">
-							<select name="targetCardNum" class="select_card">
-								<c:forEach var="dto" items="${list}">
-								<option value="${dto.cardNum}">${dto.cardName}</option>
-								</c:forEach>
-							</select>
+                  			<input type="hidden" name="targetCardNum" id="cardNum" value="${list[0].cardNum}"/>
+                  			<c:if test="${fn:length(list)<=0}">이체할 카드가 없어 해지할 수 없습니다.</c:if>
+							<ul class="cards close">
+							<c:forEach var="dto" items="${list}">
+							<li data-card-num="${dto.cardNum}"> 
+								<div class="card-item">
+									<div>
+										<figure>
+											<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.cardNum}" />
+										</figure>
+										<ul>
+											<li><span>${dto.cardName}</span></li>								
+											<li><span><fmt:formatNumber value="${dto.balance}"/>원</span></li>								
+										</ul>
+									</div>
+								</div>
+							</li>
+							</c:forEach>
+							<c:forEach var="dto" items="${list}">
+							<li data-card-num="${dto.cardNum}"> 
+								<div class="card-item">
+									<div>
+										<figure>
+											<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.cardNum}" />
+										</figure>
+										<ul>
+											<li><span>${dto.cardName}</span></li>								
+											<li><span><fmt:formatNumber value="${dto.balance}"/>원</span></li>								
+										</ul>
+									</div>
+								</div>
+							</li>
+							</c:forEach>
+							</ul>
 						</td>
                   	</tr>
                   	</c:if>
@@ -194,7 +230,7 @@
             <c:if test="${mode!='close'}">
               <a href="#" class="list_button submit" onclick="submit()">${mode=="register"?"등록":"충전"}하기</a>
              </c:if>
-            <c:if test="${mode=='close'}">
+            <c:if test="${mode=='close' and fn:length(list)>0}">
               <a href="#" class="list_button submit" onclick="submit()">해지하기</a>
              </c:if>
             </div>
