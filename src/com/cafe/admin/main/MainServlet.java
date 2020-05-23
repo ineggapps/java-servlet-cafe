@@ -66,7 +66,7 @@ public class MainServlet extends EspressoServlet {
 		Map<String, Object> attributes = new HashMap<>();
 		attributes.put(ATTRIBUTE_API, uri.substring(uri.lastIndexOf("/")));
 
-		if (uri.indexOf(API_INDEX) != -1) {
+		if (uri.indexOf(API_INDEX) != -1 || uri.indexOf("/") != -1) {
 			main(req, resp, attributes);
 		} else if (uri.indexOf(API_ORDER_PAYMENT) != -1) {
 			orderStatus(req, resp, attributes, AdminOrderDAO.STATUS_PAYMENT);
