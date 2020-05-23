@@ -67,7 +67,8 @@ public class SessionCart {
 
 	@Override
 	public String toString() {
-		return "SessionCart [totalPaymentAmount=" + totalPaymentAmount + ", items=" + items + "]";
+		return "SessionCart [totalPaymentAmount=" + totalPaymentAmount + ", totalQuantity=" + totalQuantity + ", items="
+				+ items + "]";
 	}
 
 }
