@@ -1,6 +1,7 @@
 package com.cafe.members;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -160,7 +161,7 @@ public class MembersServlet extends EspressoServlet {
 
 	protected void detail(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
-		final int rows = 10;//충전, 사용내역 페이지당 보여 줄 개수
+		final int rows = 5;//충전, 사용내역 페이지당 보여 줄 개수
 		String path = VIEWS + JSP_DETAIL;
 		String tab = req.getParameter(PARAM_TAB);
 		CardDAO dao = new CardDAO();
@@ -251,6 +252,7 @@ public class MembersServlet extends EspressoServlet {
 			int totalPage = pager.pageCount(rows, dataCount);
 			int[] pages = pager.paging(rows, currentPage, totalPage);
 			List<CardModelDTO> list = dao.listCardModel(pager.getOffset(currentPage, rows), rows);
+			Collections.shuffle(list);//섞기
 			//페이징 관련 attributes 삽입
 			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_REGISTER, "step=" + PARAM_REGISTER_STEP_1, rows,  attributes);
 			attributes.put(PARAM_MODE, PARAM_MODE_REGISTER);
