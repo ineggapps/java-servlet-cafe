@@ -97,6 +97,15 @@ li.on .order_item a,
   padding: 3px 0;
 }
 
+p.title {
+	font-weight:bold;
+	text-align:center;
+	user-select:none;
+    font-size: 1.6rem;
+    color: #233e83;
+    margin:0 0 40px;
+}
+
 /*반응형*/
 @media (max-width: 1050px) {
   #order_process li {

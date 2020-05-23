@@ -27,6 +27,10 @@
               <h3>오늘의 판매현황</h3>
             </div>
             <div class="content_area">
+              <c:if test="${empty todayStatus.todayMenuName or empty todayStatus.todayTotalSales}">
+				<p class="title">아직 판매가 시작되지 않았습니다.</p>
+              </c:if>
+              <c:if test="${not empty todayStatus.todayMenuName and not empty todayStatus.todayTotalSales}">
               <ul id="today_status">
                 <li>
                   <div class="order_item deep">
@@ -47,6 +51,7 @@
                   </div>
                 </li>
               </ul>
+              </c:if>
             </div>
           </div>
           

@@ -42,7 +42,7 @@ public class AdminOrderDAO {
 		}
 		sql.append(" FROM dual");
 		try {
-			System.out.println(sql.toString());
+//			System.out.println(sql.toString());
 			pstmt = conn.prepareStatement(sql.toString());
 			for (int i = 1; i <= STATUS.length; i++) {
 				pstmt.setInt(i, STATUS[i - 1]);
