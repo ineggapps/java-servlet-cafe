@@ -66,7 +66,7 @@ public class MainServlet extends EspressoServlet {
 		Map<String, Object> attributes = new HashMap<>();
 		attributes.put(ATTRIBUTE_API, uri.substring(uri.lastIndexOf("/")));
 
-		if (uri.indexOf(API_INDEX) != -1 || uri.indexOf("/") != -1) {
+		if (uri.indexOf(API_INDEX) != -1 || uri.substring(contextPath.length()).equals("/")) {
 			main(req, resp, attributes);
 		} else if (uri.indexOf(API_ORDER_PAYMENT) != -1) {
 			orderStatus(req, resp, attributes, AdminOrderDAO.STATUS_PAYMENT);
@@ -157,8 +157,7 @@ public class MainServlet extends EspressoServlet {
 		try {
 			String orderNum = req.getParameter(PARAM_ORDER_NUM);
 			int oNum = Integer.parseInt(orderNum);
-			int result = dao.insertCancelOrder(oNum);
-			resp.sendRedirect(path);
+			dao.insertCancelOrder(oNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
