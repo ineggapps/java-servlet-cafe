@@ -23,6 +23,7 @@ public abstract class EspressoServlet extends HttpServlet {
 	protected static final String ATTRIBUTE_PAGES = "pages";
 	protected static final String ATTRIBUTE_URI = "uri";
 	protected static final String ATTRIBUTE_QUERY = "query";
+	protected static final String ATTRIBUTE_ROWS = "rows";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -50,13 +51,14 @@ public abstract class EspressoServlet extends HttpServlet {
 	}
 
 	protected void setPagerAttributes(int dataCount, int currentPage, int totalPage, int[] pages, String uri, String query,
-			Map<String, Object> attributes) throws Exception {
+			int rows, Map<String, Object> attributes) throws Exception {
 		try {
 			attributes.put(ATTRIBUTE_DATA_COUNT, dataCount);
 			attributes.put(ATTRIBUTE_TOTAL_PAGE, totalPage);
 			attributes.put(ATTRIBUTE_CURRENT_PAGE, currentPage);
 			attributes.put(ATTRIBUTE_PAGES, pages);
 			attributes.put(ATTRIBUTE_URI, uri);
+			attributes.put(ATTRIBUTE_ROWS, rows);
 			if(query != null && query.length()>0 ) {
 				query += "&";
 			}

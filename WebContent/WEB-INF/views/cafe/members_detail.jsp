@@ -2,7 +2,9 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="cd" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="p" tagdir="/WEB-INF/tags" %>
 <%
 	String cp = request.getContextPath();
 %>
@@ -99,7 +101,7 @@
                 <tbody>
                 <c:forEach var="history" items="${orderHistory}" varStatus="status">
                   <tr>
-                    <td class="col_no">${status.count}</td>
+                    <td class="col_no">${dataCount - ((currentPage-1)*rows + status.index)}</td>
                     <td class="col_category">구매</td>
                     <td class="col_content">상품 구매</td>
                     <td class="col_amount"><fmt:formatNumber value="-${history.totalPaymentAmount}"/></td>
@@ -120,7 +122,7 @@
                 <tbody>
                 <c:forEach var="charge" items="${cardChargeList}" varStatus="status">
                   <tr>
-                    <td class="col_no">${status.count}</td>
+                    <td class="col_no">${dataCount - ((currentPage-1)*rows + status.index)}</td>
                     <td class="col_category">충전</td>
                     <td class="col_content">온라인 충전</td>
                     <td class="col_amount"><fmt:formatNumber value="+${charge.chargeAmount}"/></td>
@@ -131,6 +133,9 @@
                 </tbody>
               </table>
             </div>
+             <div class="row">
+				<p:pager pages="${pages}" data_count="${dataCount}" total_page="${totalPage}" uri="${uri}" query="${query}" current_page="${currentPage}"/>
+             </div>
             <div class="row">
               <a href="<%=cp %>/members/list.do" class="list_button">목록</a>
             </div>

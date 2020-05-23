@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -67,8 +66,8 @@ public class MembersServlet extends EspressoServlet {
 	private static final String PARAM_PRICE = "price";
 	private static final String PARAM_MENU_NUM = "menuNum";
 	private static final String PARAM_TAB = "tab";
-//	private static final String PARAM_TAB_USAGE = "usage";
-//	private static final String PARAM_TAB_CHARGE = "charge";
+	private static final String PARAM_TAB_USAGE = "usage";
+	private static final String PARAM_TAB_CHARGE = "charge";
 	private static final int PARAM_REGISTER_STEP_1 = 1;
 	private static final int PARAM_REGISTER_STEP_2 = 2;
 	private static final int PARAM_REGISTER_STEP_3 = 3;
@@ -150,7 +149,7 @@ public class MembersServlet extends EspressoServlet {
 			int totalPage = pager.pageCount(rows, dataCount);
 			int[] pages = pager.paging(rows, currentPage, totalPage);
 			//페이징 관련 attributes 삽입
-			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_LIST, "", attributes);
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_LIST, "",rows, attributes);
 			List<CardDTO> list = dao.listCard(info.getUserNum(), pager.getOffset(currentPage, rows),rows);
 			attributes.put(ATTRIBUTE_LIST, list);
 		} catch (Exception e) {
@@ -161,6 +160,7 @@ public class MembersServlet extends EspressoServlet {
 
 	protected void detail(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> attributes)
 			throws ServletException, IOException {
+		final int rows = 10;//충전, 사용내역 페이지당 보여 줄 개수
 		String path = VIEWS + JSP_DETAIL;
 		String tab = req.getParameter(PARAM_TAB);
 		CardDAO dao = new CardDAO();
@@ -176,15 +176,30 @@ public class MembersServlet extends EspressoServlet {
 			}
 			List<OrderHistoryDTO> historyList; 
 			List<CardChargeDTO> chargeList;
-			if(tab==null || tab.equalsIgnoreCase("usage")) {
-				historyList = orderDAO.listOrderHistoryByCardNum(cardNum, info.getUserNum());
+			//페이징 관련 처리 병행
+			Pager pager = new Pager();
+			String page = req.getParameter(PARAM_PAGE);
+			int currentPage = page!=null&&page.length()>0?Integer.parseInt(page):1;
+			int dataCount=0;
+			if(tab==null || tab.equalsIgnoreCase("usage")) {//사용내역
+				historyList = orderDAO.listOrderHistoryByCardNum(cardNum, info.getUserNum(),pager.getOffset(currentPage, rows),rows);
 				attributes.put(ATTRIBUTE_ORDER_HISTORY, historyList);
+				dataCount = orderDAO.countOrderHistoryByCardNum(cardNum, info.getUserNum());
+				tab = PARAM_TAB_USAGE;
 			}else {
-				chargeList = chargeDAO.listCardCharge(cardNum, info.getUserNum());
+				chargeList = chargeDAO.listCardCharge(cardNum, info.getUserNum(), pager.getOffset(currentPage, rows),rows);
 				attributes.put(ATTRIBUTE_CARD_CHARGE_LIST, chargeList);
+				dataCount = chargeDAO.dataCount(cardNum, info.getUserNum());
+				tab = PARAM_TAB_CHARGE;
 			}
 			attributes.put(PARAM_TAB, tab);
 			attributes.put(ATTRIBUTE_CARD_DTO, dto);
+			//페이징 관련 attributes 삽입
+			int totalPage = pager.pageCount(rows, dataCount);
+			int[] pages = pager.paging(rows, currentPage, totalPage);
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_DETAIL, 
+					PARAM_CARD_NUM + "=" + cardNum + "&" + PARAM_TAB + "=" + tab, rows
+					, attributes);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -237,7 +252,7 @@ public class MembersServlet extends EspressoServlet {
 			int[] pages = pager.paging(rows, currentPage, totalPage);
 			List<CardModelDTO> list = dao.listCardModel(pager.getOffset(currentPage, rows), rows);
 			//페이징 관련 attributes 삽입
-			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_REGISTER, "step=" + PARAM_REGISTER_STEP_1, attributes);
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_REGISTER, "step=" + PARAM_REGISTER_STEP_1, rows,  attributes);
 			attributes.put(PARAM_MODE, PARAM_MODE_REGISTER);
 			attributes.put(ATTRIBUTE_LIST, list);
 		} catch (Exception e) {
@@ -579,7 +594,7 @@ public class MembersServlet extends EspressoServlet {
 			int totalPage = pager.pageCount(rows, dataCount);
 			int[] pages = pager.paging(rows, currentPage, totalPage);
 			//페이징 관련 attributes 삽입
-			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_ORDERED_LIST, "", attributes);
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_ORDERED_LIST, "", rows, attributes);
 			//DB에서 불러오기
 			List<OrderHistoryDTO> orderHistory = dao.listOrderHistoryByUserNum(info.getUserNum(),  pager.getOffset(currentPage, rows), rows);
 			attributes.put(ATTRIBUTE_ORDER_HISTORY, orderHistory);
