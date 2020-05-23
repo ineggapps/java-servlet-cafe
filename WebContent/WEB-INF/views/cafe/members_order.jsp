@@ -36,16 +36,28 @@
   		function submit(){
   		  const f = document.buy;
           const cards = document.getElementsByName("cardNum");
-          for(let i = 0;i<cards.length;i++){
+          const rs = confirm("결제하시겠습니까?");
+          if(rs){
+        	  f.submit();
+          }else{
+        	  alert("결제가 취소되었습니다.");
+        	  return false;
+          }
+          f.submit();
+          /*for(let i = 0;i<cards.length;i++){
               if(cards[i].checked){
                   f.submit();
                   return;
               }
           }
-          alert("결제 수단이 선택되지 않았습니다. 카드를 선택해 주세요");
+          alert("결제 수단이 선택되지 않았습니다. 카드를 선택해 주세요");*/
   		}
-  
   	</script>
+	  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+	  <script type="text/javascript" src="<%=cp %>/resource/js/jquery-3.5.1.min.js"></script>
+	  <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	  <script type="text/javascript" src="https:///cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+	  <script type="text/javascript" src="<%=cp %>/resource/js/slick-cards.js"></script>
   </head>
   <body onload="goToError()">
     <div id="wrap">
@@ -165,28 +177,48 @@
              </div>
              <form action="<%=cp%>/members/buy_ok.do" method="post" name="buy">
              <div class="row">
-             	<ul class="buy_method" id="cards">
-				<c:forEach var="dto" items="${cards}">
-				<li>
-					<div class="item_card transform">
-						<div>
-							<label for="card_${dto.cardNum}">
-								<input name="cardNum" id="card_${dto.cardNum}" class="radio_cards" type="radio" value="${dto.cardNum}"/>
-								<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.cardNum}" />
-							</label>
-							<ul>
-								<li><span>${dto.cardName}</span></li>								
-								<li><span><fmt:formatNumber value="${dto.balance}"/>원</span></li>								
-							</ul>
+                <input type="hidden" name="cardNum" id="cardNum" value="${cards[0].cardNum}"/>
+                <c:if test="${fn:length(list)<=0}">카드를 만드신 후에 결제가 가능합니다.</c:if>
+             	<ul class="cards buy_method" id="cards">
+					<c:forEach var="dto" items="${cards}">
+					<li data-card-num="${dto.cardNum}"> 
+						<div class="card-item">
+							<div>
+								<figure>
+									<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.cardNum}" />
+								</figure>
+								<ul>
+									<li><span class="title">${dto.cardName}</span></li>								
+									<li><span><fmt:formatNumber value="${dto.balance}"/>원</span></li>								
+								</ul>
+							</div>
 						</div>
-					</div>
-				</li>
-				</c:forEach>
+					</li>
+					</c:forEach>
+					<c:if test="${fn:length(cards)==1}">
+					<c:forEach var="dto" items="${cards}">
+					<li data-card-num="${dto.cardNum}"> 
+						<div class="card-item">
+							<div>
+								<figure>
+									<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.cardNum}" />
+								</figure>
+								<ul>
+									<li><span class="title">${dto.cardName}</span></li>								
+									<li><span><fmt:formatNumber value="${dto.balance}"/>원</span></li>								
+								</ul>
+							</div>
+						</div>
+					</li>
+					</c:forEach>
+					</c:if>
              	</ul>
              </div>
+             <c:if test="${fn:length(cards)>0}">
              <div class="row">
               	<a href="#" class="list_button submit" onclick="submit()">결제하기</a>
              </div>
+             </c:if>
              </form>
              </div>
              </c:if>

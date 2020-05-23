@@ -26,8 +26,18 @@
 				chk.checked = false;
 				return;
 			}
-			document.getElementById('after_balance').innerText =	new Intl.NumberFormat().format(after)
-			
+			printBalance(after);
+		}
+		
+		function printBalance(balance){
+			if(!balance){
+				balance = ${cardDTO.balance};
+			}
+			document.getElementById('after_balance').innerText =	new Intl.NumberFormat().format(balance);
+		}
+		
+		window.onload = function(){
+			printBalance();
 		}
 		
 		function submit(){
@@ -45,7 +55,7 @@
 		}
 	</script>    
    
-  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
   <script type="text/javascript" src="<%=cp %>/resource/js/jquery-3.5.1.min.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="https:///cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
@@ -80,7 +90,7 @@
                     <h3>카드 해지하기</h3>
 					</c:if>                    
                 </div>
-                <div class="card_container card_container_full">
+                <div class="card_container card_container_full" id="card_profile">
                   <ul>
                     <li>
                       <figure>
@@ -110,6 +120,44 @@
                   </ul>
                 </div>
               </div>
+              <c:if test="${mode=='charge'}">
+              <div class="row">
+				<ul class="charge-cards">
+				<c:forEach var="dto" items="${list}">
+				<li data-card-num="${dto.cardNum}" data-card-identity = "${dto.cardIdentity}" data-card-name="${dto.cardName}" data-card-thumbnail="<%=cp%>${dto.thumbnail}" data-card-balance="${dto.balance}"> 
+					<div class="card-item">
+						<div>
+							<figure>
+								<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.cardNum}" />
+							</figure>
+							<ul>
+								<li><span class="title">${dto.cardName}</span></li>								
+								<li><span><fmt:formatNumber value="${dto.balance}"/>원</span></li>								
+							</ul>
+						</div>
+					</div>
+				</li>
+				</c:forEach>
+               			<c:if test="${fn:length(list)==1}">
+				<c:forEach var="dto" items="${list}">
+				<li data-card-num="${dto.cardNum}"> 
+					<div class="card-item">
+						<div>
+							<figure>
+								<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.cardNum}" />
+							</figure>
+							<ul>
+								<li><span class="title">${dto.cardName}</span></li>								
+								<li><span><fmt:formatNumber value="${dto.balance}"/>원</span></li>								
+							</ul>
+						</div>
+					</div>
+				</li>
+				</c:forEach>
+               			</c:if>
+				</ul>
+              </div>
+              </c:if>
               <div class="row">
                 <table id="card_charge">
                   <thead>
@@ -134,13 +182,14 @@
 											<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.cardNum}" />
 										</figure>
 										<ul>
-											<li><span>${dto.cardName}</span></li>								
+											<li><span class="title">${dto.cardName}</span></li>								
 											<li><span><fmt:formatNumber value="${dto.balance}"/>원</span></li>								
 										</ul>
 									</div>
 								</div>
 							</li>
 							</c:forEach>
+                  			<c:if test="${fn:length(list)==1}">
 							<c:forEach var="dto" items="${list}">
 							<li data-card-num="${dto.cardNum}"> 
 								<div class="card-item">
@@ -149,13 +198,14 @@
 											<img src="<%=cp %>/${dto.thumbnail}" alt="${dto.cardNum}" />
 										</figure>
 										<ul>
-											<li><span>${dto.cardName}</span></li>								
+											<li><span class="title">${dto.cardName}</span></li>								
 											<li><span><fmt:formatNumber value="${dto.balance}"/>원</span></li>								
 										</ul>
 									</div>
 								</div>
 							</li>
 							</c:forEach>
+                  			</c:if>
 							</ul>
 						</td>
                   	</tr>
@@ -217,7 +267,7 @@
                   </tbody>
                 </table>
               </div>
-            <div class="row buttons">
+            <div class="row buttons" id="controller">
             <c:if test="${mode=='register'}">
             	<input type="hidden" name="register_step" value="3" />
             	<input type="hidden" name="modelNum" value ="${modelDTO.modelNum}"/>

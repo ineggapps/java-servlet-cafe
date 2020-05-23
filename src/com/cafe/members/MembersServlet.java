@@ -315,15 +315,17 @@ public class MembersServlet extends EspressoServlet {
 		CardDAO dao = new CardDAO();
 		CardDTO dto = null;
 		try {
+			List<CardDTO> list = dao.listCard(info.getUserNum());
 			String cardNum = req.getParameter(PARAM_CARD_NUM);
 			if (cardNum == null) {
 				dto = dao.readRecentCard(info.getUserNum());
 			} else {
 				dto = dao.readCard(Integer.parseInt(cardNum), info.getUserNum());
 			}
-			if (dto == null) {
+			if (dto == null && list.size()==0) {
 				throw new Exception("카드가 존재하지 않습니다.");
 			}
+			attributes.put(ATTRIBUTE_LIST, list);
 			attributes.put(ATTRIBUTE_CARD_DTO, dto);
 			forward(req, resp, path, attributes);
 		} catch (Exception e) {

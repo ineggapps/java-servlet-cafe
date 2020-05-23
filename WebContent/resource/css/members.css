@@ -486,6 +486,11 @@ tbody .col_date{
 	width:962px;
 }
 
+.charge-cards{
+	width:1180px;
+	margin:0 0 50px;
+}
+
 .card-item{
 	width: 200px;
     float: left;
@@ -513,6 +518,9 @@ li.slick-current .card-item figure img{
 .card-item ul li{
 	width:100%;
 	text-align:center;
+}
+.card-item ul .title{
+	font-weight:bold;
 }
 
 /*체크형식*/
