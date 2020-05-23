@@ -82,7 +82,7 @@ public class StoreServlet extends EspressoServlet {
 			int totalPage = pager.pageCount(rows, dataCount);
 			int[] pages = pager.paging(rows, currentPage, totalPage);
 			//ÆäÀÌÂ¡ °ü·Ã attributes »ðÀÔ
-			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_STORES, query, attributes);
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + API_STORES, query, rows, attributes);
 			attributes.put(ATTRIBUTE_KEYWORD, keyword);
 			attributes.put(ATTRIBUTE_LIST, list);
 		} catch (Exception e) {

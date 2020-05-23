@@ -340,6 +340,7 @@ INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_s
 INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '나무를 부탁해 카드', '환경보호를 위해 힘쓰는 사람만 구매할 수 있습니다', '/resource/images/members/card/card28.png');
 INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '지구를 지켜라 카드', '코로나로부터 지구를 구해주세요', '/resource/images/members/card/card29.png');
 INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '새싹틔움 카드', '1년 365일이 식목일인 카드', '/resource/images/members/card/card30.png');
+INSERT INTO card_model(modelNum, modelName, text, thumbnail) VALUES(card_model_seq.NEXTVAL, '심플 카드', '디자인의 심플함을 추구한다면 이 카드를 등록하세요.', '/resource/images/members/card/card-default.png');
 
 COMMIT;
 
