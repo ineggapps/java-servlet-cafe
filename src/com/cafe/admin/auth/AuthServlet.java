@@ -59,6 +59,15 @@ public class AuthServlet extends EspressoServlet {
 
 	protected void loginForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_LOGIN;
+		try {
+			SessionAuthInfo info = getSessionAuthInfo(req);
+			if(info!=null && info.isAdmin()) {
+				resp.sendRedirect(contextPath + "/" + ADMIN + "/main");
+				return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		forward(req, resp, path);
 	}
 
