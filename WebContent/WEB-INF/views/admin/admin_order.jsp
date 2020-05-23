@@ -76,7 +76,7 @@
                 <tbody>
 				<c:forEach var="history" items="${orderHistory}" varStatus="status">
                   <tr>
-                    <td>1</td>
+                    <td>${dataCount - ((currentPage-1)*rows+status.index)}</td>
                     <td>${history.nickname}</td>
                     <td>
                       <ol class="col_product_detail">
@@ -102,7 +102,7 @@
                     	<a href="<%=cp%>/admin/main/orderStepUp.do?orderNum=${history.orderNum}&amp;api=${api}"class="button">완료</a>
                     	</c:if>
                     	<c:if test="${statusNum==4}">
-                    	<span>제조 완료</span>
+                    	<span>-</span>
                     	</c:if>
                     </td>
                   </tr>

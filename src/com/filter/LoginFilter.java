@@ -64,6 +64,9 @@ public class LoginFilter implements Filter {
 		String uri = req.getRequestURI();
 		String cp = req.getContextPath();
 		uri = uri.substring(cp.length());
+		if(uri.substring(uri.length()-1).equals("/")) {
+			uri = uri.substring(0,-1);
+		}
 
 		if (uri.length() <= 1 || uri.equals("/")) {
 			return false;
@@ -71,8 +74,8 @@ public class LoginFilter implements Filter {
 
 		for (String s : INCLUDE_URIS) {
 			if (s.lastIndexOf("/**") != -1) {
-				s = s.substring(0, s.lastIndexOf("**"));
-				if (uri.indexOf(s) == 0) {// ex: s=/auth/** , uri=/auth/abc.do 이면  /auth/가 겹치므로 0이 나온다. 
+				s = s.substring(0, s.lastIndexOf("/**"));
+				if (uri.indexOf(s) == 0 || s.contains(uri)) {// ex: s=/auth/** , uri=/auth/abc.do 이면  /auth/가 겹치므로 0이 나온다. 
 					return true;
 				}
 			} else if (uri.equals(s)) {
@@ -93,8 +96,8 @@ public class LoginFilter implements Filter {
 
 		for (String s : EXCLUDE_URIS) {
 			if (s.lastIndexOf("/**") != -1) {
-				s = s.substring(0, s.lastIndexOf("**"));
-				if (uri.indexOf(s) == 0) {
+				s = s.substring(0, s.lastIndexOf("/**"));
+				if (uri.indexOf(s) == 0 || s.contains(uri)) {
 					return true;
 				}
 			} else if (uri.equals(s)) {

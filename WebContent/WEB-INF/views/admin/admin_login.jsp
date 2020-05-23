@@ -20,9 +20,7 @@
       <div class="background_overlay"></div>
       <div id="login_header">
         <h1>
-          <a href="#">
-            <span>쿠앤크<strong>관리자</strong></span></a
-          >
+          <a href="<%=cp%>"><span>쿠앤크<strong>관리자</strong></span></a>
         </h1>
       </div>
       <div id="login_content">
