@@ -124,7 +124,7 @@ public class MainServlet extends EspressoServlet {
 			int[] pages = pager.paging(rows, currentPage, totalPage);
 			List<OrderHistoryDTO> list = dao.listOrderHistory(statusNum, pager.getOffset(currentPage, rows), rows);
 			//ÆäÀÌÂ¡ °ü·Ã attributes »ðÀÔ
-			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + "/" +uri , "", attributes);
+			setPagerAttributes(dataCount, currentPage, totalPage, pages, apiPath + "/" +uri , "", rows, attributes);
 			attributes.put(ATTRIBUTE_DASHBOARD_STATUS_DTO, dashboardDTO);
 			attributes.put(ATTRIBUTE_ORDER_HISTORY, list);
 			attributes.put(ATTRIBUTE_STATUS_NUM, statusNum);
