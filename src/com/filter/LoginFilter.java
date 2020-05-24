@@ -64,7 +64,7 @@ public class LoginFilter implements Filter {
 		String uri = req.getRequestURI();
 		String cp = req.getContextPath();
 		uri = uri.substring(cp.length());
-		if(uri.substring(uri.length()-1).equals("/")) {
+		if(uri.length()-1>0 && uri.substring(uri.length()-1).equals("/")) {
 			uri = uri.substring(0,-1);
 		}
 

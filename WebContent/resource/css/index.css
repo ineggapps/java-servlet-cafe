@@ -24,7 +24,7 @@
 	width:300px;
 	height:209px;
 	top:15%;
-	right:20%;
+	right:10%;
 }
 .pic_your_coffee_desc{
 	position:absolute;
@@ -32,7 +32,7 @@
 	width:400px;
 	height:165px;
 	top:50%;
-	right:20%;
+	right:10%;
 }
 .text_hidden{
 	text-indent:-10000em;
@@ -41,7 +41,7 @@
 .intro_pic_bg .button_link{
 	position:absolute;
 	bottom:20%;
-	right:20%;	
+	right:10%;	
 }
 
 .button_link{
