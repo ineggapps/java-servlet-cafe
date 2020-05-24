@@ -35,36 +35,17 @@ SELECT menuName, od.menuNum, thumbnail, SUM(quantity) quantity
 from order_detail od
 JOIN order_history oh ON od.orderNum = oh.orderNum
 JOIN menu mn ON od.menuNum = mn.menuNum
-WHERE TO_CHAR(order_date,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+WHERE TO_CHAR(order_date,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND cancelNum IS NULL
 group by (od.menuNum, menuName, thumbnail)
 ORDER BY quantity DESC)) WHERE rnum=1 ), (SELECT SUM(unitPrice*quantity) todayTotalSales 
 FROM order_detail od
 JOIN order_history oh ON od.orderNum = oh.orderNum
-WHERE TO_CHAR(order_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD'));
+WHERE TO_CHAR(order_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND cancelNum IS NULL);
 
 
 
 
 --연습
-
---오늘의 베스트 셀러와 매출액
-SELECT (
--- 오늘의 베스트 셀러
-SELECT menuName todayMenuName FROM(
-SELECT rownum rnum, menuName FROM (
-SELECT menuName, od.menuNum, COUNT(od.menuNum) count
-from order_detail od
-JOIN order_history oh ON od.orderNum = oh.orderNum
-JOIN menu mn ON od.menuNum = mn.menuNum
-WHERE TO_CHAR(order_date,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
-group by (od.menuNum, menuName)
-ORDER BY count DESC)) WHERE rnum=1 ) menuName,
---오늘의 매출액
-(SELECT SUM(unitPrice) 
-FROM order_detail od
-JOIN order_history oh ON od.orderNum = oh.orderNum
-WHERE TO_CHAR(order_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')) todayTotalSales
-FROM DUAL;
 
 --오늘의 매출 SQL
 SELECT SUM(unitPrice) 
