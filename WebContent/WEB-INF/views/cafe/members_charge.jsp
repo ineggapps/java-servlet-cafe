@@ -38,21 +38,20 @@
 		
 		function submit(){
 			
-			if(!confirm("충전하시겠습니까?")){
-				return;
-			}
 			
 			const f = document.chargeForm;
 	 		<c:if test="${mode=='register'}">
+			if(!confirm("등록하시겠습니까?")){
+				return;
+			}
 			f.action = "<%=cp%>/members/register.do";
+			f.submit();
 			</c:if>
 			<c:if test="${mode=='charge'}">
 			f.action = "<%=cp%>/members/charge_ok.do";
-			</c:if>
-			<c:if test="${mode=='close'}">
-			f.action = "<%=cp%>/members/close_ok.do";
-			</c:if>
-			
+			if(!confirm("충전하시겠습니까?")){
+				return;
+			}
 			for(let i=0;i<f.length;i++){
 				let type = f[i].getAttribute("type");
 				if(type=="radio" && f[i].checked){
@@ -62,6 +61,15 @@
 			}
 			
 			alert("충전 금액을 선택하세요.");
+			</c:if>
+			<c:if test="${mode=='close'}">
+			if(!confirm("정말 해지하시겠습니까?")){
+				return;
+			}
+			f.action = "<%=cp%>/members/close_ok.do";
+			f.submit();
+			</c:if>
+			
 		}
 		
     window.onload = function(){
