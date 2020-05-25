@@ -37,6 +37,7 @@ public class AuthServlet extends EspressoServlet {
 	private static final String JSP_JOIN = "/auth_join.jsp";
 
 	// COLUMN
+	private static final String PARAM_USER_NUM = "userNum";
 	private static final String PARAM_EMAIL1 = "email1";
 	private static final String PARAM_EMAIL2 = "email2";
 	private static final String PARAM_USER_ID = "userId";
@@ -87,9 +88,7 @@ public class AuthServlet extends EspressoServlet {
 			findPwdSubmit(req,resp);
 		} else if (uri.indexOf("/find_pwd_ok2.do")!=-1) {
 			findPwdForm2(req, resp);
-		} else if(uri.indexOf("/withdraw.do")!=-1) {
-			withdrawAccount(req, resp);
-		}
+		} 
 	}
 
 	// 로그인폼
@@ -191,7 +190,6 @@ public class AuthServlet extends EspressoServlet {
 
 	// 회원정보 수정 완료
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = "/WEB-INF/views/cafe/auth_mypage2.jsp";
 		SessionAuthInfo info = getSessionAuthInfo(req);
 
 		try {
@@ -201,18 +199,34 @@ public class AuthServlet extends EspressoServlet {
 			String userPwd = req.getParameter(PARAM_USER_PWD);
 			String nickname = req.getParameter(PARAM_NICKNAME);
 			String phone = req.getParameter(PARAM_PHONE);
-			int userNum = info.getUserNum();
+			int userNum = Integer.parseInt(req.getParameter(PARAM_USER_NUM));
+			String mode=req.getParameter("mode");
 
-			AuthDTO dto = new AuthDTO();
-			dto.setEmail(email1 + "@" + email2);
-			dto.setUserPwd(userPwd);
-			dto.setNickname(nickname);
-			dto.setPhone(phone);
-			dto.setUserNum(userNum);
-//			System.out.println(dto);
-
-			dao.updateMember(dto);
-			forward(req, resp, path);
+			if(mode.equals("update")) {
+				AuthDTO dto = new AuthDTO();
+				dto.setEmail(email1 + "@" + email2);
+				dto.setUserPwd(userPwd);
+				dto.setNickname(nickname);
+				dto.setPhone(phone);
+				dto.setUserNum(userNum);
+	
+				dao.updateMember(dto);
+			} else if(mode.equals("delete")){
+				int result=dao.deleteMember(userNum, userPwd);
+				if(result==0) {
+					String path = "/WEB-INF/views/cafe/auth_mypage.jsp";
+					req.setAttribute("mode", "main");
+					AuthDTO dto = dao.readMember(info.getUserId());
+					req.setAttribute("authDTO", dto);
+					forward(req, resp, path);
+					return;
+				}
+				
+				HttpSession session = req.getSession();
+				session.invalidate();
+			}
+			
+			resp.sendRedirect(contextPath + MAIN);
 
 
 		} catch (Exception e) {
@@ -233,7 +247,6 @@ public class AuthServlet extends EspressoServlet {
 	// 아이디 전송 (이름, 핸드폰번호)
 	protected void findIdSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	    String path = "/WEB-INF/views/cafe/auth_find_id2.jsp";
-		SessionAuthInfo info = getSessionAuthInfo(req);
 	      try {
 	         AuthDAO dao = new AuthDAO();
 	         String userName = req.getParameter("userName");
@@ -274,19 +287,6 @@ public class AuthServlet extends EspressoServlet {
 
 			forward(req, resp, path);
 			
-			/*
-				// System.out.println(userPwd + "\n" + ".." + phone);
-				req.setAttribute("userPwd", userPwd);
-				forward(req, resp, path);
-		
-			
-	         if(userPwd==null) {
-		            String s = "해당되는 정보가 없습니다.";
-		            req.setAttribute("message", s);
-		            forward(req, resp, "/WEB-INF/views/auth/find_pwd2.jsp");
-		            return;
-		         }
-			*/	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -307,26 +307,9 @@ public class AuthServlet extends EspressoServlet {
 		
 		forward(req, resp, path); 
 	}
-	
-	
+	// 아이디 중복 검사
 	protected int memberIdCheck(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 아이디 중복 검사
 		int result=0;
 		return result;
 	}
-	   
-	protected void withdrawAccount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = "/main";
-		try {
-			SessionAuthInfo info = getSessionAuthInfo(req);
-			AuthDAO dao = new AuthDAO();
-			dao.deleteMember(info.getUserNum());
-			forward(req, resp, path);
-		} catch (Exception e) {
-			e.printStackTrace();
-			resp.sendRedirect(apiPath+ API_MY_PAGE);
-		}
-		
-	}	
-
 }

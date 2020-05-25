@@ -14,15 +14,37 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/authentication.css" />
-    <script>
-	    function autoFormatPhone(){
-			const f = document.joinForm;
-			f.phone.value = f.phone.value.replace(/\-/gi,"");
-		}
-	    
-	    window.onload = function(){
-	    	autoFormatPhone();
-	    }
+    
+    <script type="text/javascript">
+    function send_ok(mode){
+    	var f=document.memberForm;
+
+    	if(!f.userPwd.value && mode=='delete'){
+    		alert("비밀번호를 입력하셔야 탈퇴하실 수 있습니다.");
+    		return;
+    	}
+    	
+    	if(mode=='update' && (!f.userPwd.value || !f.userPwdConfirm.value)){
+    		alert("비밀번호를 입력하셔야 회원정보를 수정하실 수 있습니다.");
+    		return;
+    	}
+    	
+    	if(f.userPwd.value != f.userPwdConfirm.value){
+    		alert("비밀번호란이 서로 일치하지 않습니다.");
+    		f.userPwd.focus();
+    		return;
+    	}
+    	
+    	if(mode=="delete"){
+    		if(!confirm("회원을 탈퇴하시겠습니까?")){
+    			return;
+    		}
+    	}
+    	
+    	f.mode.value = mode;
+    	f.submit();
+    	
+    }
     </script>
   </head>
   <body>
@@ -40,7 +62,7 @@
               </div>
             </div>
             <div class="row">
-              <form name="joinForm" action="<%=cp%>/auth/mypage_ok.do" method="post">
+              <form name="memberForm" action="<%=cp%>/auth/mypage_ok.do" method="post">
                 <div class="joinbox">
                   <div class="component_wrap">
                     <div class="agreement_box">
@@ -74,13 +96,14 @@
                       </div>
                       
                       <div>
-                         <button type="submit" name="btn">회원탈퇴</button>
+                         <button type="button" name="btn" onclick="send_ok('delete')">회원탈퇴</button>
                       </div>
                       
                     </div>
                     <div class="join_item_title submit">
                       <input type="hidden" name="userNum" value="${authDTO.userNum}">
-                      <button type="submit" name="btn" class="navy_button">확인</button>
+                      <input type="hidden" name = "mode">
+                      <button type="button" name="btn" class="navy_button" onclick="send_ok('update')">확인</button>
                     </div>
                   </div>
                 </div>

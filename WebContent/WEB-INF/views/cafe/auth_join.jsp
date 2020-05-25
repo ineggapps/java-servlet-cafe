@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/authentication.css" />
-    <script src="<%=cp %>/resource/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="<%=cp %>/resource/js/jquery-3.5.1.min.js"></script>
     <script type="text/javascript">
     	
 		function checkSubmit(){

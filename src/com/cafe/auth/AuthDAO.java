@@ -132,31 +132,6 @@ public class AuthDAO {
 		return result;
 	}
 
-	// 회원탈퇴
-	public void deleteMember(int userNum, String userPwd) {
-		PreparedStatement pstmt = null;
-		Connection conn = DBCPConn.getConnection();
-		String sql;
-
-		try {
-			sql = "UPDATE member SET enabled=0 WHERE userNum=?, userPwd=?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, userNum);
-			pstmt.setString(2, userPwd);
-			pstmt.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (Exception e2) {
-				}
-			}
-			DBCPConn.close(conn);
-		}
-	}
-
 	// 아이디 찾기 (이름, 핸드폰번호)
 	protected String findId(String userName, String phone) throws ServletException, IOException {
 		Connection conn = DBCPConn.getConnection();
@@ -288,6 +263,28 @@ public class AuthDAO {
 		return result;
 	}
 
+	public int deleteMember(int userNum, String userPwd) {
+		int result = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql = "UPDATE member SET enabled=0 WHERE userNum=? and userPwd=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userNum);
+			pstmt.setString(2, userPwd);
+			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
+
+			System.out.println(userNum + "," + userPwd);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBCPConn.close(conn);
+
+		}
+		return result;
+	}
 }
 /*
  * protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp)
