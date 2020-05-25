@@ -82,7 +82,7 @@
 			   				</tr>
 			   			</table>
             			
-			   			
+			   <c:if test="${sessionScope.member.admin==true}">
 			   <table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
 			   		<tr height="20px">
 			      		<td align="left">
@@ -93,6 +93,7 @@
 			        	</td>
 			     	</tr>
 			  		</table>				
+			   </c:if>
               		</div>
 		    	</div>
 		  	</div>
