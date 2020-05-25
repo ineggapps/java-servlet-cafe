@@ -347,7 +347,6 @@ public class OrderDAO {
 		}
 		sql.append(" FROM dual");
 		try {
-			System.out.println(sql.toString());
 			pstmt = conn.prepareStatement(sql.toString());
 			int idx = 1;
 			for (int i = 1; i <= AdminOrderDAO.STATUS.length; i++) {

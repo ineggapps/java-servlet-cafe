@@ -63,12 +63,9 @@ public class AuthDAO {
 					+ "LEFT OUTER JOIN member_admin admin ON m.userNum = admin.userNum "
 					+ "WHERE enabled=1 and userId = ?";
 			try {
-				long start = System.currentTimeMillis();
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, userId);
 				rs = pstmt.executeQuery();
-				long end = System.currentTimeMillis();
-				System.out.println((end - start));
 				if (rs.next()) {
 					int userNum = rs.getInt("userNum");
 					String email = rs.getString("email");
