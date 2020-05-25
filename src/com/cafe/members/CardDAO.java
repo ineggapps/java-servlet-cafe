@@ -50,12 +50,7 @@ public class CardDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return cardNum;
@@ -90,12 +85,7 @@ public class CardDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		return count;
 	}
@@ -140,12 +130,7 @@ public class CardDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return list;
@@ -188,12 +173,7 @@ public class CardDAO {
 					} catch (Exception e2) {
 					}
 				}
-				try {
-					if (!conn.isClosed()) {
-						DBCPConn.close(conn);
-					}
-				} catch (Exception e2) {
-				}
+				DBCPConn.close(conn);
 			}
 
 			return list;
@@ -236,12 +216,7 @@ public class CardDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					conn.close();
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		return dto;
 	}
@@ -290,12 +265,7 @@ public class CardDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return dto;
@@ -345,12 +315,7 @@ public class CardDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return result;
@@ -377,12 +342,7 @@ public class CardDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if(!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		
 		return result;

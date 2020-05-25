@@ -47,12 +47,7 @@ public class AdminAuthDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		return dto;
 	}

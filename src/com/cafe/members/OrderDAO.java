@@ -45,12 +45,7 @@ public class OrderDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		return count;
 	}
@@ -157,12 +152,7 @@ public class OrderDAO {
 			}
 			returnDBResources(pstmt, rs);
 			// ¿¬°á ´Ý±â
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return result;
@@ -198,12 +188,7 @@ public class OrderDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		return count;
 	}
@@ -272,12 +257,7 @@ public class OrderDAO {
 		} finally {
 			returnDBResources(pstmt, rs);
 			returnDBResources(pstmtSub, rsSub);
-			try {
-				if (!conn.isClosed()) {
-					conn.close();
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return list;
@@ -343,12 +323,7 @@ public class OrderDAO {
 		} finally {
 			returnDBResources(pstmt, rs);
 			returnDBResources(pstmtSub, rsSub);
-			try {
-				if (!conn.isClosed()) {
-					conn.close();
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return list;
@@ -401,12 +376,7 @@ public class OrderDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return dto;

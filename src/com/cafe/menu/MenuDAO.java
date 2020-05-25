@@ -37,12 +37,7 @@ public class MenuDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if(!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		
 		return result;
@@ -78,12 +73,7 @@ public class MenuDAO {
 				} catch (SQLException e) {
 				}
 			}
-			try {
-				if(!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		
 		return result;
@@ -120,12 +110,7 @@ public class MenuDAO {
 				} catch (SQLException e) {
 				}
 			}
-			try {
-				if(!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		
 		return result;
@@ -173,12 +158,7 @@ public class MenuDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if(!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		
 		return list;
@@ -225,12 +205,7 @@ public class MenuDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if(!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		
 		return list;
@@ -275,12 +250,7 @@ public class MenuDAO {
 				} catch (SQLException e) {
 				}
 			}
-			try {
-				if(!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		
 		return dto;
@@ -313,12 +283,7 @@ public class MenuDAO {
 				} catch (SQLException e) {
 				}
 			}
-			try {
-				if(!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		
 		return result;
@@ -344,12 +309,7 @@ public class MenuDAO {
 				} catch (SQLException e) {
 				}
 			}
-			try {
-				if(!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		
 		return result;

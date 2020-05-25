@@ -36,17 +36,7 @@ public class AuthDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				conn.close();
-			} catch (Exception e2) {
-			}
-			
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return result;
@@ -57,55 +47,58 @@ public class AuthDAO {
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		/*
-		 * SELECT member.userNum, email, userId, userPwd, userName, nickname,
-		 * TO_CHAR(created_date,'YYYY-MM-DD') created_date,
-		 * TO_CHAR(updated_date,'YYYY-MM-DD') updated_date, phone, enabled,
-		 * admin.userNum isAdmin FROM member LEFT OUTER JOIN member_admin admin ON
-		 * member.userNum = admin.userNum WHERE enabled=1 and member.userNum = 5;
-		 */
-		String sql = "SELECT m.userNum, email, userId, userPwd, userName, nickname, "
-				+ "TO_CHAR(created_date,'YYYY-MM-DD') created_date, TO_CHAR(updated_date,'YYYY-MM-DD') "
-				+ "updated_date, phone, enabled, admin.userNum isAdmin FROM member m "
-				+ "LEFT OUTER JOIN member_admin admin ON m.userNum = admin.userNum " + "WHERE enabled=1 and userId = ?";
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, userId);
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				int userNum = rs.getInt("userNum");
-				String email = rs.getString("email");
-				String userPwd = rs.getString("userPwd");
-				String userName = rs.getString("userName");
-				String nickname = rs.getString("nickname");
-				String created_date = rs.getString("created_date");
-				String updated_date = rs.getString("updated_date");
-				String phone = rs.getString("phone");
-				int enabled = rs.getInt("enabled");
-				boolean isAdmin = rs.getInt("isAdmin") > 0 ? true : false; // null이면 0으로 반환됨.
-				dto = new AuthDTO(userNum, email, userId, userPwd, userName, nickname, created_date, updated_date,
-						phone, enabled, isAdmin);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (Exception e2) {
-				}
-			}
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (Exception e2) {
-				}
-			}
+
+		synchronized (this) {
+
+			/*
+			 * SELECT member.userNum, email, userId, userPwd, userName, nickname,
+			 * TO_CHAR(created_date,'YYYY-MM-DD') created_date,
+			 * TO_CHAR(updated_date,'YYYY-MM-DD') updated_date, phone, enabled,
+			 * admin.userNum isAdmin FROM member LEFT OUTER JOIN member_admin admin ON
+			 * member.userNum = admin.userNum WHERE enabled=1 and member.userNum = 5;
+			 */
+			String sql = "SELECT m.userNum, email, userId, userPwd, userName, nickname, "
+					+ "TO_CHAR(created_date,'YYYY-MM-DD') created_date, TO_CHAR(updated_date,'YYYY-MM-DD') "
+					+ "updated_date, phone, enabled, admin.userNum isAdmin FROM member m "
+					+ "LEFT OUTER JOIN member_admin admin ON m.userNum = admin.userNum "
+					+ "WHERE enabled=1 and userId = ?";
 			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
+				long start = System.currentTimeMillis();
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, userId);
+				rs = pstmt.executeQuery();
+				long end = System.currentTimeMillis();
+				System.out.println((end - start));
+				if (rs.next()) {
+					int userNum = rs.getInt("userNum");
+					String email = rs.getString("email");
+					String userPwd = rs.getString("userPwd");
+					String userName = rs.getString("userName");
+					String nickname = rs.getString("nickname");
+					String created_date = rs.getString("created_date");
+					String updated_date = rs.getString("updated_date");
+					String phone = rs.getString("phone");
+					int enabled = rs.getInt("enabled");
+					boolean isAdmin = rs.getInt("isAdmin") > 0 ? true : false; // null이면 0으로 반환됨.
+					dto = new AuthDTO(userNum, email, userId, userPwd, userName, nickname, created_date, updated_date,
+							phone, enabled, isAdmin);
 				}
-			} catch (Exception e2) {
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (Exception e2) {
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (Exception e2) {
+					}
+				}
+				DBCPConn.close(conn);
 			}
 		}
 		return dto;
@@ -137,12 +130,7 @@ public class AuthDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		return result;
 	}
@@ -168,12 +156,7 @@ public class AuthDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 	}
 
@@ -209,12 +192,7 @@ public class AuthDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e) {
-			}
+			DBCPConn.close(conn);
 		}
 		return userId;
 
@@ -245,13 +223,7 @@ public class AuthDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e) {
-			}
+			DBCPConn.close(conn);
 		}
 		return result;
 	}
@@ -278,24 +250,19 @@ public class AuthDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (Exception e2) {
-				}
-			}
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
 				}
-			} catch (Exception e) {
 			}
+			DBCPConn.close(conn);
 		}
 		return x;
 	}
@@ -319,12 +286,7 @@ public class AuthDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		return result;
 	}

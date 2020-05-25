@@ -69,12 +69,7 @@ public class AdminOrderDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return dto;
@@ -121,12 +116,7 @@ public class AdminOrderDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return dto;
@@ -154,12 +144,7 @@ public class AdminOrderDAO {
 			e.printStackTrace();
 		}finally {
 			returnDBResources(pstmt, rs);
-			try {
-				if(!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		return count;
 	}
@@ -235,12 +220,7 @@ public class AdminOrderDAO {
 		} finally {
 			returnDBResources(pstmt, rs);
 			returnDBResources(pstmtSub, rsSub);
-			try {
-				if (!conn.isClosed()) {
-					conn.close();
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 
 		return list;
@@ -306,12 +286,7 @@ public class AdminOrderDAO {
 		} finally {
 			returnDBResources(pstmt, rs);
 			returnDBResources(pstmtSub, rsSub);
-			try {
-				if (!conn.isClosed()) {
-					conn.close();
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		
 		return list;
@@ -338,12 +313,8 @@ public class AdminOrderDAO {
 				} catch (Exception e2) {
 				}
 			}
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
+
 		}
 		return result;
 	}
@@ -415,12 +386,7 @@ public class AdminOrderDAO {
 			} catch (Exception e2) {
 			}
 			returnDBResources(pstmt, rs);
-			try {
-				if (!conn.isClosed()) {
-					DBCPConn.close(conn);
-				}
-			} catch (Exception e2) {
-			}
+			DBCPConn.close(conn);
 		}
 		return result;
 	}
