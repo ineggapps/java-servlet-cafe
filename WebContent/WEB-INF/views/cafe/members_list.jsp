@@ -62,6 +62,12 @@
                 </ul>
               </div>
             </div>
+            <c:if test="${fn:length(list)==0}">
+            <div class="row border_box"> 
+				<p class="title">아직 카드를 만들지 않았습니다.</p>
+             	<a href="<%=cp%>/members/register.do" class="single_button">카드 구경하러 가기</a>
+             </div>
+            </c:if>
             <div class="row">
             	<p:pager pages="${pages}" data_count="${dataCount}" total_page="${totalPage}" uri="${uri}" query="${query}" current_page="${currentPage}"/>
             </div>
