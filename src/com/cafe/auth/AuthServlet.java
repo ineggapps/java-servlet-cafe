@@ -1,18 +1,13 @@
 package com.cafe.auth;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.util.DBCPConn;
 import com.util.EspressoServlet;
 
 @WebServlet("/auth/*") 
@@ -35,10 +30,6 @@ public class AuthServlet extends EspressoServlet {
 	private static final String API_LOGOUT = "/logout.do";
 	private static final String API_JOIN = "/join.do";
 	private static final String API_JOIN_OK = "/join_ok.do";
-
-	private static final String API_FIND_EMAIL = "/find_email.do";
-	private static final String API_FIND_PASSWORD = "/find_password.do";
-
 	private static final String API_MY_PAGE = "/mypage.do";
 	
 	// JSP
@@ -46,18 +37,13 @@ public class AuthServlet extends EspressoServlet {
 	private static final String JSP_JOIN = "/auth_join.jsp";
 
 	// COLUMN
-	private static final String PARAM_USER_NUM = "userNum";
 	private static final String PARAM_EMAIL1 = "email1";
 	private static final String PARAM_EMAIL2 = "email2";
-	private static final String PARAM_EMAIL = "email";
 	private static final String PARAM_USER_ID = "userId";
 	private static final String PARAM_USER_PWD = "userPwd";
 	private static final String PARAM_USER_NAME = "userName";
 	private static final String PARAM_NICKNAME = "nickname";
-	private static final String PARAM_CREATED_DATE = "created_date";
-	private static final String PARAM_UPDATED_DATE = "updated_date";
 	private static final String PARAM_PHONE = "phone";
-	private static final String PARAM_ENABLED = "enabled";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
