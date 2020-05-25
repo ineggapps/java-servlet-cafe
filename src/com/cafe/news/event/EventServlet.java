@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.cafe.auth.SessionAuthInfo;
 import com.util.EspressoServlet;
@@ -61,7 +62,7 @@ public class EventServlet extends EspressoServlet {
 	private static final String JSP_LIST = "/news_event_list.jsp";
 	private static final String JSP_WRITE = "/news_event_write.jsp";
 	private static final String JSP_UPDATE = JSP_WRITE;
-	private static final String JSP_VIEW = "/news_event_view.jsp";
+	private static final String JSP_VIEW = "/news_event_view2.jsp";
 
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -81,6 +82,8 @@ public class EventServlet extends EspressoServlet {
 			updateForm(req, resp);
 		} else if (uri.indexOf(API_UPDATE_OK) != -1) {
 			updateSubmit(req, resp);
+		} else if (uri.indexOf(API_DELETE) != -1) {
+			delete(req, resp);
 		}
 	}
 
@@ -90,99 +93,141 @@ public class EventServlet extends EspressoServlet {
 		EventDAO dao = new EventDAO();
 		MyUtil util = new MyUtil();
 		String cp = req.getContextPath();
-		
+
 		String page = req.getParameter("page");
 		int current_page = 1;
-		if(page!=null) {
-			current_page=Integer.parseInt(page);
+		if (page != null) {
+			current_page = Integer.parseInt(page);
 		}
-		
+
 		String condition = req.getParameter("condition");
 		String keyword = req.getParameter("keyword");
-		if(condition==null) {
-			condition="subject";
-			keyword="";
+		if (condition == null) {
+			condition = "subject";
+			keyword = "";
 		}
-		if(req.getMethod().equalsIgnoreCase("GET")) {
-		keyword = URLDecoder.decode(keyword, "utf-8");
+		if (req.getMethod().equalsIgnoreCase("GET")) {
+			keyword = URLDecoder.decode(keyword, "utf-8");
 		}
-		
+
 		// 전체 데이터 개수
 		int dataCount;
-		
-		if(keyword.length()!=0) {
+
+		if (keyword.length() != 0) {
 			dataCount = dao.dataCount(condition, keyword);
 		} else {
 			dataCount = dao.dataCount();
 		}
-		
+
 		// 전체 페이지 수
 		int rows = 10;
 		int total_page = util.pageCount(rows, dataCount);
-		if(current_page>total_page) {
-			current_page=total_page;
+		if (current_page > total_page) {
+			current_page = total_page;
 		}
-		
-		int offset = (current_page-1)*rows;
-		if(offset<0) offset=0;
-		
+
+		int offset = (current_page - 1) * rows;
+		if (offset < 0)
+			offset = 0;
+
 		List<EventDTO> list;
-		if(keyword.length()!=0) {
+		if (keyword.length() != 0) {
 			list = dao.listEvent(offset, rows, condition, keyword);
 		} else {
 			list = dao.listEvent(offset, rows);
 		}
-		
+
 		// 리스트 글번호
-		int listNum, n=0;
-		for(EventDTO dto : list) {
-			listNum = dataCount-(offset+n);
-			dto.setNum(listNum);
+		int listNum, n = 0;
+		for (EventDTO dto : list) {
+			listNum = dataCount - (offset + n);
+			dto.setListNum(listNum);
 			n++;
 		}
-		
-		String query="";
-		if(keyword.length()!=0) {
-			query = "condition="+condition+"&keyword="+URLEncoder.encode(keyword, "utf-8");
+
+		String query = "";
+		if (keyword.length() != 0) {
+			query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
 		}
-		
+
 		// 페이징
-		String listUrl = cp+API_LIST;
-		String articleUrl = cp+API_NAME + API_VIEW + "?page="+current_page;
-		if(query.length()!=0) {
-			listUrl+="?"+query;
-			articleUrl=articleUrl+"&"+query;
+		String listUrl = apiPath + API_LIST;
+		String articleUrl = cp + API_NAME + API_VIEW + "?page=" + current_page;
+		if (query.length() != 0) {
+			listUrl += "?" + query;
+			articleUrl += "&" + query;
 		}
-		
+
 		String paging = util.paging(current_page, total_page, listUrl);
-		
+
 		// list.jsp 파일에 데이터 넘겨주기
 		req.setAttribute(ATTRIBUTE_LIST, list);
 		req.setAttribute(ATTRIBUTE_PAGING, paging);
-		req.setAttribute(PARAM_PAGE, page);
+		req.setAttribute(PARAM_PAGE, current_page);
 		req.setAttribute(ATTRIBUTE_TOTAL_PAGE, total_page);
 		req.setAttribute(ATTRIBUTE_DATA_COUNT, dataCount);
 		req.setAttribute(ATTRIBUTE_ARTICLE_URL, articleUrl);
 		req.setAttribute("condition", condition);
 		req.setAttribute("keyword", keyword);
-			
+		req.setAttribute("rows", rows);
+
 		forward(req, resp, path);
 	}
 
 	// 이벤트 보기
 	protected void view(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_VIEW;
+		try {
+			int num = Integer.parseInt(req.getParameter("num"));
+			String pageNum = req.getParameter("page");
+
+			EventDAO dao = new EventDAO();
+
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			if (condition == null) {
+				condition = "subject";
+				keyword = "";
+			}
+
+			keyword = URLDecoder.decode(keyword, "UTF-8");
+
+			String query = "page=" + pageNum;
+			if (keyword.length() != 0) {
+				query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+			}
+			// 조회수 증가
+			dao.ViewsCount(num);
+			// 게시글 가져오기
+			EventDTO dto = dao.readEvent(num);
+			if (dto == null) {
+				resp.sendRedirect(contextPath + "/news/event/list.do?" + query);
+				return;
+			}
+			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+
+			EventDTO preReadDto = dao.preReadEvent(num, condition, keyword);
+			EventDTO nextReadDto = dao.nextReadEvent(num, condition, keyword);
+			
+			req.setAttribute("dto", dto);
+			req.setAttribute("preReadDto", preReadDto);
+			req.setAttribute("nextReadDto", nextReadDto);
+			req.setAttribute("query", query);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		forward(req, resp, path);
 	}
 
 	// 이벤트 작성
 	protected void writeForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_WRITE;
+		req.setAttribute("mode", "write");
 		forward(req, resp, path);
 	}
-	
+
 	protected boolean isBlank(String str) {
-		if(str==null || str.length()==0) {
+		if (str == null || str.length() == 0) {
 			return true;
 		}
 		return false;
@@ -193,23 +238,24 @@ public class EventServlet extends EspressoServlet {
 		EventDTO dto = new EventDTO();
 		try {
 			SessionAuthInfo info = getSessionAuthInfo(req);
-			//info.isAdmin(); //true 관리자 false 일반 사용자
+		//	info.isAdmin(); // true 관리자 false 일반 사용자
 			String subject = req.getParameter("subject");
 			String content = req.getParameter("content");
 			String start_date = req.getParameter("start_date");
 			String end_date = req.getParameter("end_date");
 			
-			 System.out.println(subject);
-			if(isBlank(subject) || isBlank(content) || isBlank(start_date) || isBlank(end_date)) {
-				throw new Exception("게시물 내용이 입력되지 않았음");
+
+			if (isBlank(subject) || isBlank(content) || isBlank(start_date) || isBlank(end_date)) {
+				throw new Exception("게시물 내용이 입력되지 않았습니다.");
 			}
-			
+
 			dto.setUserNum(info.getUserNum());
 			dto.setSubject(subject);
 			dto.setContent(content);
 			dto.setStart_date(start_date);
 			dto.setEnd_date(end_date);
 			dao.insertEvent(dto);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -218,16 +264,91 @@ public class EventServlet extends EspressoServlet {
 
 	// 이벤트 수정
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = VIEWS + JSP_LIST;
-		forward(req, resp, path);
+		String path = VIEWS + JSP_WRITE;
+
+		try {
+			EventDAO dao = new EventDAO();
+			String cp = req.getContextPath();
+
+			// HttpSession session = req.getSession();
+
+			String pageNum = req.getParameter("page");
+			int num = Integer.parseInt(req.getParameter("num"));
+			EventDTO dto = dao.readEvent(num);
+
+			if (dto == null) {
+				resp.sendRedirect(cp + "/news/event/list.do?page=" + pageNum);
+				return;
+			}
+
+			req.setAttribute("mode", "update");
+			req.setAttribute("dto", dto);
+			req.setAttribute("page", pageNum);
+
+			forward(req, resp, path);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		EventDAO dao = new EventDAO();
+		String cp = req.getContextPath();
+
+		try {
+			HttpSession session = req.getSession();
+
+			String pageNum = req.getParameter("page");
+			if (req.getMethod().equalsIgnoreCase("GET")) {
+				resp.sendRedirect(cp + "/news/event/list.do?page=" + pageNum);
+				return;
+			}
+
+			EventDTO dto = new EventDTO();
+			dto.setSubject(req.getParameter("subject"));
+			dto.setContent(req.getParameter("content"));
+			dto.setStart_date(req.getParameter("start_date"));
+			dto.setEnd_date(req.getParameter("end_date"));
+
+			int num = Integer.parseInt(req.getParameter("num"));
+			dto.setNum(num);
+
+			dao.eventUpdate(dto);
+
+			resp.sendRedirect(cp + "/news/event/list.do?page=" + pageNum);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// 이벤트 지우기
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	//	EventDAO dao = new EventDAO();
-	//	String path = 
+		EventDAO dao = new EventDAO();
+		String cp = req.getContextPath();
+
+		HttpSession session = req.getSession();
+
+		String pageNum = req.getParameter("page");
+		int num = Integer.parseInt(req.getParameter("num"));
+		String condition = req.getParameter("condition");
+		String keyword = req.getParameter("keyword");
+
+		if (condition == null) {
+			condition = "subject";
+			keyword = "";
+		}
+		keyword = URLDecoder.decode(keyword, "utf-8");
+
+		String query = "page=" + pageNum;
+		if (keyword.length() != 0) {
+			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+		}
+
+		dao.eventdelete(num);
+
+		resp.sendRedirect(cp + "/news/event/list.do?" + query);
+
 	}
 }

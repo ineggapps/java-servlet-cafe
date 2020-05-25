@@ -142,7 +142,8 @@ public class EventDAO {
 				sb.append(" TO_CHAR(start_date, 'YYYY-MM-DD') start_date, ");
 				sb.append(" TO_CHAR(end_date, 'YYYY-MM-DD') end_date, ");
 				sb.append(" FROM event e ");
-				sb.append(" JOIN member m ON m.userNum = e.userNum ");
+				sb.append(" JOIN member m ON m.userNum = e.userNum "
+						+ " ORDER BY num DESC");
 				
 				if(condition.equalsIgnoreCase("created")) {
 					keyword = keyword.replaceAll("-", "");
@@ -168,6 +169,7 @@ public class EventDAO {
 					dto.setSubject(rs.getString("subject"));
 					dto.setUserName(rs.getString("userName"));
 					dto.setViews(rs.getInt("views"));
+					dto.setCreated_date(rs.getString("created_date"));
 					dto.setStart_date(rs.getString("start_date"));
 					dto.setEnd_date(rs.getString("end_date"));
 					
@@ -210,8 +212,8 @@ public class EventDAO {
 			sb.append(" TO_CHAR(end_date, 'YYYY-MM-DD') end_date ");
 			sb.append(" FROM event e ");
 			sb.append(" JOIN member m ON m.userNum = e.userNum ");
-			sb.append(" ORDER BY e.userNum DESC ");
-			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
+			sb.append(" ORDER BY num DESC ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, offset);
@@ -262,7 +264,7 @@ public class EventDAO {
 		
 		
 		try {
-			sql="SELECT num, subject, userName, content, views, created_date FROM event WHERE num=?";
+			sql="SELECT num, subject, content, views, created_date FROM event WHERE num=?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -275,7 +277,7 @@ public class EventDAO {
 				dto.setNum(rs.getInt("num"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setViews(rs.getInt("views"));
-				dto.setUserName(rs.getString("userName"));
+				/* dto.setUserName(rs.getString("userName")); */
 				dto.setContent(rs.getString("content"));
 				dto.setCreated_date(rs.getString("created_date"));
 			}
@@ -302,7 +304,34 @@ public class EventDAO {
 	}
 
 	// 조회수 증가
-//	public 
+	public int ViewsCount(int num) {
+		int result = 0;
+		
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt=null;
+		String sql;
+
+		try {
+			sql = "UPDATE event SET views = views+1 WHERE num=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			DBCPConn.close(conn);
+		}
+		
+		return result;
+	}
 	
 	
 	// 이전글
@@ -316,15 +345,15 @@ public class EventDAO {
         try {
         	if(keyword!=null && keyword.length() != 0) {
                 sb.append(" SELECT ROWNUM, tb.* FROM ( ");
-                sb.append("     SELECT num, subject FROM event ");
+                sb.append("   SELECT num, subject FROM event ");
                 if(condition.equalsIgnoreCase("created")) {
                 	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-                	sb.append("     WHERE (TO_CHAR(created_date, 'YYYYMMDD') = ?) ");
+                	sb.append("  WHERE (TO_CHAR(created_date, 'YYYYMMDD') = ?) ");
                 } else {
-    				sb.append("     WHERE (INSTR(" + condition + ", ?) >= 1) ");
+    				sb.append("  WHERE (INSTR(" + condition + ", ?) >= 1) ");
                 }
-                sb.append("             AND (num > ? ) ");
-                sb.append("         ORDER BY num ASC ");	
+                sb.append("   AND (num > ? ) ");
+                sb.append("   ORDER BY num ASC ");	
                 sb.append(" ) tb WHERE ROWNUM=1 ");
 
                 pstmt=conn.prepareStatement(sb.toString());
@@ -332,7 +361,7 @@ public class EventDAO {
                 pstmt.setInt(2, num);
 			} else {
                 sb.append(" SELECT ROWNUM, tb.* FROM ( ");
-                sb.append("    SELECT num, subject FROM event ");
+                sb.append("   SELECT num, subject FROM event ");
                 sb.append("    WHERE num > ? ");		
                 sb.append("    ORDER BY num ASC ");		
                 sb.append(" ) tb WHERE ROWNUM=1 ");		
@@ -383,15 +412,15 @@ public class EventDAO {
 	        try {
 	        	if(keyword!=null && keyword.length() != 0) {
 	                sb.append(" SELECT ROWNUM, tb.* FROM ( ");
-	                sb.append("     SELECT num, subject FROM event ");
+	                sb.append("   SELECT num, subject FROM event ");
 	                if(condition.equalsIgnoreCase("created")) {
 	                	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-	                	sb.append("     WHERE (TO_CHAR(created_date, 'YYYYMMDD') = ?) ");
+	                	sb.append("   WHERE (TO_CHAR(created_date, 'YYYYMMDD') = ?) ");
 	                } else {
-	    				sb.append("     WHERE (INSTR(" + condition + ", ?) >= 1) ");
+	    				sb.append("   WHERE (INSTR(" + condition + ", ?) >= 1) ");
 	                }
-	                sb.append("             AND (num < ? ) ");
-	                sb.append("         ORDER BY num DESC ");	
+	                sb.append("   AND (num < ? ) ");
+	                sb.append("  ORDER BY num DESC ");	
 	                sb.append(" ) tb WHERE ROWNUM=1 ");
 
 	                pstmt=conn.prepareStatement(sb.toString());
@@ -399,9 +428,9 @@ public class EventDAO {
 	                pstmt.setInt(2, num);
 				} else {
 	                sb.append(" SELECT ROWNUM, tb.* FROM ( ");
-	                sb.append("    SELECT num, subject FROM event ");
-	                sb.append("    WHERE num < ? ");		
-	                sb.append("    ORDER BY num DESC ");		
+	                sb.append("   SELECT num, subject FROM event ");
+	                sb.append("   WHERE num < ? ");		
+	                sb.append("   ORDER BY num DESC ");		
 	                sb.append(" ) tb WHERE ROWNUM=1 ");		
 
 	                pstmt=conn.prepareStatement(sb.toString());
@@ -438,13 +467,13 @@ public class EventDAO {
 		}
 	
 	// 이벤트 수정
-	public void Eventupdate(EventDTO dto) {
+	public void eventUpdate(EventDTO dto) {
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
-			sql="UPDATE event SET subject=?, content=? start_date=?, end_date=? WHERE num=?";
+			sql="UPDATE event SET subject=?, content=?, start_date=?, end_date=? WHERE num=?";
 		
 			pstmt = conn.prepareStatement(sql);
 			
@@ -453,6 +482,7 @@ public class EventDAO {
 			pstmt.setString(3, dto.getStart_date());
 			pstmt.setString(4, dto.getEnd_date());
 			pstmt.setInt(5, dto.getNum());
+			pstmt.executeUpdate();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -468,7 +498,7 @@ public class EventDAO {
 	}
 	
 	// 이벤트 삭제
-	public int Eventdelete(int num) {
+	public int eventdelete(int num) {
 		int result = 0;
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;

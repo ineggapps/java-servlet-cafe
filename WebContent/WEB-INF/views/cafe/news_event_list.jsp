@@ -1,9 +1,16 @@
+<%@page import="java.net.URLEncoder"%>
+<%@page import="com.cafe.news.event.EventDTO"%>
+<%@page import="java.util.List"%>
+<%@page import="java.net.URLDecoder"%>
+<%@page import="com.util.MyUtil"%>
+<%@page import="com.cafe.news.event.EventDAO"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	String cp = request.getContextPath();
+
 %>
 
 
@@ -16,14 +23,6 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/event.css" />
-
-<script type="text/javascript">
-function eventList() {
-
-} 
-
-
-</script>
 
   </head>
   <body>
@@ -55,32 +54,49 @@ function eventList() {
 						<div class="nav">홈 &nbsp;〉 쿠앤크소식 &nbsp;〉이벤트</div>
 					</div>
 				
+					
 				    <div>
-            		<form>
             			<table style="width: 100%; margin: 20px auto; border-spacing: 0px;">
-              				<tr>
-              					<td width="20%">번호</td>
-              					<td width="40%"><a href="/">제목</a></td>
-              					<td width="20%">관리자</td>
+						    <tr>
+              					<td width="20%">번&nbsp;호</td>
+              					<td width="40%">제&nbsp;목</td>
+              					<td width="20%">이&nbsp;름</td>
               					<td width="20%">조회수</td>
-              				</tr>
+              				</tr> 	
+              				
               				<c:forEach items="${list}" var="dto">
               				<tr>
-              					<td width="20%">${dto.num}</td>
-              					<td width="40%"><a href="/">${dto.subject}</a></td>
+              					<td width="20%">${dto.listNum}</td>
+              					<td width="40%"><a href="<%=cp%>/news/event/view.do?num=${dto.num}&page=${page}">${dto.subject}</a></td>
               					<td width="20%">${dto.userName}</td>
               					<td width="20%">${dto.views}</td>
               				</tr>
-              				</c:forEach>
+              				</c:forEach>              				
             			</table>
-						
-						<div>
-							<a href="<%=cp%>/news/event/write.do">등록하기</button>
-						</div>
-            		</form>
-				    </div>   
-                 </div>
-		      </div>
+            			
+						<table style="width: 100%; border-spacing: 0px;">
+							<tr height="35">
+								<td align="center">
+			        				${dataCount==0?"등록된 게시물이 없습니다.":paging}
+								</td>
+			   				</tr>
+			   			</table>
+            			
+			   			
+			   <table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			   		<tr height="20px">
+			      		<td align="left">
+			          		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/news/event/list.do';">새로고침</button>
+			      		</td>
+			      		<td align="right">
+			          		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/news/event/write.do';">등록하기</button>
+			        	</td>
+			     	</tr>
+			  		</table>				
+              		</div>
+		    	</div>
+		  	</div>
+		      <%-- Content 영역 끝 --%>
            </article>
         </div>
       </main>

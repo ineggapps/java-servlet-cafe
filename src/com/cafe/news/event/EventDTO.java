@@ -2,6 +2,7 @@ package com.cafe.news.event;
 
 public class EventDTO {
 	private int num;
+	private int listNum;
 	private int userNum;
 	private String userName;
 	private String subject;
@@ -17,6 +18,13 @@ public class EventDTO {
 	}
 	public void setNum(int num) {
 		this.num = num;
+	}
+	
+	public int getListNum() {
+		return listNum;
+	}
+	public void setListNum(int listNum) {
+		this.listNum = listNum;
 	}
 	public int getUserNum() {
 		return userNum;

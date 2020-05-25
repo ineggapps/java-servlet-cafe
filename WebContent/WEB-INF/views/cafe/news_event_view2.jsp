@@ -1,3 +1,7 @@
+<%@page import="java.net.URLEncoder"%>
+<%@page import="com.cafe.news.event.EventDTO"%>
+<%@page import="com.cafe.news.event.EventDAO"%>
+<%@page import="java.net.URLDecoder"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -14,6 +18,8 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/board_notice.css" />
+    <link rel="stylesheet" href="<%=cp%>/resource/css/event.css" />
+    
     <style type="text/css">
       .notice-board {
         min-height: 1000px;
@@ -59,7 +65,9 @@
         line-height: 50px;
         border-bottom: 1px solid #d9d9d9;
       }
-    </style>
+        
+    </style>  
+    
   </head>
   <body>
     <div id="wrap">
@@ -81,27 +89,41 @@
                   <div class="nav-bar">홈&nbsp; 〉 쿠앤크소식&nbsp; 〉 이벤트</div>
                 </div>
                 <div class="view-title">
-                  <div class="s1">쿠앤크 멤버스 이용약관 변경 안내</div>
-                  <span class="s2">2020-04-21</span>
+                  <div class="s1">${dto.subject}</div>
+                  <span class="s2">${dto.created_date }</span>
                 </div>
                 <div class="view-con">
-                  <p>안녕하세요. 쿠키 앤 크림입니다.</p>
-                  <p>쿠키 앤 크림을 이용해주시는 고객님들께 감사드리며,</p>
-                  <p>
-                    쿠앤크 멤버스 약관이 개정되어 변경내용에 대해 안내드리니 이용에 참고하여 주시기
-                    바랍니다.
-                  </p>
+                  ${dto.content}
                 </div>
                 <div class="view-page">
                   <ul class="vp">
                     <li class="pp">이전글</li>
-                    <li class="pt"><a href="#">제목2</a></li>
+                    <c:if test="${not empty preReadDto}">
+                    <li class="pt"><a href="<%=cp%>/news/event/view.do?${query}&num=${preReadDto.num}">${preReadDto.subject}</a></li>
+					</c:if>
+                    <c:if test="${empty preReadDto}">
+						<li class="pt"> 이전 글이 없습니다.</li>
+                    </c:if>
                   </ul>
                   <ul class="vp">
                     <li class="pp">다음글</li>
-                    <li class="pt">다음글이 없습니다.</li>
-                    <li><a href="notice_list1.html">목록으로</a></li>
+                    <c:if test="${not empty nextReadDto}">
+                    <li class="pt"><a href="<%=cp%>/news/event/view.do?${query}&num=${nextReadDto.num}">${nextReadDto.subject}</a></li>
+					</c:if>
+                    <c:if test="${empty nextReadDto}">
+                    <li class="pt"> 다음글이 없습니다.</li>
+                    <li><a href="<%=cp%>/news/event/list.do">목록으로</a></li>
+                    </c:if>
                   </ul>
+                  <table>
+                  	<tr align="center">
+                  		<td><button type="button" onclick="javascript:location.href='<%=cp%>/news/event/update.do?num=${dto.num}&${query}';">수정</button></td>
+                  		<td><button type="button" onclick="javascript:location.href='<%=cp%>/news/event/delete.do?num=${dto.num}&${query}';">삭제</button></td>
+              
+                  		<td><button type="button" onclick="javascript:location.href='<%=cp%>/news/event/list.do';">목록</button></td>
+                  	</tr>
+                  </table>
+                 
                 </div>
               </div>
             </div>
