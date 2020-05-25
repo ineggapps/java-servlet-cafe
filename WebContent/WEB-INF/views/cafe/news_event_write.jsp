@@ -1,7 +1,3 @@
-<%@page import="java.net.URLEncoder"%>
-<%@page import="com.cafe.news.event.EventDTO"%>
-<%@page import="com.cafe.news.event.EventDAO"%>
-<%@page import="java.net.URLDecoder"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -19,7 +15,6 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/board_notice.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/event.css" />
-    
     <style type="text/css">
       .notice-board {
         min-height: 1000px;
@@ -65,11 +60,19 @@
         line-height: 50px;
         border-bottom: 1px solid #d9d9d9;
       }
-        
-    </style>  
+      
+    </style>
     
+    <script type="text/javascript">
+  		function searchEvent() {
+  			var f = document.searchFrom;
+  			f.submit();
+  		}  
+    </script>
+  
   </head>
   <body>
+  
     <div id="wrap">
       <header id="header">
         <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
@@ -77,57 +80,61 @@
       <main id="content">
         <div id="main">
           <article id="main_container">
+          <form action="${mode=='update'?'update_ok.do':'write_ok.do'}" method="post">
             <!-- Content영역 -->
             <div class="notice-board">
+              
               <div class="noticelist-img">
                 <p class="line1">이벤트</p>
                 <span class="line2">ALWAYS BESIDE YOU,</span>
                 <span class="line3"> COOKIE&amp;CREAM</span>
               </div>
-              <div class="board-list">
-                <div class="navigation">
-                  <div class="nav-bar">홈&nbsp; 〉 쿠앤크소식&nbsp; 〉 이벤트</div>
-                </div>
-                <div class="view-title">
-                  <div class="s1">${dto.subject}</div>
-                  <span class="s2">${dto.created_date }</span>
-                </div>
-                <div class="view-con">
-                  ${dto.content}
-                </div>
-                <div class="view-page">
-                  <ul class="vp">
-                    <li class="pp">이전글</li>
-                    <c:if test="${not empty preReadDto}">
-                    <li class="pt"><a href="<%=cp%>/news/event/view.do?${query}&num=${preReadDto.num}">${preReadDto.subject}</a></li>
-					</c:if>
-                    <c:if test="${empty preReadDto}">
-						<li class="pt"> 이전 글이 없습니다.</li>
-                    </c:if>
-                  </ul>
-                  <ul class="vp">
-                    <li class="pp">다음글</li>
-                    <c:if test="${not empty nextReadDto}">
-                    <li class="pt"><a href="<%=cp%>/news/event/view.do?${query}&num=${nextReadDto.num}">${nextReadDto.subject}</a></li>
-					</c:if>
-                    <c:if test="${empty nextReadDto}">
-                    <li class="pt"> 다음글이 없습니다.</li>
-                    <li><a href="<%=cp%>/news/event/list.do">목록으로</a></li>
-                    </c:if>
-                  </ul>
-                  <table>
-                  	<tr align="center">
-                  		<td><button type="button" onclick="javascript:location.href='<%=cp%>/news/event/update.do?num=${dto.num}&${query}';">수정</button></td>
-                  		<td><button type="button" onclick="javascript:location.href='<%=cp%>/news/event/delete.do?num=${dto.num}&${query}';">삭제</button></td>
               
-                  		<td><button type="button" onclick="javascript:location.href='<%=cp%>/news/event/list.do';">목록</button></td>
-                  	</tr>
-                  </table>
-                 
+              <div class="eventBox">
+                <div class="nav-box">
+                  <div class="nav">홈&nbsp; 〉 쿠앤크소식&nbsp; 〉이벤트</div>
                 </div>
-              </div>
+            	
+            	<div>
+            		<h3><span style="font-family: Webdings"></span> 이벤트 ${mode=='update'?"수정":"등록"}</h3>
+            	</div>
+            	
+    		
+            <div>
+            	<table style="margin: 30px auto; width: 100%; border-spacing: 0px;">
+            		<tr height="10px">
+            			<td width="20%"> 제&nbsp;목 : 
+            			 <input type="text" name="subject" maxlength="50" value="${dto.subject}"> </td>           		
+					</tr>
+					<tr height="10px">
+						<td width="100%;"> 내&nbsp;용 : 
+						<textarea name="content" rows="50" cols="100">${dto.content}</textarea>
+						</td>
+					</tr>
+					<%-- 이미지 업로드  --%>
+					<tr>
+						<td> 이벤트 기간&nbsp;:&nbsp;
+						<input type="text" name="start_date" value="2020-05-22" maxlength="10" value="${dto.start_date}">~
+						<input type="text" name="end_date" value="2020-05-23" maxlength="10" value="${dto.end_date}">
+						</td>
+					</tr>
+					<tr height="10px">
+						<td>
+							<c:if test="${mode=='update'}">
+							<input type="hidden" name="num" value="${dto.num}" />
+							<input type="hidden" name="page" value="${page}"/>
+							</c:if>
+							<button type="submit">${mode=='update'?"수정":"등록"}</button>
+							<button type="button" onclick="javascript:location.href='<%=cp%>/news/event/list.do';">취소</button>
+						</td>	
+            	</table>
+          
             </div>
+            	
+          </div>
+        </div>
             <!-- Content 영역 끝 -->
+          </form>
           </article>
         </div>
       </main>

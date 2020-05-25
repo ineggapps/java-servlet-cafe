@@ -16,7 +16,7 @@
 .intro_pic_bg .row{
 	position:relative;
 	height:100%;
-	min-height:750px;
+	min-height:850px;
 }
 .pic_your_coffee{
 	position:absolute;
@@ -92,7 +92,7 @@
 	background:url("../images/index/welcome-coffee-shop.jpg");
 	background-attachment:fixed;
 	width:100%;
-	min-height:700px;
+	min-height:850px;
 }
 
 .logoWrap{

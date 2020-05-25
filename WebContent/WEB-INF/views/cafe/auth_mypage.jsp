@@ -14,6 +14,16 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/authentication.css" />
+    <script>
+	    function autoFormatPhone(){
+			const f = document.joinForm;
+			f.phone.value = f.phone.value.replace(/\-/gi,"");
+		}
+	    
+	    window.onload = function(){
+	    	autoFormatPhone();
+	    }
+    </script>
   </head>
   <body>
     <div id="wrap">
@@ -30,7 +40,7 @@
               </div>
             </div>
             <div class="row">
-              <form action="<%=cp%>/auth/mypage_ok.do" method="post">
+              <form name="joinForm" action="<%=cp%>/auth/mypage_ok.do" method="post">
                 <div class="joinbox">
                   <div class="component_wrap">
                     <div class="agreement_box">

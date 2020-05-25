@@ -246,6 +246,14 @@ ul.email {
   font-size: 0.9rem;
 }
 
+.join_form p.desc.hidden{
+	display:none;
+}
+
+.join_form p.desc.always{
+	display:block !important;
+}
+
 .subtitle,
 .title,
 .content_text {

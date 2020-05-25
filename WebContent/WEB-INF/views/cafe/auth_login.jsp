@@ -27,24 +27,25 @@
             <div class="row_full">
               <div class="row login">
                 <h2><span>로그인</span></h2>
-                <p class="welcome"><span>Welcome, Cookie&Coffee</span></p>
+                <p class="welcome"><span>Welcome, Cookie&amp;Coffee</span></p>
                 <p><span>쿠앤크커피에 오신 것을 환영합니다.</span></p>
               </div>
 
+			<c:if test="${isWelcome==1}">
               <div class="row whitebox">
                 <div class="row500">
-                  <p class="subtitle"><span>쿠앤크 회원이셨나요?</span></p>
-                  <p class="title"><span>쿠앤크 멤버스가 새로워졌습니다.</span></p>
+                  <p class="title"><span>쿠앤크 가입을 환영합니다.</span></p>
+                  <p class="subtitle"><span>로그인해 보세요</span></p>
                   <hr />
                   <p class="content_text">
                     회원님께 더 좋은 서비스를 제공해 드리고자 <br />
-                    선물하기, 쿠앤크카드, 스마크오더 등의 서비스를 추가하여 더욱 새로워졌습니다.<br />
-                    회원님께서 새로운 서비스를 이용하시기 위해서는 본인 인증이 필요합니다. <br />
-                    본인 인증은 1회만 진행하며 인증후 더 편리하게 서비스를 이용하실 수 있습니다.
+                    쿠앤크카드, 스마크오더 등의 서비스를 추가하여 더욱 새로워졌습니다.<br />
+                    가입하신 아이디와 비밀번호로 로그인이 가능합니다.
                   </p>
-                  <a href="#" class="navy_button">쿠앤크 멤버스 가입정보 찾기</a>
+                  <%--a href="#" class="navy_button">쿠앤크 멤버스 가입정보 찾기</a--%>
                 </div>
               </div>
+			</c:if>
 
               <div class="row whitebox">
                 <div class="row500">
@@ -52,8 +53,8 @@
                     <input class="text_input" type="text" placeholder="아이디 입력" name="userId"/>
                     <input class="text_input" type="password" placeholder="비밀번호 입력" name="userPwd" />
                     <div class="checkbox_row">
-                      <input type="checkbox" class="checkbox" /> 이메일 저장
-                    </div>
+                      <%--input type="checkbox" class="checkbox" /> 이메일 저장
+                    --%></div>
                     <button type="submit" class="navy_button">로그인</button>
                     <ul class="login_menu">
                       <li><a href="<%=cp%>/auth/join.do">회원가입</a></li>

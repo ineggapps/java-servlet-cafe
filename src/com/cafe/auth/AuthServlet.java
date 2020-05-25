@@ -39,6 +39,8 @@ public class AuthServlet extends EspressoServlet {
 	private static final String API_FIND_EMAIL = "/find_email.do";
 	private static final String API_FIND_PASSWORD = "/find_password.do";
 
+	private static final String API_MY_PAGE = "/mypage.do";
+	
 	// JSP
 	private static final String JSP_LOGIN = "/auth_login.jsp";
 	private static final String JSP_JOIN = "/auth_join.jsp";
@@ -72,7 +74,7 @@ public class AuthServlet extends EspressoServlet {
 		contextPath = req.getContextPath();
 		apiPath = contextPath + API_NAME;
 		String uri = req.getRequestURI(); // 접속주소 모든 
-		System.out.println(uri);
+//		System.out.println(uri);
 		// System.out.println(uri.indexOf("find_id.do"));
 			
 		if (uri.indexOf(API_LOGIN) != -1) {
@@ -99,12 +101,16 @@ public class AuthServlet extends EspressoServlet {
 			findPwdSubmit(req,resp);
 		} else if (uri.indexOf("/find_pwd_ok2.do")!=-1) {
 			findPwdForm2(req, resp);
+		} else if(uri.indexOf("/withdraw.do")!=-1) {
+			withdrawAccount(req, resp);
 		}
 	}
 
 	// 로그인폼
 	protected void loginForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = VIEWS + JSP_LOGIN;
+		int isWelcome = req.getParameter("isWelcome")!=null?1:0;
+		req.setAttribute("isWelcome", isWelcome);
 		forward(req, resp, path);
 	}
 	// 로그인 처리
@@ -181,13 +187,13 @@ public class AuthServlet extends EspressoServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		resp.sendRedirect(apiPath + API_LOGIN);
+		resp.sendRedirect(apiPath + API_LOGIN + "?isWelcome=1");
 	}
 
 	// 회원정보수정 폼
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = "/WEB-INF/views/cafe/auth_mypage.jsp";
-		req.setAttribute("mode", "main");
+		req.setAttribute("mode", "update");
 		//1. 회원정보 불러오기
 		SessionAuthInfo info = getSessionAuthInfo(req);
 		AuthDAO dao = new AuthDAO();
@@ -209,7 +215,7 @@ public class AuthServlet extends EspressoServlet {
 			String userPwd = req.getParameter(PARAM_USER_PWD);
 			String nickname = req.getParameter(PARAM_NICKNAME);
 			String phone = req.getParameter(PARAM_PHONE);
-			int userNum = Integer.parseInt(req.getParameter(PARAM_USER_NUM));
+			int userNum = info.getUserNum();
 
 			AuthDTO dto = new AuthDTO();
 			dto.setEmail(email1 + "@" + email2);
@@ -217,7 +223,7 @@ public class AuthServlet extends EspressoServlet {
 			dto.setNickname(nickname);
 			dto.setPhone(phone);
 			dto.setUserNum(userNum);
-			System.out.println(dto);
+//			System.out.println(dto);
 
 			dao.updateMember(dto);
 			forward(req, resp, path);
@@ -230,10 +236,7 @@ public class AuthServlet extends EspressoServlet {
 		}
 
 	}
-	// 회원탈퇴 폼
-	protected void DeleteMemberForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
-	}
+
 	// 아이디 찾기 폼
 	protected void findIdForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = "/WEB-INF/views/cafe/auth_find_id.jsp";
@@ -313,7 +316,7 @@ public class AuthServlet extends EspressoServlet {
 		String phone = req.getParameter("phone");
 		
 		
-		System.out.println(userPwd +"." + userId + "." + phone);
+//		System.out.println(userPwd +"." + userId + "." + phone);
 		dao.findPwd(userPwd, userId, phone);
 		
 		forward(req, resp, path); 
@@ -326,5 +329,18 @@ public class AuthServlet extends EspressoServlet {
 		return result;
 	}
 	   
+	protected void withdrawAccount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String path = "/main";
+		try {
+			SessionAuthInfo info = getSessionAuthInfo(req);
+			AuthDAO dao = new AuthDAO();
+			dao.deleteMember(info.getUserNum());
+			forward(req, resp, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(apiPath+ API_MY_PAGE);
+		}
+		
+	}	
 
 }

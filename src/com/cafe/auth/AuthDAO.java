@@ -37,6 +37,11 @@ public class AuthDAO {
 				}
 			}
 			try {
+				conn.close();
+			} catch (Exception e2) {
+			}
+			
+			try {
 				if (!conn.isClosed()) {
 					DBCPConn.close(conn);
 				}
@@ -89,12 +94,14 @@ public class AuthDAO {
 					rs.close();
 				} catch (Exception e2) {
 				}
-			} if (pstmt != null) {
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
-			} try {
+			}
+			try {
 				if (!conn.isClosed()) {
 					DBCPConn.close(conn);
 				}
@@ -129,7 +136,8 @@ public class AuthDAO {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
-			} try {
+			}
+			try {
 				if (!conn.isClosed()) {
 					DBCPConn.close(conn);
 				}
@@ -189,18 +197,24 @@ public class AuthDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt!=null) {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
-		}
-		try {
-			if (!conn.isClosed()) {
-				DBCPConn.close(conn);
+			try {
+				if (!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e) {
 			}
-		} catch (Exception e) {
 		}
 		return userId;
 
@@ -210,7 +224,7 @@ public class AuthDAO {
 	public int findPwd(String userPwd, String userId, String phone) {
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
-		int result=0;
+		int result = 0;
 		String sql = "UPDATE member SET userPwd=? WHERE userId=? and phone=?";
 
 		try {
@@ -220,24 +234,24 @@ public class AuthDAO {
 			pstmt.setString(2, userId);
 			pstmt.setString(3, phone);
 
-			result=pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt!=null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
-		}
-		try {
+			try {
 
-			if (!conn.isClosed()) {
-				DBCPConn.close(conn);
+				if (!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e) {
 			}
-		} catch (Exception e) {
 		}
 		return result;
 	}
@@ -264,54 +278,81 @@ public class AuthDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt!=null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
-		}
-		try {
-			if (!conn.isClosed()) {
-				DBCPConn.close(conn);
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
 			}
-		} catch (Exception e) {
+			try {
+				if (!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e) {
+			}
 		}
 		return x;
 	}
-	
-}
-/*
- * protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = "/WEB-INF/views/cafe/auth_mypage2.jsp";
-		SessionAuthInfo info = getSessionAuthInfo(req);
 
+	public int deleteMember(int userNum) {
+		int result = 0;
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "UPDATE member SET enabled=0 WHERE userNum = ?";
 		try {
-			AuthDAO dao = new AuthDAO();
-			String email1 = req.getParameter(PARAM_EMAIL1);
-			String email2 = req.getParameter(PARAM_EMAIL2);
-			String userPwd = req.getParameter(PARAM_USER_PWD);
-			String nickname = req.getParameter(PARAM_NICKNAME);
-			String phone = req.getParameter(PARAM_PHONE);
-			int userNum = Integer.parseInt(req.getParameter(PARAM_USER_NUM));
-
-			AuthDTO dto = new AuthDTO();
-			dto.setEmail(email1 + "@" + email2);
-			dto.setUserPwd(userPwd);
-			dto.setNickname(nickname);
-			dto.setPhone(phone);
-			dto.setUserNum(userNum);
-			System.out.println(dto);
-
-			dao.updateMember(dto);
-			forward(req, resp, path);
-
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userNum);
+			result = pstmt.executeUpdate();
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			resp.sendRedirect(apiPath + "/update.do");
-			return;
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			try {
+				if (!conn.isClosed()) {
+					DBCPConn.close(conn);
+				}
+			} catch (Exception e2) {
+			}
 		}
-
+		return result;
 	}
-	*/
+
+}
+/*
+ * protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp)
+ * throws ServletException, IOException { String path =
+ * "/WEB-INF/views/cafe/auth_mypage2.jsp"; SessionAuthInfo info =
+ * getSessionAuthInfo(req);
+ * 
+ * try { AuthDAO dao = new AuthDAO(); String email1 =
+ * req.getParameter(PARAM_EMAIL1); String email2 =
+ * req.getParameter(PARAM_EMAIL2); String userPwd =
+ * req.getParameter(PARAM_USER_PWD); String nickname =
+ * req.getParameter(PARAM_NICKNAME); String phone =
+ * req.getParameter(PARAM_PHONE); int userNum =
+ * Integer.parseInt(req.getParameter(PARAM_USER_NUM));
+ * 
+ * AuthDTO dto = new AuthDTO(); dto.setEmail(email1 + "@" + email2);
+ * dto.setUserPwd(userPwd); dto.setNickname(nickname); dto.setPhone(phone);
+ * dto.setUserNum(userNum); System.out.println(dto);
+ * 
+ * dao.updateMember(dto); forward(req, resp, path);
+ * 
+ * 
+ * } catch (Exception e) { e.printStackTrace(); resp.sendRedirect(apiPath +
+ * "/update.do"); return; }
+ * 
+ * }
+ */

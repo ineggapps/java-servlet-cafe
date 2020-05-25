@@ -14,6 +14,93 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/authentication.css" />
+    <script src="<%=cp %>/resource/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript">
+    	
+		function checkSubmit(){
+			const f = document.joinForm;
+			
+			if(!f.agreement.checked){
+				alert("약관에 동의해야 가입이 가능합니다.");
+				f.agreement.focus();
+				return false;
+			}
+			
+			if(!f.email1.value || !f.email2.value){
+				alert("이메일 주소를 입력하세요.")
+				f.email1.focus();
+				return false;
+			}
+			
+			if(!f.userId.value){
+				alert("아이디를 입력하세요");
+				f.userId.focus();
+				return false;
+			}
+			
+			if(!f.userName.value){
+				alert("이름을 입력하세요");
+				f.userName.focus();
+				return false;
+			}
+			
+			if(!f.nickname.value){
+				alert("별명을 입력하세요.");
+				f.nickname.focus();
+				return false;
+			}
+			
+			if(!f.phone.value){
+				alert("휴대폰 번호를 입력하세요.");
+				f.phone.focus();
+				return false;
+			}
+			
+			
+			if(!f.userPwd.value){
+				alert("비밀번호를 입력하세요.");
+				f.userPwd.focus();
+				return false;
+			}
+			
+			
+			if(!f.userPwdConfirm.value){
+				alert("비밀번호 확인란을 입력하세요.");
+				f.userPwdConfirm.focus();
+				return false;
+			}
+			
+			if(f.userPwd.value != f.userPwdConfirm.value){
+				alert("비밀번호 항목이 일치하지 않습니다.");
+				f.userPwd.focus();
+				return false;
+			}
+			
+    		return true;
+    	}
+    	
+		function changeDomain(){
+			const f = document.joinForm;
+			f.email2.value = f.selectEmail.value;
+		}
+		
+	    function autoFormatPhone(){
+			const f = document.joinForm;
+			f.phone.value = f.phone.value.replace(/\-/gi,"");
+		}
+	    
+    	//이하 jQuery
+		$(function(){
+			$(".join_form input[type=text]").focus(function(){
+				$(this).next("p").removeClass("hidden");
+			});
+			
+			$(".join_form input[type=text]").blur(function(){
+				$(this).next("p").addClass("hidden");
+			});
+			
+		});
+	</script>
   </head>
   <body>
     <div id="wrap">
@@ -32,7 +119,7 @@
               </div>
             </div>
             <div class="row">
-              <form action="<%=cp%>/auth/${mode }_ok.do" method="post">
+              <form action="<%=cp%>/auth/${mode }_ok.do" method="post" onsubmit="return checkSubmit()" name="joinForm">
                 <div class="joinbox">
                   <div class="email_wrap component_wrap">
                     <h3>이메일을 입력해주세요.</h3>
@@ -41,9 +128,12 @@
                     <ul class="email">
                       <li><input type="text" class="email id" name="email1"/></li>
                       <li>@</li>
-                      <li><input type="text" class="email domain" name="email2"/></li>
-                        <select>
-                          <option>직접입력</option>
+                      <li>
+                      	<input type="text" class="email domain" name="email2"/>
+                      </li>
+                      <li>
+                        <select name="selectEmail" onchange="changeDomain()">
+                          <option value="">직접입력</option>
                           <option value="naver.com">naver.com</option>
                           <option value="daum.net">daum.net</option>
                           <option value="nate.com">nate.com</option>
@@ -63,16 +153,12 @@
                   </div>
                   <div class="component_wrap">
                     <h3>서비스 이용약관</h3>
-                    <div class="join_item_title all">
-                      <input type="checkbox" />
-                      <h4>전체동의 <span>( ※ 선택동의 사항이 포함되어 있습니다. )</span></h4>
-                    </div>
                     <div class="agreement_box">
                       <div class="join_item_title">
                         <h4>
                           쿠앤크 멤버스 서비스 이용약관 동의 <span class="color">(필수)</span>
                         </h4>
-                        <input type="checkbox" />
+                        <input type="checkbox" name="agreement" id="agreement"/>
                       </div>
                       <div class="agreement_content_box">
                         <p>
@@ -84,7 +170,7 @@
                         </p>
                       </div>
                     </div>
-                    <div class="agreement_box">
+                    <%--div class="agreement_box">
                       <div class="join_item_title">
                         <h4>개인정보 수집 및 이용 동의 <span class="color">(필수)</span></h4>
                         <input type="checkbox" />
@@ -143,7 +229,7 @@
                           대해서도 그 성질에 반하지 않는 한 이 약관을 준용합니다.」
                         </p>
                       </div>
-                    </div>
+                    </div--%>
                   </div>
 
                   <div class="join_form">
@@ -151,23 +237,36 @@
                       <div class="join_item_title">
                         <h3>회원정보입력</h3>
                       </div>
-                      <div class="join_item"><strong>아이디</strong> <input type="text" value="${authDTO.userId}" name="userId"/></div>
-                      <div class="join_item"><strong>이름</strong> <input type="text"  value="${authDTO.userName }" name="userName"/></div>
+                      <div class="join_item"><strong>아이디</strong> <input type="text" value="${authDTO.userId}" name="userId"/>
+						<p class="desc hidden">
+                         	아이디가 중복되면 안 됩니다.
+                        </p>
+                      </div>
+                      
+                      <div class="join_item"><strong>이름</strong> <input type="text"  value="${authDTO.userName }" name="userName"/>
+                      	<p class="desc hidden">
+                        	 이름을 입력하세요
+                      	</p>
+                      </div>
                       <div class="join_item">
                         <strong>별명</strong> <input type="text" name="nickname"/>
-                        <p class="desc">※ 욕설 등 부적절한 단어는 제한을 받습니다.</p>
+                        <p class="desc always">※ 욕설 등 부적절한 단어는 제한을 받습니다.</p>
                       </div>
-                      <div class="join_item"><strong>휴대폰</strong> <input type="text" name="phone"/></div>
+                      <div class="join_item"><strong>휴대폰</strong> <input type="text" maxlength="11" name="phone" onkeyup="autoFormatPhone()" onkeydown="autoFormatPhone()"/>
+                      <p class="desc hidden">
+                         	휴대폰 번호를 입력하세요
+                      </p>
+                      </div>
                       <div class="join_item">
                         <strong>비밀번호</strong> <input type="password" name="userPwd"/>
-                        <p class="desc">
+                        <p class="desc hidden">
                           ※ 안전한 비밀번호를 위해 숫자, 문자 조합하여 10~16자 이상으로
                           입력해주세요.
                         </p>
                       </div>
                       <div class="join_item">
                         <strong>비밀번호 확인</strong> <input type="password" name="userPwdConfirm"/>
-                        <p class="desc">
+                        <p class="desc hidden">
                           비밀번호를 한 번 더 입력하세요
                         </p>
                       </div>
