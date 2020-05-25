@@ -117,9 +117,10 @@
                   </ul>
                   <table>
                   	<tr align="center">
+                  	<c:if test="${sessionScope.member.admin==true}">
                   		<td><button type="button" onclick="javascript:location.href='<%=cp%>/news/event/update.do?num=${dto.num}&${query}';">수정</button></td>
                   		<td><button type="button" onclick="javascript:location.href='<%=cp%>/news/event/delete.do?num=${dto.num}&${query}';">삭제</button></td>
-              
+              		</c:if>
                   		<td><button type="button" onclick="javascript:location.href='<%=cp%>/news/event/list.do';">목록</button></td>
                   	</tr>
                   </table>
