@@ -6,8 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.util.DBCPConn;
 
@@ -89,12 +87,14 @@ public class AuthDAO {
 					rs.close();
 				} catch (Exception e2) {
 				}
-			} if (pstmt != null) {
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
-			} try {
+			}
+			try {
 				if (!conn.isClosed()) {
 					DBCPConn.close(conn);
 				}
@@ -103,8 +103,8 @@ public class AuthDAO {
 		}
 		return dto;
 	}
-
-	public int updateMember(AuthDTO dto) throws Exception { // 회원정보 수정
+	// 회원정보 수정
+	public int updateMember(AuthDTO dto) throws Exception { 
 
 		int result = 0;
 		PreparedStatement pstmt = null;
@@ -129,7 +129,8 @@ public class AuthDAO {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
-			} try {
+			}
+			try {
 				if (!conn.isClosed()) {
 					DBCPConn.close(conn);
 				}
@@ -140,17 +141,20 @@ public class AuthDAO {
 	}
 
 	// 회원탈퇴
-	public void deleteMember(int userNum, String userPwd) {
-		PreparedStatement pstmt = null;
+	public int deleteMember(int userNum, String userPwd) { 
+		int result=0;
 		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
 		String sql;
 
 		try {
-			sql = "UPDATE member SET enabled=0 WHERE userNum=?, userPwd=?";
+			sql = "UPDATE member SET enabled=0 WHERE userNum=? and userPwd=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, userNum);
 			pstmt.setString(2, userPwd);
-			pstmt.executeUpdate();
+			result=pstmt.executeUpdate();
+			
+			System.out.println(userNum+","+userPwd);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -165,8 +169,10 @@ public class AuthDAO {
 					DBCPConn.close(conn);
 				}
 			} catch (Exception e2) {
-			}
+			} 
+			
 		}
+		return result;
 	}
 
 	// 아이디 찾기 (이름, 핸드폰번호)
@@ -189,7 +195,7 @@ public class AuthDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt!=null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
@@ -210,7 +216,7 @@ public class AuthDAO {
 	public int findPwd(String userPwd, String userId, String phone) {
 		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
-		int result=0;
+		int result = 0;
 		String sql = "UPDATE member SET userPwd=? WHERE userId=? and phone=?";
 
 		try {
@@ -220,12 +226,12 @@ public class AuthDAO {
 			pstmt.setString(2, userId);
 			pstmt.setString(3, phone);
 
-			result=pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt!=null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
@@ -264,7 +270,7 @@ public class AuthDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt!=null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
@@ -279,39 +285,7 @@ public class AuthDAO {
 		}
 		return x;
 	}
+
+	
 	
 }
-/*
- * protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = "/WEB-INF/views/cafe/auth_mypage2.jsp";
-		SessionAuthInfo info = getSessionAuthInfo(req);
-
-		try {
-			AuthDAO dao = new AuthDAO();
-			String email1 = req.getParameter(PARAM_EMAIL1);
-			String email2 = req.getParameter(PARAM_EMAIL2);
-			String userPwd = req.getParameter(PARAM_USER_PWD);
-			String nickname = req.getParameter(PARAM_NICKNAME);
-			String phone = req.getParameter(PARAM_PHONE);
-			int userNum = Integer.parseInt(req.getParameter(PARAM_USER_NUM));
-
-			AuthDTO dto = new AuthDTO();
-			dto.setEmail(email1 + "@" + email2);
-			dto.setUserPwd(userPwd);
-			dto.setNickname(nickname);
-			dto.setPhone(phone);
-			dto.setUserNum(userNum);
-			System.out.println(dto);
-
-			dao.updateMember(dto);
-			forward(req, resp, path);
-
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			resp.sendRedirect(apiPath + "/update.do");
-			return;
-		}
-
-	}
-	*/

@@ -14,6 +14,23 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/authentication.css" />
+    
+    <script type="text/javascript">
+    function send_ok(mode){
+    	var f=document.memberForm;
+    	
+    	
+    	if(f.mode.value=="delete"){
+    		if(!confirm("회원을 탈퇴하시겠습니까?")){
+    			return;
+    		}
+    	}
+    	
+    	f.mode.value = mode;
+    	f.submit();
+    	
+    }
+    </script>
   </head>
   <body>
     <div id="wrap">
@@ -30,7 +47,7 @@
               </div>
             </div>
             <div class="row">
-              <form action="<%=cp%>/auth/mypage_ok.do" method="post">
+              <form name="memberForm" action="<%=cp%>/auth/mypage_ok.do" method="post">
                 <div class="joinbox">
                   <div class="component_wrap">
                     <div class="agreement_box">
@@ -64,13 +81,14 @@
                       </div>
                       
                       <div>
-                         <button type="submit" name="btn">회원탈퇴</button>
+                         <button type="button" name="btn" onclick="send_ok('delete')">회원탈퇴</button>
                       </div>
                       
                     </div>
                     <div class="join_item_title submit">
                       <input type="hidden" name="userNum" value="${authDTO.userNum}">
-                      <button type="submit" name="btn" class="navy_button">확인</button>
+                      <input type="hidden" name = "mode">
+                      <button type="button" name="btn" class="navy_button" onclick="send_ok('update')">확인</button>
                     </div>
                   </div>
                 </div>

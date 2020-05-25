@@ -14,6 +14,118 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/authentication.css" />
+    
+	<script type="text/javascript">
+	function joinOk(){
+		var f = document.joinForm;
+		var str;
+		
+		str = f.email1.value;
+		str = str.trim();
+		if(!str){
+			alert("이메일을 입력하세요. ");
+			f.email1.focus();
+			return;
+		}
+		
+		str = f.email2.value;
+		str = str.trim();
+		if(!str){
+			alert("이메일을 입력하세요.");
+			f.email2.focus();
+			return;
+		}
+		
+		str = f.userId.value;
+		str = str.trim();
+		if(!str){
+			alert("아이디를 입력하세요.");
+			f.userId.focus();
+			return;
+		}
+		if(!/^[a-z][a-z0-9_]{4,9}$/i.test(str)) { 
+			alert("아이디는 5~10자이며 첫글자는 영문자이어야 합니다.");
+			f.userId.focus();
+			return;
+		}
+		f.userId.value = str;
+		
+		
+		str = f.userName.value;
+		str = str.trim();
+		if(!str){
+			alert("이름을 입력하세요. ");
+			f.userName.focus();
+			return;
+		}
+		f.userName.value = str;
+		
+		str = f.nickname.value;
+		str = str.trim();
+		if(!str){
+			alert("닉네임을 입력하세요. ");
+			f.nickname.focus();
+			return;
+		}
+		str = f.phone.value;
+		str = str.trim();
+		if(!str){
+			alert("핸드폰 번호를 입력하세요. ");
+			f.phone.focus();
+			return;
+		}
+	    if(!/^(\d+)$/.test(str)) {
+	        alert("숫자만 가능합니다. ");
+	        f.tel2.focus();
+	        return;
+	    }
+	    str = f.userPwd.value;
+		str = str.trim();
+		if(!str) {
+			alert("패스워드를 입력하세요. ");
+			f.userPwd.focus();
+			return;
+		}
+		if(!/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str)) { 
+			alert("패스워드는 5~10자이며 하나 이상의 숫자나 특수문자가 포함되어야 합니다.");
+			f.userPwd.focus();
+			return;
+		}
+		f.userPwd.value = str;
+		
+		if(str != f.userPwdConfirm.value){
+	        alert("패스워드가 일치하지 않습니다. ");
+	        f.userPwdCheck.focus();
+	        return;
+		}
+			 var mode="${mode}";
+			 if(mode=="join") {
+				 f.action = "<%=cp%>/cafe/login_ok.do";
+			   } else if(mode=="main") {
+			    	f.action = "<%=cp%>/cafe/mypage_ok.do";
+			   }
+			 
+			 f.submit();
+	}
+	
+	function changeEmail(){
+		var f= document.joinForm;
+		
+		var str = f.selectEmail.value;
+		if(str!="direct"){
+			f.email2.value=str;
+			f.email2.readOnly = true;
+			f.email1.focus();
+		}
+		else {
+			f.email2.value="";
+			f.email2.readOnly = false;
+			f.email1.focus();
+			
+		}
+	}
+	</script>
+
   </head>
   <body>
     <div id="wrap">
@@ -32,7 +144,7 @@
               </div>
             </div>
             <div class="row">
-              <form action="<%=cp%>/auth/${mode }_ok.do" method="post">
+              <form name="joinForm" action="<%=cp%>/auth/${mode }_ok.do" method="post">
                 <div class="joinbox">
                   <div class="email_wrap component_wrap">
                     <h3>이메일을 입력해주세요.</h3>
@@ -41,9 +153,9 @@
                     <ul class="email">
                       <li><input type="text" class="email id" name="email1"/></li>
                       <li>@</li>
-                      <li><input type="text" class="email domain" name="email2"/></li>
-                        <select>
-                          <option>직접입력</option>
+                      <li><input type="text" class="email domain" name="email2"/>
+                        <select  name="selectEmail" onchange="changeEmail();">
+                          <option value="">선 택</option>
                           <option value="naver.com">naver.com</option>
                           <option value="daum.net">daum.net</option>
                           <option value="nate.com">nate.com</option>
@@ -57,8 +169,9 @@
                           <option value="dreamwiz.com">dreamwiz.com</option>
                           <option value="netian.com">netian.com</option>
                           <option value="chol.net">chol.net</option>
+                          <option value="direct">직접입력</option>
                         </select>
-                      </li>
+                        </li>
                     </ul>
                   </div>
                   <div class="component_wrap">
@@ -173,7 +286,7 @@
                       </div>
                     </div>
                     <div class="join_item_title submit">
-                      <button type="submit" name="btn" class="navy_button">가입하기</button>
+                      <button type="submit" name="btn" class="navy_button" onclick="joinOk();">가입하기</button>
                     </div>
                   </div>
                 </div>
