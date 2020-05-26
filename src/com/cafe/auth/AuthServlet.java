@@ -1,6 +1,7 @@
 package com.cafe.auth;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -291,14 +292,22 @@ public class AuthServlet extends EspressoServlet {
 	// 비밀번호 수정값 전송 (아이디, 핸드폰번호)
 	protected void findPwdSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = "/WEB-INF/views/cafe/auth_find_pwd2.jsp";
+		AuthDAO dao = new AuthDAO();
 		
 		try {
 			String userId = req.getParameter("userId");
 			String phone = req.getParameter("phone");
+			
+			int result = dao.findPwdBefore(userId, phone);
+			if(result==0) {
+				resp.sendRedirect(contextPath+"/auth/find_pwd.do");
+				return;
+			}
 
 			req.setAttribute("userId", userId);
 			req.setAttribute("phone", phone);
-
+			
+			
 			forward(req, resp, path);
 			
 		} catch (Exception e) {
