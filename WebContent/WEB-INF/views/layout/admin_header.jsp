@@ -9,7 +9,7 @@
           <div class="header_top">
             <div class="header_row">
               <h1>
-                <a href="<%=cp %>"
+                <a href="<%=cp %>/main/index.do"
                   ><img src="<%=cp%>/resource/images/admin/logo_dark.png" alt="COOKIE&amp;CREAM" class="logo" /></a
                 >매장 관리
               </h1>
