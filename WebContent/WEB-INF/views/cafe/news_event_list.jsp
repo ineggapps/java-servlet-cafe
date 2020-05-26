@@ -83,12 +83,12 @@
 			   			</table>
             			
 			   <c:if test="${sessionScope.member.admin==true}">
-			   <table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			   <table class="controller" style="width: 100%; margin: 10px auto; border-spacing: 0px;">
 			   		<tr height="20px">
-			      		<td align="left">
+			      		<td class="left" align="left">
 			          		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/news/event/list.do';">새로고침</button>
 			      		</td>
-			      		<td align="right">
+			      		<td class="right" align="right">
 			          		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/news/event/write.do';">등록하기</button>
 			        	</td>
 			     	</tr>
