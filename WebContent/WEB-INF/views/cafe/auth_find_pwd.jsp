@@ -14,6 +14,22 @@
     <link rel="stylesheet" href="<%=cp%>/resource/css/reset.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" />
     <link rel="stylesheet" href="<%=cp%>/resource/css/authentication.css" />
+    <script type="text/javascript">
+    function sendOk(){
+    	var f= document.pwdForm;
+    	if(! f.userId.value){
+    		alert("아이디를 입력해주세요.");
+    		f.userId.focus();
+    		return;
+    	}
+    	if(! f.phone.value){
+    		alert("핸드폰번호를 입력해주세요.");
+    		f.phone.focus();
+    		return;
+    	}
+    	f.submit();
+    }
+    </script>
   </head>
   <body>
     <div id="wrap">
@@ -21,7 +37,7 @@
       	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
       </header>
       <main id="content">
-      	<form action="<%=cp%>/auth/find_pwd_ok.do" method="post">
+      	<form name = "pwdForm" action="<%=cp%>/auth/find_pwd_ok.do" method="post">
         <div id="main">
           <article id="main_container">
             <!-- Content영역 -->
@@ -45,7 +61,7 @@
                 </tr>
                 
                 <tr>
-                    <td><button type="submit" class="navy_button">확인</button> </td>
+                    <td><button type="button" class="navy_button" onclick="sendOk();">확인</button> </td>
                 </tr>
                 
                     <tr>

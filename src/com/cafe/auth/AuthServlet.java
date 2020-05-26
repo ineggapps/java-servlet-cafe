@@ -163,14 +163,28 @@ public class AuthServlet extends EspressoServlet {
 			String phone = req.getParameter(PARAM_PHONE);
 			
 			AuthDTO dto = new AuthDTO(email1 + "@" + email2, userId, userPwd, userName, nickname, phone);
+			/*
 			if(dao.readMember(userId) != null) {
 				resp.sendRedirect(apiPath+API_JOIN);
 				return;
 			}
-			dao.insertMember(dto);
+			*/
+			int result=dao.insertMember(dto);
+			if(result==0) {
+				String message = "회원가입에 실패했습니다.";
+				
+				req.setAttribute("title", "회원가입");
+				req.setAttribute("mode", "join");
+				req.setAttribute("message", message);
+				forward(req, resp,  "/WEB-INF/views/cafe/auth_join.jsp");
+				return;
+			}
+			
 //			System.out.println(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
+			
+			
 		}
 		resp.sendRedirect(apiPath + API_LOGIN + "?isWelcome=1");
 	}
