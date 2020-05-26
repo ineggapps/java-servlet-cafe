@@ -17,7 +17,16 @@ import com.cafe.auth.SessionAuthInfo;
 public class AdminAuthFilter implements Filter {
 
 	private FilterConfig filterConfig;
-	private static final String[] INCLUDE_URIS = { "/admin/main/**",
+	private static final String[] INCLUDE_URIS = { 
+			"/admin/main/**", 
+			"/menu/createdMenu.do", "/menu/createdMenu_ok.do",
+			"/menu/update.do", "/menu/createdMenu_ok.do",
+			"/menu/delete.do",			
+			"/news/notice/update.do", "/news/notice/update_ok.do",
+			"/news/notice/delete.do",
+			"/news/event/write.do", "/news/event/write_ok.do",
+			"/news/event/update.do", "/news/event/update_ok.do",
+			"/news/event/delete.do"
 //			"/news/notice/write.do", "/news/notice/write_ok.do", "/news/notice/update.do", "/news/notice/update_ok.do", "/news/notice/delete.do" 
 //			,"/news/event/write.do", "/news/event/write_ok.do", "/news/event/update.do", "/news/event/update_ok.do", "/news/event/delete.do" 
 	};
