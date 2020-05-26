@@ -23,60 +23,69 @@
 			if(!f.agreement.checked){
 				alert("약관에 동의해야 가입이 가능합니다.");
 				f.agreement.focus();
-				return false;
+				return;
 			}
 			
 			if(!f.email1.value || !f.email2.value){
 				alert("이메일 주소를 입력하세요.")
 				f.email1.focus();
-				return false;
+				return;
 			}
 			
 			if(!f.userId.value){
 				alert("아이디를 입력하세요");
 				f.userId.focus();
-				return false;
+				return;
 			}
 			
 			if(!f.userName.value){
 				alert("이름을 입력하세요");
 				f.userName.focus();
-				return false;
+				return;
 			}
 			
 			if(!f.nickname.value){
 				alert("별명을 입력하세요.");
 				f.nickname.focus();
-				return false;
+				return;
 			}
 			
 			if(!f.phone.value){
 				alert("휴대폰 번호를 입력하세요.");
 				f.phone.focus();
-				return false;
+				return;
 			}
 			
 			
 			if(!f.userPwd.value){
 				alert("비밀번호를 입력하세요.");
 				f.userPwd.focus();
-				return false;
+				return;
 			}
 			
+			if(!/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(f.userPwd.value)) { 
+				alert("패스워드는 5~10자이며 하나 이상의 숫자나 특수문자가 포함되어야 합니다.");
+				f.userPwd.focus();
+				return;
+			}
 			
 			if(!f.userPwdConfirm.value){
 				alert("비밀번호 확인란을 입력하세요.");
 				f.userPwdConfirm.focus();
-				return false;
+				return;
 			}
+			
 			
 			if(f.userPwd.value != f.userPwdConfirm.value){
 				alert("비밀번호 항목이 일치하지 않습니다.");
 				f.userPwd.focus();
-				return false;
+				return;
 			}
 			
-    		return true;
+   
+
+		    f.submit();
+ 			
     	}
     	
 		function changeDomain(){
@@ -119,7 +128,7 @@
               </div>
             </div>
             <div class="row">
-              <form action="<%=cp%>/auth/${mode }_ok.do" method="post" onsubmit="return checkSubmit()" name="joinForm">
+              <form action="<%=cp%>/auth/${mode}_ok.do" method="post"  name="joinForm">
                 <div class="joinbox">
                   <div class="email_wrap component_wrap">
                     <h3>이메일을 입력해주세요.</h3>
@@ -260,8 +269,9 @@
                       <div class="join_item">
                         <strong>비밀번호</strong> <input type="password" name="userPwd"/>
                         <p class="desc hidden">
-                          ※ 안전한 비밀번호를 위해 숫자, 문자 조합하여 10~16자 이상으로
+                          ※ 안전한 비밀번호를 위해 숫자, 문자 조합하여 5~10자 이내로
                           입력해주세요.
+                          
                         </p>
                       </div>
                       <div class="join_item">
@@ -272,7 +282,8 @@
                       </div>
                     </div>
                     <div class="join_item_title submit">
-                      <button type="submit" name="btn" class="navy_button">가입하기</button>
+			        <p align="center" style="color: black;">${message}</p>
+                      <button type="button" name="btn" class="navy_button" onclick="checkSubmit();">가입하기</button>
                     </div>
                   </div>
                 </div>

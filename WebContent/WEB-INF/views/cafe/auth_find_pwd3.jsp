@@ -21,6 +21,7 @@
       	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
       </header>
       <main id="content">
+      	<form action="<%=cp%>/main/index.do" method="post">
         <div id="main">
           <article id="main_container">
             <!-- Content영역 -->
@@ -59,6 +60,7 @@
             <!-- Content 영역 끝 -->
           </article>
         </div>
+        </form>
       </main>
       <footer id="footer">
       	<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

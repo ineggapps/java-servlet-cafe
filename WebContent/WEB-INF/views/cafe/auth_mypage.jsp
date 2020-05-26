@@ -19,6 +19,7 @@
     function send_ok(mode){
     	var f=document.memberForm;
 
+		
     	if(!f.userPwd.value && mode=='delete'){
     		alert("비밀번호를 입력하셔야 탈퇴하실 수 있습니다.");
     		return;
@@ -35,11 +36,17 @@
     		return;
     	}
     	
+		if(!/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(f.userPwd.value)) { 
+			alert("패스워드는 5~10자이며 하나 이상의 숫자나 특수문자가 포함되어야 합니다.");
+			f.userPwd.focus();
+			return;
+		}
     	if(mode=="delete"){
     		if(!confirm("회원을 탈퇴하시겠습니까?")){
     			return;
     		}
     	}
+
     	
     	f.mode.value = mode;
     	f.submit();
@@ -83,10 +90,10 @@
                       <div class="join_item"><strong>휴대폰</strong> <input type="text" value="${authDTO.phone}" name="phone"/></div>
                       <div class="join_item">
                         <strong>비밀번호</strong> <input type="password" name="userPwd"/>
-                        <p class="desc">
+                        <td class="desc">
                           	※ 안전한 비밀번호를 위해 숫자, 문자 조합하여 10~16자 이상으로
                          	 입력해주세요.
-                        </p>
+                        </td>
                       </div>
                       <div class="join_item">
                         <strong>비밀번호 확인</strong> <input type="password" name="userPwdConfirm"/>

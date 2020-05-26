@@ -14,7 +14,7 @@ import com.util.DBCPConn;
 public class AuthDAO {
 	private Connection conn = DBCPConn.getConnection();
 
-	public int insertMember(AuthDTO dto) { // 회원가입
+	public int insertMember(AuthDTO dto) throws Exception { // 회원가입
 		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql = "INSERT INTO member(userNum, email, userId, userPwd, userName, nickname, phone) VALUES(MEMBER_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?)";
@@ -26,7 +26,7 @@ public class AuthDAO {
 			pstmt.setString(4, dto.getUserName());
 			pstmt.setString(5, dto.getNickname());
 			pstmt.setString(6, dto.getPhone());
-			pstmt.executeUpdate();
+			result=pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
