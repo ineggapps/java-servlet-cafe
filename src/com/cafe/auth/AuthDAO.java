@@ -169,6 +169,43 @@ public class AuthDAO {
 		return userId;
 
 	}
+	
+	protected int findPwdBefore(String userId, String phone) throws ServletException, IOException {
+		Connection conn = DBCPConn.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT NVL(count(userId),0) FROM member WHERE userId=? and phone=?";
+		int result=0;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			pstmt.setString(2, phone);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				result=rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			DBCPConn.close(conn);
+		}
+		return result;
+
+	}
 
 	// 비밀번호 찾기 (아이디, 핸드폰번호)
 	public int findPwd(String userPwd, String userId, String phone) {
@@ -285,6 +322,8 @@ public class AuthDAO {
 		}
 		return result;
 	}
+
+	
 }
 /*
  * protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp)
