@@ -50,6 +50,9 @@ button:focus {
   background: url("../images/admin/login_background.jpg") center 0%;
   background-size: cover;
 }
+.background_wrapper.odd {
+  background: url("../images/admin/login_background2.jpg") center 0%;
+}
 .background_overlay {
   background: rgba(0, 0, 0, 0.5);
 }

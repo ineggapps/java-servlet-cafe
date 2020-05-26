@@ -276,7 +276,7 @@ public class AuthDAO {
 			pstmt.executeUpdate();
 			result = pstmt.executeUpdate();
 
-			System.out.println(userNum + "," + userPwd);
+//			System.out.println(userNum + "," + userPwd);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

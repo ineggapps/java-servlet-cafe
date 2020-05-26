@@ -16,7 +16,13 @@
   </head>
   <body>
     <div id="login_wrap">
-      <div class="background_wrapper"></div>
+	    <c:set var="ran"><%= java.lang.Math.round(java.lang.Math.random() * 1000) %></c:set>
+    	<c:if test="${ran%2==0}">
+      	<div class="background_wrapper"></div>
+    	</c:if>
+    	<c:if test="${ran%2==1}">
+      	<div class="background_wrapper odd"></div>
+    	</c:if>
       <div class="background_overlay"></div>
       <div id="login_header">
         <h1>
