@@ -62,7 +62,7 @@ public class AuthServlet extends EspressoServlet {
 		try {
 			SessionAuthInfo info = getSessionAuthInfo(req);
 			if(info!=null && info.isAdmin()) {
-				resp.sendRedirect(contextPath + "/" + ADMIN + "/main");
+				resp.sendRedirect(contextPath + "/" + ADMIN + "/main/index.do");
 				return;
 			}
 		} catch (Exception e) {

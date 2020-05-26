@@ -26,7 +26,7 @@
         <article id="main_container">
           <div class="content_box">
             <div class="content_title">
-              <h3>현재 주문 상태</h3>
+              <h3>오늘 주문 상태</h3>
             </div>
             <div class="content_area">
               <ul id="order_process">
