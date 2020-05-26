@@ -103,23 +103,24 @@
             <div>
             	<table style="margin: 30px auto; width: 100%; border-spacing: 0px;">
             		<tr height="10px">
-            			<td width="20%"> 제&nbsp;목 : 
+            			<td>제&nbsp;목 </td>
+            			<td width="20%" style="padding: 0px;">
             			 <input type="text" name="subject" maxlength="50" value="${dto.subject}"> </td>           		
 					</tr>
 					<tr height="10px">
-						<td width="100%;"> 내&nbsp;용 : 
+						<td style="vertical-align: middle;">내&nbsp;용 </td>
+						<td width="100%;" style="padding: 10px;">
 						<textarea name="content" rows="50" cols="100">${dto.content}</textarea>
 						</td>
 					</tr>
-					<%-- 이미지 업로드  --%>
 					<tr>
-						<td> 이벤트 기간&nbsp;:&nbsp;
+						<td style="padding: 0px;" colspan="2"> 이벤트 기간&nbsp;&nbsp;
 						<input type="text" name="start_date" value="2020-05-22" maxlength="10" value="${dto.start_date}">~
 						<input type="text" name="end_date" value="2020-05-23" maxlength="10" value="${dto.end_date}">
 						</td>
 					</tr>
 					<tr height="10px">
-						<td>
+						<td style="padding: 0px;" colspan="2">
 							<c:if test="${mode=='update'}">
 							<input type="hidden" name="num" value="${dto.num}" />
 							<input type="hidden" name="page" value="${page}"/>

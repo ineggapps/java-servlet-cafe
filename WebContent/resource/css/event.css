@@ -55,6 +55,17 @@ td {
 	border-bottom: 1px solid #d9d9d9;
 }
 
+table.controller td{
+	padding:0;
+	
+}
+table.controller td.left{
+	text-align:left;
+}
+table.controller td.right{
+	text-align:right;
+}
+
 .btn {
 	height: 30px;
 }
