@@ -42,7 +42,7 @@
                 >
               </div>
               <ul class="lnb">
-                <li><a href="./notice_list1.html">공지사항</a></li>
+                <li><a href="<%=cp%>/news/notice/list.do">공지사항</a></li>
                 <li class="on"><a href="./event.html">이벤트</a></li>
               </ul>
             </div>
