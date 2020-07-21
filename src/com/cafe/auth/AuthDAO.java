@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.util.DBCPConn;
 
 public class AuthDAO {
-	private Connection conn = DBCPConn.getConnection();
 
 	public int insertMember(AuthDTO dto) throws Exception { // 회원가입
 		int result = 0;
+		Connection conn = DBCPConn.getConnection();
 		PreparedStatement pstmt = null;
 		String sql = "INSERT INTO member(userNum, email, userId, userPwd, userName, nickname, phone) VALUES(MEMBER_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?)";
 		try {
