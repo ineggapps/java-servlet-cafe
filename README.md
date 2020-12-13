@@ -10,7 +10,15 @@
 
 [Go to the Website](http://java.sannim.com/cafe/main/index.do)
 
-![목업](./docs/assets/readme/mockups.png)
+<div align="center">
+  <img src="./docs/assets/readme/mockups.png" width="800px" />
+</div>
+
+![주문하기 페이지](docs/assets/readme/mockup_cnk_order.png)
+
+![카드 목록](./docs/assets/readme/mockup_cnk_card_list.png)
+
+![관리자 주문 메인 페이지](./docs/assets/readme/mockup_admin_main.png)
 
 [PC Browser Mockup - Designed by Grapheberry](https://www.graphberry.com/item/flat-browser-mockup/)
 
@@ -18,9 +26,11 @@
 
 ## 참고 사이트
 
-[이디야 커피](https://www.ediya.com/)
-[스타벅스 (한국)](https://www.starbucks.co.kr/index.do)
-[Starbucks.com](https://www.starbucks.com/)
+-   주요 홈페이지 레이아웃 등
+    -   [이디야 커피](https://www.ediya.com/)
+-   쿠앤크오더 메뉴 구성
+    -   [스타벅스 (한국)](https://www.starbucks.co.kr/index.do)
+    -   [Starbucks.com](https://www.starbucks.com/)
 
 ## 목차
 
