@@ -11,7 +11,7 @@ CREATE TABLE member(
     updated_date DATE DEFAULT SYSDATE, -- 회원정보 수정일시
     phone VARCHAR2(50), -- 휴대폰번호
     enabled NUMBER(1) DEFAULT 1, -- 회원탈퇴여부 (0: 탈퇴, 1:회원(기본값))
-    CONSTRAINT pk_member_userNum PRIMARY KEY(userNum)
+    CONSTRAINT pk_member_userNum PRIMARY KEY(userNum),
     CONSTRAINT uk_member_userId UNIQUE(userId),
     CONSTRAINT uk_member_email UNIQUE(email),
     CONSTRAINT uk_member_phone UNIQUE(phone)
